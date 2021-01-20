@@ -5,14 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.robot.subsystems.Collector;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Localizer;
+import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Map;
 import frc.robot.subsystems.OI;
-
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 // Import commands: Add commands here.
 import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.TeleopCommand;
 
 /**
@@ -25,11 +28,17 @@ public class RobotContainer {
 
   // Subsystems: Add subsystems here
   private final Drivetrain m_drivetrain = new Drivetrain();
+  private final Collector m_collector = new Collector();
+  private final Magazine m_magazine = new Magazine();
+  private final Turret m_turret = new Turret();
+  private final Shooter m_shooter = new Shooter();
+  private final Map m_map = new Map();
+  private final Localizer m_localizer = new Localizer(m_drivetrain);
+
   private final OI m_OI = new OI();
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Commands: Add commands here.
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain);
   private final TeleopCommand  m_teleopCommand = new TeleopCommand(m_drivetrain, m_OI);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
