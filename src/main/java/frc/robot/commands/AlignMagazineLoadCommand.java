@@ -5,26 +5,33 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Bling;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class ExampleCommand extends CommandBase {
+public class AlignMagazineLoadCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Drivetrain subsystem;
-  private final Bling subsystem2;
+  private final Magazine subsystem;
+  private final Shooter subsystem2;
+  private final Bling subsystem3;
 
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new AlignMagazineLoadCommand that makes the robot drive a given distance at a given velocity.
    *
    * @param subsystem The subsystem used by this command.
+   * @param distance The distance this command should move the robot by.
+   * @param velocity The velocity of the robot for this command.
    */
-  public ExampleCommand(Drivetrain subsystem, Bling subsystem2) {
+  public AlignMagazineLoadCommand(Magazine subsystem, Shooter subsystem2, Bling subsystem3) {
     this.subsystem = subsystem;
     this.subsystem2 = subsystem2;
+    this.subsystem3 = subsystem3;
     addRequirements(subsystem);
-    addRequirements(subsystem2);
+    addRequirements(subsystem2);    
+    addRequirements(subsystem3);
   }
+
 
   // Called when the command is initially scheduled.
   @Override
@@ -33,7 +40,9 @@ public class ExampleCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // TODO: Bling
+    // TODO: set the deadzoneroller to running downwards with Bling
+    // TODO: set the magazine to running upwards with Bling
+    // TODO: end after an experimentally determined time
   }
 
   // Called once the command ends or is interrupted.
