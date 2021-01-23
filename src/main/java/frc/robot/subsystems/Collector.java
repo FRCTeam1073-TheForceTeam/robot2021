@@ -96,7 +96,7 @@ public class Collector extends SubsystemBase {
         collectorWithdrawPneumatic.set(true);
         collectorDeployPneumatic.set(false);
         isDeployed = false;
-        isRelaxed = true;
+        isRelaxed = false;
       }
     } else if (deployed) {
       System.out.println("Collector was already deployed");
