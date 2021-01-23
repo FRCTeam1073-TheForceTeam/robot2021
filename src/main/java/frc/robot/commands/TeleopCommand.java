@@ -6,22 +6,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.OI;
+import frc.robot.subsystems.OI; // OI accessed as a static class
 
 /** An example command that uses an example subsystem. */
 public class TeleopCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Drivetrain m_drivetrain;
-  private final OI m_OI;
 
   /**
    * Creates a new TeleopCommand
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TeleopCommand(Drivetrain drivetrain, OI oi) {
+  public TeleopCommand(Drivetrain drivetrain) {
     m_drivetrain = drivetrain;
-    m_OI = oi;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_drivetrain);
   }
@@ -35,7 +33,7 @@ public class TeleopCommand extends CommandBase {
   public void execute() {
 
     // Send joystick to drivetrain:
-    m_drivetrain.setPower(m_OI.driverController.getX(), m_OI.driverController.getY());
+    m_drivetrain.setPower(OI.driverController.getX(), OI.driverController.getY());
   }
 
   // Called once the command ends or is interrupted.

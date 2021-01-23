@@ -17,6 +17,7 @@ import frc.robot.subsystems.Turret;
 // Import commands: Add commands here.
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.commands.TestCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,18 +36,19 @@ public class RobotContainer {
   private final Map m_map = new Map();
   private final Localizer m_localizer = new Localizer(m_drivetrain);
 
-  private final OI m_OI = new OI();
-
   // Commands: Add commands here.
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain);
-  private final TeleopCommand  m_teleopCommand = new TeleopCommand(m_drivetrain, m_OI);
+  private final TeleopCommand  m_teleopCommand = new TeleopCommand(m_drivetrain);
+  private final TestCommand m_testCommand = new TestCommand(m_drivetrain, m_collector, m_magazine);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // Additional subsystem setup:
+    // Initialize static OI class:
+    OI.init();
 
-    // Create command(s):
+    // Additional subsystem setup:
+    m_map.loadData();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -58,7 +60,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -73,6 +77,10 @@ public class RobotContainer {
   public Command getTeleopCommand() {
     // Command that we run in teleoperation mode.
     return m_teleopCommand;
+  }
+
+  public Command getTestCommand() {
+    return m_testCommand;
   }
 
 }

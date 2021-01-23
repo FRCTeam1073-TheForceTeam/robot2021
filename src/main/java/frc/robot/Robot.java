@@ -48,7 +48,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    // TODO: Any additional disable logic.
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -57,8 +59,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
+    // schedule the autonomous command if available.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -74,23 +75,37 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    CommandScheduler.getInstance().cancelAll(); // Stop all commands.
+
+    // Start teleop command.
+    Command teleop = m_robotContainer.getTeleopCommand();
+    if (teleop != null) {
+      teleop.schedule(); // Run the teleoperation command.
     }
-    m_robotContainer.getTeleopCommand().schedule(); // Run the teleoperation command.
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // TODO: Any additional periodic work for teleop mode.
+    
+  }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    Command test = m_robotContainer.getTestCommand();
+    if (test != null) {
+      test.schedule(); // Run the test command.
+    }
   }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    // TODO: Any additional periodic work for test mode.
+
+  }
+
 }
