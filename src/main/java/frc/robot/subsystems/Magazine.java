@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Utilities;
+import frc.robot.Utility;
 
 public class Magazine extends SubsystemBase {
     
@@ -41,7 +41,7 @@ public class Magazine extends SubsystemBase {
 
     /// Set the induct forward/reverse velocity.
     public void setPower(double power) {
-      magazineMotor.set(ControlMode.PercentOutput, Utilities.clipRange(power, 1));
+      magazineMotor.set(ControlMode.PercentOutput, Utility.clipRange(power, 1));
     }
 
     /// Return load on the magazine motor.

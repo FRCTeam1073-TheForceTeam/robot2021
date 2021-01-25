@@ -1,6 +1,6 @@
 package frc.robot;
 
-public class Utilities {
+public class Utility {
 
     /**Clips values to [min,max] */
     public static double clipRange(double value, double min, double max) {
