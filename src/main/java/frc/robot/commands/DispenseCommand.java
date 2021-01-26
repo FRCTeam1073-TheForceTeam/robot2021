@@ -41,7 +41,7 @@ public class DispenseCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // TODO: set the deadzoneroller to running downwards with Bling
+        // TODO: set the collector to running outwards with Bling
         // TODO: set the magazine to running upwards with Bling
         // TODO: end after an experimentally determined time
     }
