@@ -14,6 +14,7 @@ import frc.robot.subsystems.Map;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.commands.DriveControls;
 // Import commands: Add commands here.
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TeleopCommand;
@@ -38,8 +39,8 @@ public class RobotContainer {
 
   // Commands: Add commands here.
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain);
-  private final TeleopCommand  m_teleopCommand = new TeleopCommand(m_drivetrain);
   private final TestCommand m_testCommand = new TestCommand(m_drivetrain, m_collector, m_magazine);
+  private final DriveControls m_driveControls = new DriveControls(m_drivetrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -76,7 +77,7 @@ public class RobotContainer {
 
   public Command getTeleopCommand() {
     // Command that we run in teleoperation mode.
-    return m_teleopCommand;
+    return m_driveControls;
   }
 
   public Command getTestCommand() {
