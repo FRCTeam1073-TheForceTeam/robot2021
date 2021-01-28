@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -26,6 +28,9 @@ public class Drivetrain extends SubsystemBase  {
     private PigeonIMU gyro;
     private DifferentialDriveOdometry odometry;
     private DifferentialDriveKinematics kinematics;
+
+    Solenoid winch = new Solenoid(1, 1);
+    Solenoid drivetrain = new Solenoid(1, 7);
 
    //private double wheelDiameter = 0.15;
     // private double ticksPerWheelRotation =
@@ -242,6 +247,9 @@ public class Drivetrain extends SubsystemBase  {
     
     public void engageDrivetrain() {
 
+        drivetrain.set(true);
+        winch.set(false);
+
         leftMotorLeader.configFactoryDefault();
         rightMotorLeader.configFactoryDefault();
         leftMotorFollower.configFactoryDefault();
@@ -304,10 +312,15 @@ public class Drivetrain extends SubsystemBase  {
         leftMotorFollower.follow(leftMotorLeader);
         rightMotorFollower.follow(rightMotorLeader);
 
-        leftMotorFollower.setInverted(TalonFXInvertType.CounterClockwise);
-        rightMotorFollower.setInverted(TalonFXInvertType.CounterClockwise);
-        leftMotorLeader.setInverted(TalonFXInvertType.CounterClockwise);
-        rightMotorLeader.setInverted(TalonFXInvertType.CounterClockwise);
+        leftMotorLeader.setInverted(false);
+        leftMotorFollower.setInverted(false);
+        rightMotorLeader.setInverted(true);
+        rightMotorFollower.setInverted(true);
+
+        // leftMotorFollower.setInverted(TalonFXInvertType.CounterClockwise);
+        // rightMotorFollower.setInverted(TalonFXInvertType.CounterClockwise);
+        // leftMotorLeader.setInverted(TalonFXInvertType.CounterClockwise);
+        // rightMotorLeader.setInverted(TalonFXInvertType.CounterClockwise);
 
         leftMotorLeader.setSelectedSensorPosition(0);
         rightMotorLeader.setSelectedSensorPosition(0);
