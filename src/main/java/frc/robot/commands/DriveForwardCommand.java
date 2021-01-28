@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.OI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -67,7 +68,8 @@ public class DriveForwardCommand extends CommandBase {
     // currentTime = System.currentTimeMillis(); // TODO: set the velocity into the
     // drivetrain in an if loop of calculated time - Bling?
     currentPose = subsystem.getRobotPose();
-    subsystem.setPower(power, power);
+    // power = OI.driverController.getRawAxis(1);
+    subsystem.setPower(-power, -power);
   }
 
   // Called once the command ends or is interrupted.
