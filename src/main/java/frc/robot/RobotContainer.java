@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Collector;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
@@ -15,10 +16,13 @@ import frc.robot.subsystems.Map;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.commands.CollectCommand;
+import frc.robot.commands.DriveForwardCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.TestCommand;
+import frc.robot.commands.TurnCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -43,6 +47,9 @@ public class RobotContainer {
   private final TestCommand m_testCommand = new TestCommand(m_drivetrain, m_collector, m_magazine);
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain, m_bling);
   private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drivetrain);
+  private final DriveForwardCommand forward = new DriveForwardCommand(m_drivetrain, m_bling, 2);
+  private final TurnCommand turn = new TurnCommand(m_drivetrain, Math.PI / 2);
+  private final CollectCommand collect = new CollectCommand(m_collector, m_magazine, m_bling);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -76,7 +83,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return new SequentialCommandGroup(collect, forward, turn, forward, turn, forward, turn, forward, turn);
   }
 
   public Command getTeleopCommand() {
