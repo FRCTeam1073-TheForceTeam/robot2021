@@ -68,8 +68,9 @@ public class DriveForwardCommand extends CommandBase {
     // currentTime = System.currentTimeMillis(); // TODO: set the velocity into the
     // drivetrain in an if loop of calculated time - Bling?
     currentPose = subsystem.getRobotPose();
-    // power = OI.driverController.getRawAxis(1);
     subsystem.setPower(-power, -power);
+    System.out
+        .println("How far it thinks it has gone" + currentPose.getTranslation().getDistance(initPose.getTranslation()));
   }
 
   // Called once the command ends or is interrupted.
