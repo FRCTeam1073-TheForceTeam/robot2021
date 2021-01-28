@@ -52,6 +52,16 @@ public class Collector extends SubsystemBase {
     }
   }
 
+  /**
+   * lets the code belive the collector is deployed
+   * 
+   * @param manipulateTo - the boolean value isDeployed will be manippulated to be
+   *                     (for testing purposes only).
+   */
+  public void manipulateIsDeployed(boolean manipulateTo) {
+    isDeployed = manipulateTo;
+  }
+
   /// Return the collector motor power.
   public double getPower() {
     // TODO:
