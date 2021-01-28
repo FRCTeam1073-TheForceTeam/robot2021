@@ -71,6 +71,7 @@ public class TurnCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return rotationAngle <= currentPose.getRotation().getRadians() - initPose.getRotation().getRadians();
+    double diffAngle = (currentPose.getRotation().getRadians() - initPose.getRotation().getRadians());
+    return (Math.abs(rotationAngle) >= Math.abs(diffAngle)) && (rotationAngle==0 || Math.signum(diffAngle)==Math.signum(rotationAngle));
   }
 }
