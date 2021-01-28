@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utility;
 
@@ -72,12 +73,11 @@ public class Magazine extends SubsystemBase {
 
     // Reset number of power cells to zero.
     public void resetPowerCellCount() {
-      cellCount=0;    
+      cellCount = 0;
     }
 
     
     @Override
     public void periodic() {
-      // This method will be called once per scheduler run
     }
 }
