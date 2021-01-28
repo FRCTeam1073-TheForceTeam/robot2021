@@ -47,9 +47,10 @@ public class RobotContainer {
   private final TestCommand m_testCommand = new TestCommand(m_drivetrain, m_collector, m_magazine);
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain, m_bling);
   private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drivetrain);
-  private final DriveForwardCommand forward = new DriveForwardCommand(m_drivetrain, m_bling, 2);
+  private final DriveForwardCommand forward = new DriveForwardCommand(m_drivetrain, m_bling, 1.75, 0.3);
   private final TurnCommand turn = new TurnCommand(m_drivetrain, Math.PI / 2);
-  private final CollectCommand collect = new CollectCommand(m_collector, m_magazine, m_bling);
+  // private final CollectCommand collect = new CollectCommand(m_collector,
+  // m_magazine, m_bling);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -83,7 +84,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new SequentialCommandGroup(collect, forward, turn, forward, turn, forward, turn, forward, turn);
+    return new SequentialCommandGroup(forward, turn);// , forward, turn, forward, turn, forward, turn);
   }
 
   public Command getTeleopCommand() {
