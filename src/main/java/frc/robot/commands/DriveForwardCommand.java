@@ -61,6 +61,8 @@ public class DriveForwardCommand extends CommandBase {
     initPose = subsystem.getRobotPose();
   }
 
+  double dist;
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -68,20 +70,23 @@ public class DriveForwardCommand extends CommandBase {
     // currentTime = System.currentTimeMillis(); // TODO: set the velocity into the
     // drivetrain in an if loop of calculated time - Bling?
     currentPose = subsystem.getRobotPose();
+    // power = OI.driverController.getRawAxis(1) * 0.35;
     subsystem.setPower(-power, -power);
+    dist = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());//.getTranslation().getDistance(initPose.getTranslation());
     System.out
-        .println("How far it thinks it has gone" + currentPose.getTranslation().getDistance(initPose.getTranslation()));
+        .println("How far it thinks it has gone: " + dist + "\tHow far it needs to go: " + distance);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     System.out.println(currentPose.getTranslation().getDistance(initPose.getTranslation()));
+    subsystem.setPower(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return distance <= currentPose.getTranslation().getDistance(initPose.getTranslation());
+    return distance <= dist;
   }
 }

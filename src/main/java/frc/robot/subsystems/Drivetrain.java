@@ -216,7 +216,7 @@ public class Drivetrain extends SubsystemBase  {
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(leftMotorLeader.getSelectedSensorPosition() / ticksPerMeter,
-                -rightMotorLeader.getSelectedSensorPosition() / ticksPerMeter);
+                rightMotorLeader.getSelectedSensorPosition() / ticksPerMeter);
     }
 
     public double getLeftEncoder() {
