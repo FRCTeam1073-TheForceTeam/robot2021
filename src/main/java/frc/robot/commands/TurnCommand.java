@@ -43,35 +43,38 @@ public class TurnCommand extends CommandBase {
     this(subsystem, rotationAngle, 0.5);
   }
 
+  double constant;
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     initPose = subsystem.getRobotPose();
     if (rotationAngle < 0) {
-      left = -power;
-      right = power;
+      constant = 1;
     } else {
-      left = power;
-      right = -power;
+      constant = -1;
     }
   }
+
+  double diffAngle;
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     currentPose = subsystem.getRobotPose();
-    subsystem.setPower(left, right);
+    diffAngle = (currentPose.getRotation().getRadians() - initPose.getRotation().getRadians());
+    System.out.println(diffAngle + "," + rotationAngle);
+    subsystem.setPower(power*constant, -power*constant);
     // set the speed into the drivetrain
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {subsystem.setPower(0, 0);}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double diffAngle = (currentPose.getRotation().getRadians() - initPose.getRotation().getRadians());
-    return (Math.abs(rotationAngle) >= Math.abs(diffAngle)) && (rotationAngle==0 || Math.signum(diffAngle)==Math.signum(rotationAngle));
+    return (Math.abs(rotationAngle) <= Math.abs(diffAngle)) && (rotationAngle==0 || Math.signum(diffAngle)==Math.signum(rotationAngle));
   }
 }
