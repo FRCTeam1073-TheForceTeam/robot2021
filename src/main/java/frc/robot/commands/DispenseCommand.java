@@ -12,25 +12,28 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** An example command that uses an example subsystem. */
 public class DispenseCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-    private final Magazine subsystem;
-    private final Collector subsystem2;
-    private final Bling subsystem3;
+    private final Collector collector;
+    private final Magazine magazine;
+    private final Bling bling;
+    private int numCellsToDispense;
 
     /**
-     * Creates a new AlignMagazineLoadCommand that makes the robot drive a given
-     * distance at a given velocity.
+     * Creates a new DispenseCommand that makes the robot drive a given distance at
+     * a given velocity.
      *
-     * @param subsystem The subsystem used by this command.
-     * @param distance  The distance this command should move the robot by.
-     * @param velocity  The velocity of the robot for this command.
+     * @param colletor          The collector used by this command.
+     * @param magazine          The magazine used by this command.
+     * @param bling             The bling used by this command.
+     * @param numCellsToDispnse The number of Powercells that will be dispensed
      */
-    public DispenseCommand(Magazine subsystem, Collector subsystem2, Bling subsystem3) {
-        this.subsystem = subsystem;
-        this.subsystem2 = subsystem2;
-        this.subsystem3 = subsystem3;
-        addRequirements(subsystem);
-        addRequirements(subsystem2);
-        addRequirements(subsystem3);
+    public DispenseCommand(Collector collector, Magazine magazine, Bling bling, int numCellsToDispense) {
+        this.collector = collector;
+        this.magazine = magazine;
+        this.bling = bling;
+        this.numCellsToDispense = numCellsToDispense;
+        addRequirements(collector);
+        addRequirements(magazine);
+        addRequirements(bling);
     }
 
     // Called when the command is initially scheduled.

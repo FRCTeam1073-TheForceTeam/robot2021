@@ -6,27 +6,31 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SquareTestCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-    private final Drivetrain subsystem;
-    private final Bling subsystem2;
+    private final Drivetrain drivetrain;
+    private final Bling bling;
     private double distance;
-    // private double rotationAngle;
-    private double power;
+    private double drivePower;
+    private double turnPower;
     private boolean isFinished;
 
     /**
      * Creates a new SquareTestCommand that drives a square with a given side
      * length.
      *
-     * @param subsystem  The subsystem used by this command.
-     * @param subsystem2 The second subsystem used by this command.
+     * @param drivetrain The drivetrain used by this command.
+     * @param bling      The bling used by this command.
      * @param distance   The side length the robot will drive a square in.
-     * @param power      The power the motors will be turning at.
+     * @param drivePower The power the motors will be set to while driving.
+     * @param turnPower  The power the motors will be set to while turning.
      */
-    public SquareTestCommand(Drivetrain subsystem, Bling subsystem2, double distance, double power) {
-        this.subsystem = subsystem;
-        this.subsystem2 = subsystem2;
+    public SquareTestCommand(Drivetrain drivetrain, Bling bling, double distance, double drivePower, double turnPower) {
+        this.drivetrain = drivetrain;
+        this.bling = bling;
         this.distance = distance;
-        this.power = power;
+        this.drivePower = drivePower;
+        this.turnPower = turnPower;
+        addRequirements(drivetrain);
+        addRequirements(bling);
     }
 
     // Called when the command is initially scheduled.
@@ -38,14 +42,14 @@ public class SquareTestCommand extends CommandBase {
     @Override
     public void execute() {
         // TODO: Bling
-        new DriveForwardCommand(subsystem, subsystem2, distance, power);
-        new TurnCommand(subsystem, Math.PI / 2, power);
-        new DriveForwardCommand(subsystem, subsystem2, distance, power);
-        new TurnCommand(subsystem, Math.PI / 2, power);
-        new DriveForwardCommand(subsystem, subsystem2, distance, power);
-        new TurnCommand(subsystem, Math.PI / 2, power);
-        new DriveForwardCommand(subsystem, subsystem2, distance, power);
-        new TurnCommand(subsystem, Math.PI / 2, power);
+        new DriveForwardCommand(drivetrain, bling, distance, drivePower);
+        new TurnCommand(drivetrain, bling, Math.PI / 2, turnPower);
+        new DriveForwardCommand(drivetrain, bling, distance, drivePower);
+        new TurnCommand(drivetrain, bling, Math.PI / 2, turnPower);
+        new DriveForwardCommand(drivetrain, bling, distance, drivePower);
+        new TurnCommand(drivetrain, bling, Math.PI / 2, turnPower);
+        new DriveForwardCommand(drivetrain, bling, distance, drivePower);
+        new TurnCommand(drivetrain, bling, Math.PI / 2, turnPower);
         isFinished = true;
     }
 

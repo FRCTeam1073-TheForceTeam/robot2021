@@ -10,25 +10,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class ExampleCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Drivetrain subsystem;
-  private final Bling subsystem2;
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+  private final Drivetrain drivetrain;
+  private final Bling bling;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ExampleCommand(Drivetrain subsystem, Bling subsystem2) {
-    this.subsystem = subsystem;
-    this.subsystem2 = subsystem2;
-    addRequirements(subsystem);
-    addRequirements(subsystem2);
+  public ExampleCommand(Drivetrain drivetrain, Bling bling) {
+    this.drivetrain = drivetrain;
+    this.bling = bling;
+    addRequirements(drivetrain);
+    addRequirements(bling);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -38,7 +39,8 @@ public class ExampleCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

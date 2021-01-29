@@ -4,14 +4,16 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class TurnCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Drivetrain subsystem;
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+  private final Drivetrain drivetrain;
+  private final Bling bling;
   private double power;
   private double left;
   private double right;
@@ -20,33 +22,40 @@ public class TurnCommand extends CommandBase {
   private Pose2d currentPose;
 
   /**
-   * Creates a new TurnCommand that makes the robot turn around its own axis for a given angle the motors working at a given power.
+   * Creates a new TurnCommand that makes the robot turn around its own axis for a
+   * given angle the motors working at a given power.
    *
-   * @param subsystem The subsystem used by this command.
-   * @param rotationAngle The angle in radians the robot will turn (+ is to the left and - is to the right).
-   * @param power The power the robot's drivetrain motors should rotate itself at.
+   * @param drivetrain    The drivetrain used by this command.
+   * @param bling         The bling used by this command.
+   * @param rotationAngle The angle in radians the robot will turn (+ is to the
+   *                      left and - is to the right).
+   * @param power         The power the robot's drivetrain motors should rotate
+   *                      itself at.
    */
-  public TurnCommand(Drivetrain subsystem, double rotationAngle, double power) {
-    this.subsystem = subsystem;
+  public TurnCommand(Drivetrain drivetrain, Bling bling, double rotationAngle, double power) {
+    this.drivetrain = drivetrain;
+    this.bling = bling;
     this.rotationAngle = rotationAngle;
     this.power = Math.abs(power);
-    addRequirements(subsystem);
+    addRequirements(drivetrain);
+    addRequirements(bling);
   }
 
   /**
-   * Creates a new TurnCommand that makes the robot turn around its own axis for a given angle at 50% of the motors power.
+   * Creates a new TurnCommand that makes the robot turn around its own axis for a
+   * given angle at 50% of the motors power.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param subsystem     The subsystem used by this command.
    * @param rotationAngle The angle in radians the robot will turn
    */
-  public TurnCommand(Drivetrain subsystem, double rotationAngle) {
-    this(subsystem, rotationAngle, 0.5);
+  public TurnCommand(Drivetrain drivetrain, Bling bling, double rotationAngle) {
+    this(drivetrain, bling, rotationAngle, 0.5);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    initPose = subsystem.getRobotPose();
+    initPose = drivetrain.getRobotPose();
     if (rotationAngle < 0) {
       left = -power;
       right = power;
@@ -59,19 +68,21 @@ public class TurnCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    currentPose = subsystem.getRobotPose();
-    subsystem.setPower(left, right);
+    currentPose = drivetrain.getRobotPose();
+    drivetrain.setPower(left, right);
     // set the speed into the drivetrain
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     double diffAngle = (currentPose.getRotation().getRadians() - initPose.getRotation().getRadians());
-    return (Math.abs(rotationAngle) >= Math.abs(diffAngle)) && (rotationAngle==0 || Math.signum(diffAngle)==Math.signum(rotationAngle));
+    return (Math.abs(rotationAngle) >= Math.abs(diffAngle))
+        && (rotationAngle == 0 || Math.signum(diffAngle) == Math.signum(rotationAngle));
   }
 }
