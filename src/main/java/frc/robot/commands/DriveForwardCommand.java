@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** An example command that uses an example subsystem. */
 public class DriveForwardCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final Drivetrain subsystem;
-  private final Bling subsystem2;
+  private final Drivetrain drivetrain;
+  private final Bling bling;
   private double power;
   private double distance;
   private long initTime = 0;
@@ -26,31 +26,30 @@ public class DriveForwardCommand extends CommandBase {
    * Creates a new DriveForwardCommand that makes the robot drive a given
    * distance.
    *
-   * @param subsystem  The drivetrain used by this command.
-   * @param subsystem2 The bling used by this command.
-   * @param distance   The distance this command should move the robot by
-   *                   (meters).
+   * @param drivetrain The drivetrain used by this command.
+   * @param bling      The bling used by this command.
+   * @param distance   The distance this command should move the robot by.
    * @param power      The power the robot's drivetrain motors run at for this
    *                   command.
    */
-  public DriveForwardCommand(Drivetrain subsystem, Bling subsystem2, double distance, double power) {
-    this.subsystem = subsystem;
-    this.subsystem2 = subsystem2;
+  public DriveForwardCommand(Drivetrain drivetrain, Bling bling, double distance, double power) {
+    this.drivetrain = drivetrain;
+    this.bling = bling;
     this.distance = distance;
     this.power = power;
-    addRequirements(subsystem);
-    addRequirements(subsystem2);
+    addRequirements(drivetrain);
+    addRequirements(bling);
   }
 
   /**
    * Creates a new DriveForwardCommand that drives a distance at 50% power.
    *
-   * @param subsystem  The subsystem used by this command.
-   * @param subsystem2 The second subsystem used by this command.
+   * @param drivetrain The drivetrain used by this command.
+   * @param bling      The bling used by this command.
    * @param distance   The distance this command should move the robot by.
    */
-  public DriveForwardCommand(Drivetrain subsystem, Bling subsystem2, double distance) {
-    this(subsystem, subsystem2, distance, 0.5);
+  public DriveForwardCommand(Drivetrain drivetrain, Bling bling, double distance) {
+    this(drivetrain, bling, distance, 0.5);
   }
 
   // Called when the command is initially scheduled.
@@ -58,7 +57,7 @@ public class DriveForwardCommand extends CommandBase {
   public void initialize() {
     // initTime = System.currentTimeMillis(); // TODO: calculations with velocity
     // and distance and convert to internal unit for time - Bling?
-    initPose = subsystem.getRobotPose();
+    initPose = drivetrain.getRobotPose();
   }
 
   double dist;
@@ -69,19 +68,18 @@ public class DriveForwardCommand extends CommandBase {
     System.out.println("!!!TRYING TO DRIVE!!!TRYING TO DRIVE!!!");
     // currentTime = System.currentTimeMillis(); // TODO: set the velocity into the
     // drivetrain in an if loop of calculated time - Bling?
-    currentPose = subsystem.getRobotPose();
+    currentPose = drivetrain.getRobotPose();
     // power = OI.driverController.getRawAxis(1) * 0.35;
-    subsystem.setPower(-power, -power);
-    dist = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());//.getTranslation().getDistance(initPose.getTranslation());
-    System.out
-        .println("How far it thinks it has gone: " + dist + "\tHow far it needs to go: " + distance);
+    drivetrain.setPower(-power, -power);
+    dist = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());// .getTranslation().getDistance(initPose.getTranslation());
+    System.out.println("How far it thinks it has gone: " + dist + "\tHow far it needs to go: " + distance);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     System.out.println(currentPose.getTranslation().getDistance(initPose.getTranslation()));
-    subsystem.setPower(0, 0);
+    drivetrain.setPower(0, 0);
   }
 
   // Returns true when the command should end.
