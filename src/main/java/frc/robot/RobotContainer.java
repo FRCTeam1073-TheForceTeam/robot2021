@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Collector;
 // Import subsystems: Add subsystems here.
+import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Localizer;
 import frc.robot.subsystems.Magazine;
@@ -29,6 +30,7 @@ import frc.robot.commands.TestCommand;
 public class RobotContainer {
 
   // Subsystems: Add subsystems here
+  private final Bling m_bling = new Bling();
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Collector m_collector = new Collector();
   private final Magazine m_magazine = new Magazine();
@@ -38,9 +40,9 @@ public class RobotContainer {
   private final Localizer m_localizer = new Localizer(m_drivetrain);
 
   // Commands: Add commands here.
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain);
-  private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drivetrain);
   private final TestCommand m_testCommand = new TestCommand(m_drivetrain, m_collector, m_magazine);
+  private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain, m_bling);
+  private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drivetrain);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
