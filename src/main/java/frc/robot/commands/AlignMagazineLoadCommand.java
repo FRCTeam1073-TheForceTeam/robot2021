@@ -11,31 +11,33 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class AlignMagazineLoadCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Magazine subsystem;
-  private final Shooter subsystem2;
-  private final Bling subsystem3;
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+  private final Magazine magazine;
+  private final Shooter shooter;
+  private final Bling bling;
 
   /**
-   * Creates a new AlignMagazineLoadCommand that makes the robot drive a given distance at a given velocity.
+   * Creates a new AlignMagazineLoadCommand that makes the robot aling all the
+   * powercells in the magazine (all powercells will be laying in a line at the
+   * top end of the magazine once this command finished).
    *
-   * @param subsystem The subsystem used by this command.
-   * @param distance The distance this command should move the robot by.
-   * @param velocity The velocity of the robot for this command.
+   * @param magazine The magazine used by this command.
+   * @param shooter  The shooter used by this command.
+   * @param bling    The bling used by this command.
    */
-  public AlignMagazineLoadCommand(Magazine subsystem, Shooter subsystem2, Bling subsystem3) {
-    this.subsystem = subsystem;
-    this.subsystem2 = subsystem2;
-    this.subsystem3 = subsystem3;
-    addRequirements(subsystem);
-    addRequirements(subsystem2);    
-    addRequirements(subsystem3);
+  public AlignMagazineLoadCommand(Magazine magazine, Shooter shooter, Bling bling) {
+    this.magazine = magazine;
+    this.shooter = shooter;
+    this.bling = bling;
+    addRequirements(magazine);
+    addRequirements(shooter);
+    addRequirements(bling);
   }
-
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -47,7 +49,8 @@ public class AlignMagazineLoadCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
