@@ -56,7 +56,7 @@ public class CollectCommand extends CommandBase {
     @Override
     public void initialize() {
         initTime = System.currentTimeMillis();
-        subsystem.manipulateIsDeployed(true);
+        collector.manipulateIsDeployed(true);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

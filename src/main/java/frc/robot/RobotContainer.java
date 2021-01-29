@@ -43,13 +43,14 @@ public class RobotContainer {
   private final Shooter m_shooter = new Shooter();
   private final Map m_map = new Map();
   private final Localizer m_localizer = new Localizer(m_drivetrain);
+  private final OI m_oi = new OI();
 
   // Commands: Add commands here.
   private final TestCommand m_testCommand = new TestCommand(m_drivetrain, m_collector, m_magazine);
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain, m_bling);
-  private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drivetrain);
+  private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drivetrain, m_oi);
   private final DriveForwardCommand forward = new DriveForwardCommand(m_drivetrain, m_bling, 0.25, 0.35);
-  private final TurnCommand turn = new TurnCommand(m_drivetrain, Math.PI * 0.5, 0.15);
+  private final TurnCommand turn = new TurnCommand(m_drivetrain, m_bling, Math.PI * 0.5, 0.15);
   // private final CollectCommand collect = new CollectCommand(m_collector,
   // m_magazine, m_bling);
   private final DriveControls m_driveControls = new DriveControls(m_drivetrain);
