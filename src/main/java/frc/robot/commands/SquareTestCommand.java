@@ -21,7 +21,7 @@ public class SquareTestCommand extends SequentialCommandGroup {
      * @param bling         The bling used by this command.
      * @param distance      The side length the robot will drive a square in.
      * @param driveVelocity The velocity of the robot while driving.
-     * @param turnSpeed     The speed the robot will turn at.
+     * @param turnSpeed     The speed the robot will turn at in radians per second.
      */
     public SquareTestCommand(Drivetrain drivetrain, Bling bling, double distance, double driveVelocity,
             double turnSpeed) {
