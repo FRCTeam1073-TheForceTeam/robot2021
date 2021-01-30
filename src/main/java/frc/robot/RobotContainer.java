@@ -56,7 +56,7 @@ public class RobotContainer {
   private final CollectCommand collect = new CollectCommand(m_collector, m_magazine, m_bling, 0.5, 5000);
   private final DriveForwardCommand forward = new DriveForwardCommand(m_drivetrain, m_bling, 0.25, 0.35);
   private final TurnCommand turn90 = new TurnCommand(m_drivetrain, m_bling, Math.PI / 2, 0.15);
-  private final SquareTestCommand squareTest = new SquareTestCommand(m_drivetrain, m_bling, 1.75, 0.5, 0.25);
+  private final SquareTestCommand squareTest = new SquareTestCommand(m_drivetrain, m_bling, 1.25, 0.5, 1.75);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

@@ -67,7 +67,7 @@ public class DriveForwardCommand extends CommandBase {
     // drivetrain in an if loop of calculated time - Bling?
     currentPose = drivetrain.getRobotPose();
     drivetrain.setVelocity(velocity, 0.0);
-    currentDistance = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());// .getTranslation().getDistance(initPose.getTranslation());
+    currentDistance = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());
   }
 
   // Called once the command ends or is interrupted.
