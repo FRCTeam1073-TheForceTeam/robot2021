@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -28,16 +29,20 @@ public class Magazine extends SubsystemBase {
       magazineMotor.configFactoryDefault();
       magazineMotor.setSafetyEnabled(false);
       magazineMotor.setNeutralMode(NeutralMode.Brake);
-      magazineMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-      // magazineMotor.config_kP(0, P);
-      // magazineMotor.config_kI(0, I);
-      // magazineMotor.config_kD(0, D);
-      // magazineMotor.config_kF(0, F);
+      ErrorCode magazineEncoderAttached = magazineMotor
+          .configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+      if (magazineEncoderAttached.value != 0) {
+        System.out.println("[Magazine] Error: Magazine motor (CAN ID 26) cannot find encoder (Error code: " + magazineEncoderAttached.value + ").");
+      }
+      magazineMotor.config_kP(0, P);
+      magazineMotor.config_kI(0, I);
+      magazineMotor.config_kD(0, D);
+      magazineMotor.config_kF(0, F);
     }
 
     /// Set the induct forward/reverse velocity.
     public void setVelocity(double inductVelocity) {
-
+      magazineMotor.set(ControlMode.Velocity, inductVelocity);
     }
 
     /// Set the induct forward/reverse velocity.
@@ -79,5 +84,10 @@ public class Magazine extends SubsystemBase {
     
     @Override
     public void periodic() {
+      SmartDashboard.putNumber("Magazine Velocity", magazineMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Magazine Position", magazineMotor.getSelectedSensorPosition() * 679.0);
+      if (OI.operatorController.getAButtonPressed()) {
+        magazineMotor.setSelectedSensorPosition(0);
+      }
     }
 }

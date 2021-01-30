@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.OI;
@@ -30,7 +31,9 @@ public class MagazineControls extends CommandBase {
   @Override
   public void execute() {
     magazineVelocity = OI.operatorController.getRawAxis(1);
-    magazine.setVelocity(magazineVelocity);
+    SmartDashboard.putNumber("Magazine Power", magazineVelocity);
+    magazine.setPower(magazineVelocity);
+    // magazine.setVelocity(magazineVelocity);
   }
 
   // Called once the command ends or is interrupted.
