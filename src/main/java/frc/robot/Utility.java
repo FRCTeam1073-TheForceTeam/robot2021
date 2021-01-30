@@ -3,6 +3,7 @@ package frc.robot;
 public class Utility {
     /**
      * sets raw axis value inside the deadzone to zero
+     * 
      * @param rawAxisValue
      * @return deadzoned axisValue
      */
