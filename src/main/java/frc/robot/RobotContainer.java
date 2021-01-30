@@ -21,6 +21,7 @@ import frc.robot.commands.CollectCommand;
 import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MagazineControls;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.TestCommand;
@@ -51,6 +52,7 @@ public class RobotContainer {
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain, m_bling);
   private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drivetrain, m_oi);
   private final DriveControls m_driveControls = new DriveControls(m_drivetrain);
+  private final MagazineControls m_magazineControls = new MagazineControls(m_magazine);
   private final CollectCommand collect = new CollectCommand(m_collector, m_magazine, m_bling, 0.5, 5000);
   private final DriveForwardCommand forward = new DriveForwardCommand(m_drivetrain, m_bling, 0.25, 0.35);
   private final TurnCommand turn90 = new TurnCommand(m_drivetrain, m_bling, Math.PI / 2, 0.15);
@@ -94,7 +96,7 @@ public class RobotContainer {
 
   public Command getTeleopCommand() {
     // Command that we run in teleoperation mode.
-    return m_driveControls;
+    return m_driveControls.alongWith(m_magazineControls);
   }
 
   public Command getTestCommand() {

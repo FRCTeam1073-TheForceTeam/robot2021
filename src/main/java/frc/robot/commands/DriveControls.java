@@ -52,7 +52,7 @@ public class DriveControls extends CommandBase {
 
     public void execute() {
         multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * Utility.deadzone(OI.driverController.getRawAxis((3))));
-        forward = Utility.deadzone(OI.driverController.getRawAxis(1)) * multiplier;
+        forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier;
         rotation = Utility.deadzone(OI.driverController.getRawAxis(4)) * multiplier;
         arcadeCompute();
         // System.out.println("Output power: [" + leftOutput + "," + rightOutput + "]");

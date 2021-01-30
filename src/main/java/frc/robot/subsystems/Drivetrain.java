@@ -337,10 +337,10 @@ public class Drivetrain extends SubsystemBase  {
         leftMotorFollower.follow(leftMotorLeader);
         rightMotorFollower.follow(rightMotorLeader);
 
-        leftMotorLeader.setInverted(false);
-        leftMotorFollower.setInverted(false);
-        rightMotorLeader.setInverted(true);
-        rightMotorFollower.setInverted(true);
+        leftMotorLeader.setInverted(true);
+        leftMotorFollower.setInverted(true);
+        rightMotorLeader.setInverted(false);
+        rightMotorFollower.setInverted(false);
 
         // leftMotorFollower.setInverted(TalonFXInvertType.CounterClockwise);
         // rightMotorFollower.setInverted(TalonFXInvertType.CounterClockwise);
