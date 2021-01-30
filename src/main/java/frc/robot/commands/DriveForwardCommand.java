@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.OI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -15,8 +14,9 @@ public class DriveForwardCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final Drivetrain drivetrain;
   private final Bling bling;
-  private double power;
+  private double velocity;
   private double distance;
+  private double currentDistance;
   private long initTime = 0;
   private long currentTime = 0;
   private Pose2d initPose;
@@ -29,20 +29,20 @@ public class DriveForwardCommand extends CommandBase {
    * @param drivetrain The drivetrain used by this command.
    * @param bling      The bling used by this command.
    * @param distance   The distance this command should move the robot by.
-   * @param power      The power the robot's drivetrain motors run at for this
+   * @param velocity   The velocity the robot's drivetrain motors run at for this
    *                   command.
    */
-  public DriveForwardCommand(Drivetrain drivetrain, Bling bling, double distance, double power) {
+  public DriveForwardCommand(Drivetrain drivetrain, Bling bling, double distance, double velocity) {
     this.drivetrain = drivetrain;
     this.bling = bling;
     this.distance = distance;
-    this.power = power;
+    this.velocity = velocity;
     addRequirements(drivetrain);
     addRequirements(bling);
   }
 
   /**
-   * Creates a new DriveForwardCommand that drives a distance at 50% power.
+   * Creates a new DriveForwardCommand that drives a distance at 1 m/s.
    *
    * @param drivetrain The drivetrain used by this command.
    * @param bling      The bling used by this command.
@@ -60,31 +60,26 @@ public class DriveForwardCommand extends CommandBase {
     initPose = drivetrain.getRobotPose();
   }
 
-  double dist;
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("!!!TRYING TO DRIVE!!!TRYING TO DRIVE!!!");
     // currentTime = System.currentTimeMillis(); // TODO: set the velocity into the
     // drivetrain in an if loop of calculated time - Bling?
     currentPose = drivetrain.getRobotPose();
-    // power = OI.driverController.getRawAxis(1) * 0.35;
-    drivetrain.setPower(-power, -power);
-    dist = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());// .getTranslation().getDistance(initPose.getTranslation());
-    System.out.println("How far it thinks it has gone: " + dist + "\tHow far it needs to go: " + distance);
+    drivetrain.setVelocity(velocity, 0.0);
+    currentDistance = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());// .getTranslation().getDistance(initPose.getTranslation());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println(currentPose.getTranslation().getDistance(initPose.getTranslation()));
-    drivetrain.setPower(0, 0);
+    drivetrain.setVelocity(0.0, 0.0);
+    System.out.println("!!!currentDistance: " + currentDistance);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return distance <= dist;
+    return distance <= currentDistance;
   }
 }

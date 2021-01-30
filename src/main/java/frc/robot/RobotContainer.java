@@ -89,8 +89,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new SequentialCommandGroup(turn90);// , turn, forward, turn, forward, turn, forward, turn);
+    return squareTest;
     // m_collector.manipulateIsDeployed(true);
     // return collect;
   }
