@@ -88,9 +88,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new SequentialCommandGroup(turn);// , turn, forward, turn, forward, turn, forward, turn);
-    //m_collector.manipulateIsDeployed(true);
-    //return collect;
+    return new SequentialCommandGroup(turn90);// , turn, forward, turn, forward, turn, forward, turn);
+    // m_collector.manipulateIsDeployed(true);
+    // return collect;
   }
 
   public Command getTeleopCommand() {
