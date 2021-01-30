@@ -98,6 +98,7 @@ public class RobotContainer {
 
   public Command getTeleopCommand() {
     // Command that we run in teleoperation mode.
+    collector.manipulateIsDeployed(true);
     return teleDrive.alongWith(teleMagazine).alongWith(teleCollect);
   }
 
