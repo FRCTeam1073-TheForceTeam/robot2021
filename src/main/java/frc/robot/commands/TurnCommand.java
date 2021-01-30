@@ -14,77 +14,68 @@ public class TurnCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final Drivetrain drivetrain;
   private final Bling bling;
-  private double power;
+  private double speed;
   private double rotationAngle;
+  private double diffAngle;
   private Pose2d initPose;
   private Pose2d currentPose;
 
   /**
    * Creates a new TurnCommand that makes the robot turn around its own axis for a
-   * given angle the motors working at a given power.
+   * given angle the motors working at a given speed.
    *
    * @param drivetrain    The drivetrain used by this command.
    * @param bling         The bling used by this command.
    * @param rotationAngle The angle in radians the robot will turn (+ is to the
    *                      left and - is to the right).
-   * @param power         The power the robot's drivetrain motors should rotate
-   *                      itself at.
+   * @param speed         The speed the robot's drivetrain should rotate at in
+   *                      radians per second.
    */
-  public TurnCommand(Drivetrain drivetrain, Bling bling, double rotationAngle, double power) {
+  public TurnCommand(Drivetrain drivetrain, Bling bling, double rotationAngle, double speed) {
     this.drivetrain = drivetrain;
     this.bling = bling;
     this.rotationAngle = rotationAngle;
-    this.power = Math.abs(power);
+    this.speed = speed;
     addRequirements(drivetrain);
     addRequirements(bling);
   }
 
   /**
    * Creates a new TurnCommand that makes the robot turn around its own axis for a
-   * given angle at 50% of the motors power.
+   * given angle at 0.25 radians per second.
    *
    * @param subsystem     The subsystem used by this command.
    * @param rotationAngle The angle in radians the robot will turn
    */
   public TurnCommand(Drivetrain drivetrain, Bling bling, double rotationAngle) {
-    this(drivetrain, bling, rotationAngle, 0.5);
+    this(drivetrain, bling, rotationAngle, 0.25);
   }
-
-  double constant;
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     initPose = drivetrain.getRobotPose();
-    if (rotationAngle < 0) {
-      constant = 1;
-    } else {
-      constant = -1;
-    }
   }
-
-  double diffAngle;
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     currentPose = drivetrain.getRobotPose();
     diffAngle = (currentPose.getRotation().getRadians() - initPose.getRotation().getRadians());
-    System.out.println(diffAngle + "," + rotationAngle);
-    drivetrain.setPower(power * constant, -power * constant);
-    // set the speed into the drivetrain
+    drivetrain.setVelocity(0.0, speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.setPower(0, 0);
+    drivetrain.setVelocity(0.0, 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double diffAngle = (currentPose.getRotation().getRadians() - initPose.getRotation().getRadians());
+    // double diffAngle = (currentPose.getRotation().getRadians() -
+    // initPose.getRotation().getRadians());
     return (Math.abs(rotationAngle) >= Math.abs(diffAngle))
         && (rotationAngle == 0 || Math.signum(diffAngle) == Math.signum(rotationAngle));
   }
