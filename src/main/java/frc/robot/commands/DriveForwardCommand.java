@@ -63,7 +63,6 @@ public class DriveForwardCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("!!!TRYING TO DRIVE!!!TRYING TO DRIVE!!!");
     // currentTime = System.currentTimeMillis(); // TODO: set the velocity into the
     // drivetrain in an if loop of calculated time - Bling?
     currentPose = drivetrain.getRobotPose();
@@ -75,6 +74,7 @@ public class DriveForwardCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drivetrain.setVelocity(0.0, 0.0);
+    System.out.println("!!!currentDistance: " + currentDistance);
   }
 
   // Returns true when the command should end.
