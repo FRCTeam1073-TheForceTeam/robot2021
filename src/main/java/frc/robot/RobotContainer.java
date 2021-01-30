@@ -18,6 +18,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 // Import commands: Add commands here.
 import frc.robot.commands.CollectCommand;
+import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
@@ -37,26 +38,27 @@ import frc.robot.commands.TurnCommand;
 public class RobotContainer {
 
   // Subsystems: Add subsystems here
-  private final Bling m_bling = new Bling();
-  private final Drivetrain m_drivetrain = new Drivetrain();
-  private final Collector m_collector = new Collector();
-  private final Magazine m_magazine = new Magazine();
-  private final Turret m_turret = new Turret();
-  private final Shooter m_shooter = new Shooter();
-  private final Map m_map = new Map();
-  private final Localizer m_localizer = new Localizer(m_drivetrain);
-  private final OI m_oi = new OI();
+  private final Bling bling = new Bling();
+  private final Drivetrain drivetrain = new Drivetrain();
+  private final Collector collector = new Collector();
+  private final Magazine magazine = new Magazine();
+  private final Turret turret = new Turret();
+  private final Shooter shooter = new Shooter();
+  private final Map map = new Map();
+  private final Localizer localizer = new Localizer(drivetrain);
+  private final OI oi = new OI();
 
   // Commands: Add commands here.
-  private final TestCommand m_testCommand = new TestCommand(m_drivetrain, m_collector, m_magazine);
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_drivetrain, m_bling);
-  private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drivetrain, m_oi);
-  private final DriveControls m_driveControls = new DriveControls(m_drivetrain);
-  private final MagazineControls m_magazineControls = new MagazineControls(m_magazine);
-  private final CollectCommand collect = new CollectCommand(m_collector, m_magazine, m_bling, 0.5, 5000);
-  private final DriveForwardCommand forward = new DriveForwardCommand(m_drivetrain, m_bling, 0.25, 0.35);
-  private final TurnCommand turn90 = new TurnCommand(m_drivetrain, m_bling, Math.PI / 2, 0.15);
-  private final SquareTestCommand squareTest = new SquareTestCommand(m_drivetrain, m_bling, 1.75, 0.5, 0.25);
+  private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
+  private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
+  private final TeleopCommand teleopCommand = new TeleopCommand(drivetrain, oi);
+  private final DriveControls teleDrive = new DriveControls(drivetrain);
+  private final MagazineControls teleMagazine = new MagazineControls(magazine);
+  private final CollectorControls teleCollect = new CollectorControls(collector);
+  private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
+  private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
+  private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, Math.PI / 2, 0.15);
+  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -67,7 +69,7 @@ public class RobotContainer {
     OI.init();
 
     // Additional subsystem setup:
-    m_map.loadData();
+    map.loadData();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -90,17 +92,18 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return squareTest;
-    // m_collector.manipulateIsDeployed(true);
+    // collector.manipulateIsDeployed(true);
     // return collect;
   }
 
   public Command getTeleopCommand() {
     // Command that we run in teleoperation mode.
-    return m_driveControls.alongWith(m_magazineControls);
+    collector.manipulateIsDeployed(true);
+    return teleDrive.alongWith(teleMagazine).alongWith(teleCollect);
   }
 
   public Command getTestCommand() {
-    return m_driveControls;
+    return teleDrive;
 
   }
 

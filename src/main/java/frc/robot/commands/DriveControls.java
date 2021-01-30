@@ -1,4 +1,5 @@
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants;
@@ -13,8 +14,9 @@ public class DriveControls extends CommandBase {
     private double rightOutput;
     private double leftOutput;
     private double multiplier;
-    public DriveControls(Drivetrain drivetrain_) {
-        drivetrain = drivetrain_;
+
+    public DriveControls(Drivetrain drivetrain) {
+        this.drivetrain = drivetrain;
         addRequirements(drivetrain);
         forward = 0;
         rotation = 0;
@@ -31,14 +33,14 @@ public class DriveControls extends CommandBase {
     private void arcadeCompute() {
         rotation *= -1;
         double maxInput = Math.copySign(Math.max(Math.abs(forward), Math.abs(rotation)), forward);
-		if (forward >= 0.0) {
-			if (rotation >= 0.0) {
-				leftOutput = maxInput;
-				rightOutput = forward - rotation;
-			} else {
-				leftOutput = forward + rotation;
-				rightOutput = maxInput;
-			}
+        if (forward >= 0.0) {
+            if (rotation >= 0.0) {
+                leftOutput = maxInput;
+                rightOutput = forward - rotation;
+            } else {
+                leftOutput = forward + rotation;
+                rightOutput = maxInput;
+            }
         } else {
             if (rotation >= 0.0) {
                 leftOutput = forward + rotation;
@@ -48,7 +50,7 @@ public class DriveControls extends CommandBase {
                 rightOutput = forward - rotation;
             }
         }
-	}
+    }
 
     public void execute() {
         multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * Utility.deadzone(OI.driverController.getRawAxis((3))));
@@ -56,14 +58,17 @@ public class DriveControls extends CommandBase {
         rotation = Utility.deadzone(OI.driverController.getRawAxis(4)) * multiplier;
         arcadeCompute();
         // System.out.println("Output power: [" + leftOutput + "," + rightOutput + "]");
-        System.out.println("Odometry coords: ["+drivetrain.getRobotPose().getX()+", "+drivetrain.getRobotPose().getY()+"] @ "+ drivetrain.getRobotPose().getRotation().getDegrees());        
-        //        drivetrain.setPower(leftOutput, rightOutput);
+        System.out.println("Odometry coords: [" + drivetrain.getRobotPose().getX() + ", "
+                + drivetrain.getRobotPose().getY() + "] @ " + drivetrain.getRobotPose().getRotation().getDegrees());
+        // drivetrain.setPower(leftOutput, rightOutput);
         drivetrain.setVelocity(forward, rotation);
-         // ensures that the driver doesn't accidentally reset the odometry but makes it an option
-         if (OI.driverController.getStartButtonPressed() && OI.driverController.getBackButtonPressed()) {
+        // ensures that the driver doesn't accidentally reset the odometry but makes it
+        // an option
+        if (OI.driverController.getStartButtonPressed() && OI.driverController.getBackButtonPressed()) {
             drivetrain.resetRobotOdometry();
         }
     }
+
     public boolean isFinished() {
         return false;
     }

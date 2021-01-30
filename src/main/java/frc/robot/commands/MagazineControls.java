@@ -15,8 +15,8 @@ public class MagazineControls extends CommandBase {
   private double magazineVelocity;
 
   /** Creates a new MagazineControls. */
-  public MagazineControls(Magazine magazine_) {
-    magazine = magazine_;
+  public MagazineControls(Magazine magazine) {
+    this.magazine = magazine;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(magazine);
   }
