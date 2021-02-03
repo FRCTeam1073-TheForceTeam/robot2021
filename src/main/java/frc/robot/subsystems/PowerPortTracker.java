@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class PowerPortTracker extends SubsystemBase {
+public class PowerPortTracker extends OpenMVSubsystem {
 
       /**
      * This is the data for each active power cell target visible.
@@ -28,6 +28,7 @@ public class PowerPortTracker extends SubsystemBase {
     }
 
     public PowerPortTracker() {
+      super(1); // Constructor with device ID for OpenMVProtocol.
 
     }
 
@@ -71,6 +72,11 @@ public class PowerPortTracker extends SubsystemBase {
     @Override
     public void periodic() {
       // This method will be called once per scheduler run
+      super.periodic(); // The OpenMVSubsystem needs you to call this in your periodic method.
+
+      // Now do PowerPortTracker specific things.
+      
+
     }
     
 }

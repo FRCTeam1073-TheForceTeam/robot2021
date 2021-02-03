@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.hal.CANData;
 import edu.wpi.first.wpilibj.CAN;
 
-public class OpenMVProtocol extends SubsystemBase {
+public class OpenMVSubsystem extends SubsystemBase {
   private CAN openmv;
   private CANData recvData;
   /// Mode feedback of the OpenMV
@@ -43,7 +43,7 @@ public class OpenMVProtocol extends SubsystemBase {
   /**
    * Creates a new OpenMV with a specific deviceID using our Miscellaneous type and manufacturer defaults.
    */
-  public OpenMVProtocol(int deviceId_) {
+  public OpenMVSubsystem(int deviceId_) {
     deviceId = deviceId_;
     openmv = new CAN(deviceId, 173, 10);
     recvData = new CANData();
@@ -243,10 +243,10 @@ public class OpenMVProtocol extends SubsystemBase {
 
       // Only log hearbeat updates once in a while.
       if (loopCounter % 50 == 0) {
-        // System.out.print("OpenMV Heartbeat. Device ID: ");
-        // System.out.println(deviceId);
-        // System.out.println(frameCounter);
-        // System.out.println(lastHeartbeat);
+        System.out.print("OpenMV Heartbeat. Device ID: ");
+        System.out.println(deviceId);
+        System.out.println(frameCounter);
+        System.out.println(lastHeartbeat);
       }
 
       missedHeartbeats = 0;
@@ -262,6 +262,7 @@ public class OpenMVProtocol extends SubsystemBase {
 
     }
 
+    // On H7's this does not do anything right now. Bug being worked by OpenMV
     if ((loopCounter % 50 == 0)) {
       // System.out.println("SET MODE");
       setMode((byte)3);
@@ -269,17 +270,17 @@ public class OpenMVProtocol extends SubsystemBase {
 
     // See if we got a config message and update data, but only check once in a while.
     if ((loopCounter % 50 == 0) && readConfig()) {
-      // System.out.print("OpenMV Configuration Updated: ");
-      // System.out.println(deviceId);
+      System.out.print("OpenMV Configuration Updated: ");
+      System.out.println(deviceId);
     }
 
     // See if we got a camera status message and update data, but only check once in a while.
     if ((loopCounter % 50 == 0) && readCameraStatus())
     {
-      // System.out.print("OpenMV Camera Status Updated : ");
-      // System.out.println(deviceId);
-      // System.out.print("Width: ");
-      // System.out.println(imageWidth);
+      System.out.print("OpenMV Camera Status Updated : ");
+      System.out.println(deviceId);
+      System.out.print("Width: ");
+      System.out.println(imageWidth);
     }
 
     loopCounter++;
