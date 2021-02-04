@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
@@ -51,7 +53,6 @@ public class RobotContainer {
   // Commands: Add commands here.
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
-  private final TeleopCommand teleopCommand = new TeleopCommand(drivetrain, oi);
   private final DriveControls teleDrive = new DriveControls(drivetrain);
   private final MagazineControls teleMagazine = new MagazineControls(magazine);
   private final CollectorControls teleCollect = new CollectorControls(collector);
@@ -59,7 +60,8 @@ public class RobotContainer {
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, Math.PI / 2, 0.15);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
-
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleCollect);
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -91,7 +93,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return squareTest;
+    return (new PrintCommand("[RobotContainer] Starting autonomous test (driving forward).")
+        .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
+//    return squareTest;
     // collector.manipulateIsDeployed(true);
     // return collect;
   }
@@ -99,11 +103,11 @@ public class RobotContainer {
   public Command getTeleopCommand() {
     // Command that we run in teleoperation mode.
     collector.manipulateIsDeployed(true);
-    return teleDrive.alongWith(teleMagazine).alongWith(teleCollect);
+    return teleopCommand;
   }
 
   public Command getTestCommand() {
-    return teleDrive;
+        return teleDrive;
 
   }
 

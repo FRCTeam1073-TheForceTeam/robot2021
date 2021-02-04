@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
@@ -41,6 +42,9 @@ public class TurnCommand extends CommandBase {
     this.maxSpeed = maxSpeed;
     addRequirements(drivetrain);
     addRequirements(bling);
+    SmartDashboard.putNumber("[Turn] Angle", AngletoTurn);
+    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
+    SmartDashboard.putNumber("[Turn] Speed", speed);
   }
 
   /**
@@ -65,8 +69,12 @@ public class TurnCommand extends CommandBase {
   public void execute() {
     currentRotation = drivetrain.getRobotPose().getRotation();
     angleTurned = (currentRotation.minus(initRotation)).getRadians();
-    speed = MathUtil.clamp(constant * Math.PI / (AngletoTurn - angleTurned), 0.1, maxSpeed);
+    //speed = MathUtil.clamp(constant * Math.PI / (AngletoTurn - angleTurned), 0.1, maxSpeed);
+    speed = maxSpeed;
     drivetrain.setVelocity(0.0, speed);
+    SmartDashboard.putNumber("[Turn] Angle", AngletoTurn);
+    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
+    SmartDashboard.putNumber("[Turn] Rotational Speed", speed);
   }
 
   // Called once the command ends or is interrupted.

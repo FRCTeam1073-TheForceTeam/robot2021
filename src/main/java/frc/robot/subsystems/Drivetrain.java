@@ -72,7 +72,7 @@ public class Drivetrain extends SubsystemBase  {
         rightMotorLeader = new WPI_TalonFX(13);
         rightMotorFollower = new WPI_TalonFX(15);
 
-        isDebugOutputActive = false;
+        isDebugOutputActive = true;
 
         // Gyro
         gyro = new PigeonIMU(6);
@@ -125,6 +125,7 @@ public class Drivetrain extends SubsystemBase  {
         gyroAngle = rawGyroAngle - gyroDriftValue - totalGyroDrift;
 
         DifferentialDriveWheelSpeeds wheelSpeeds = getWheelSpeeds();
+
         robotPose = odometry.update(getAngleRadians(), wheelSpeeds.leftMetersPerSecond,
                 wheelSpeeds.rightMetersPerSecond);
         if (isDebugOutputActive) {
@@ -142,6 +143,9 @@ public class Drivetrain extends SubsystemBase  {
                     (rightMotorLeader.getSelectedSensorVelocity() - rightPower) * 10.0 / ticksPerMeter);//  / 2048.0 * 10.0 * (2.0 * Math.PI)
             SmartDashboard.putNumber("[VAL] Right Error", rightMotorLeader.getClosedLoopError());
 
+            double[] xyz_dps = new double[3];
+            gyro.getRawGyro(xyz_dps);
+            SmartDashboard.putNumber("[IMU] Actual Rotational Speed", xyz_dps[0] * Math.PI / 180.0);
             
             SmartDashboard.putNumber("Left Output", leftMotorLeader.getMotorOutputPercent());
             SmartDashboard.putNumber("Left Error P", leftMotorLeader.getClosedLoopError());
