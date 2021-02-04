@@ -17,8 +17,10 @@ public class TurnCommand extends CommandBase {
   private final Bling bling;
   private double speed;
   private final double maxSpeed;
-  private double AngletoTurn;
+  private double angleToTurn;
   private double angleTurned;
+  private double angleRemaining;
+  private Rotation2d toTurn;
   private Rotation2d initRotation;
   private Rotation2d currentRotation;
   private final double constant = 0.5;
@@ -34,10 +36,10 @@ public class TurnCommand extends CommandBase {
    * @param maxSpeed    The max speed the robot's drivetrain should rotate at in
    *                    radians per second.
    */
-  public TurnCommand(Drivetrain drivetrain, Bling bling, double AngletoTurn, double maxSpeed) {
+  public TurnCommand(Drivetrain drivetrain, Bling bling, double angleToTurn, double maxSpeed) {
     this.drivetrain = drivetrain;
     this.bling = bling;
-    this.AngletoTurn = AngletoTurn;
+    this.angleToTurn = angleToTurn;
     this.maxSpeed = maxSpeed;
     addRequirements(drivetrain);
     addRequirements(bling);
@@ -58,6 +60,7 @@ public class TurnCommand extends CommandBase {
   @Override
   public void initialize() {
     initRotation = drivetrain.getRobotPose().getRotation();
+    toTurn = new Rotation2d(angleToTurn);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,7 +68,16 @@ public class TurnCommand extends CommandBase {
   public void execute() {
     currentRotation = drivetrain.getRobotPose().getRotation();
     angleTurned = (currentRotation.minus(initRotation)).getRadians();
-    speed = MathUtil.clamp(constant * Math.PI / (AngletoTurn - angleTurned), 0.1, maxSpeed);
+    angleRemaining = toTurn.minus(currentRotation.minus(initRotation)).getRadians();
+
+    if (angleRemaining > Math.PI / 6 || angleRemaining < -Math.PI / 6) {
+      speed = Math.cbrt(angleRemaining / Math.PI);
+    } else if (angleRemaining >= 0) {
+      speed = Math.sqrt(1.415 * angleRemaining);
+    } else {
+      speed = -Math.sqrt(1.415 * angleRemaining);
+    }
+
     drivetrain.setVelocity(0.0, speed);
   }
 
@@ -79,6 +91,6 @@ public class TurnCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(angleTurned) >= Math.abs(AngletoTurn));
+    return (Math.abs(angleTurned) >= Math.abs(angleToTurn));
   }
 }
