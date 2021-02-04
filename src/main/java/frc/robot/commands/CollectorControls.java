@@ -30,7 +30,7 @@ public class CollectorControls extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        power = OI.operatorController.getRawAxis(3);
+        power = OI.operatorController.getRawAxis(5);
         SmartDashboard.putNumber("Collector Power", power);
         collector.setCollect(power);
     }

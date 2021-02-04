@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -68,6 +69,8 @@ public class DriveForwardCommand extends CommandBase {
     currentPose = drivetrain.getRobotPose();
     drivetrain.setVelocity(velocity, 0.0);
     currentDistance = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());
+    SmartDashboard.putNumber("[DriveForward] Distance", distance);
+    SmartDashboard.putNumber("[DriveForward] CurrentDistance", currentDistance);
   }
 
   // Called once the command ends or is interrupted.

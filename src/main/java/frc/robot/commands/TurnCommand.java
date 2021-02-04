@@ -7,8 +7,8 @@ package frc.robot.commands;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpiutil.math.MathUtil;
 
 /** An example command that uses an example subsystem. */
 public class TurnCommand extends CommandBase {
@@ -42,6 +42,9 @@ public class TurnCommand extends CommandBase {
     this.maxSpeed = Math.abs(maxSpeed);
     addRequirements(drivetrain);
     addRequirements(bling);
+    SmartDashboard.putNumber("[Turn] Angle", angleToTurn);
+    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
+    SmartDashboard.putNumber("[Turn] Speed", speed);
   }
 
   /**
@@ -78,6 +81,9 @@ public class TurnCommand extends CommandBase {
     }
 
     drivetrain.setVelocity(0.0, speed);
+    SmartDashboard.putNumber("[Turn] Angle", angleToTurn);
+    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
+    SmartDashboard.putNumber("[Turn] Rotational Speed", speed);
   }
 
   // Called once the command ends or is interrupted.
