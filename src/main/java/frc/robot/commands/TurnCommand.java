@@ -23,7 +23,6 @@ public class TurnCommand extends CommandBase {
   private Rotation2d toTurn;
   private Rotation2d initRotation;
   private Rotation2d currentRotation;
-  private final double constant = 0.5;
 
   /**
    * Creates a new TurnCommand that makes the robot turn around its own axis for a
@@ -40,7 +39,7 @@ public class TurnCommand extends CommandBase {
     this.drivetrain = drivetrain;
     this.bling = bling;
     this.angleToTurn = angleToTurn;
-    this.maxSpeed = maxSpeed;
+    this.maxSpeed = Math.abs(maxSpeed);
     addRequirements(drivetrain);
     addRequirements(bling);
   }
@@ -71,11 +70,11 @@ public class TurnCommand extends CommandBase {
     angleRemaining = toTurn.minus(currentRotation.minus(initRotation)).getRadians();
 
     if (angleRemaining > Math.PI / 6 || angleRemaining < -Math.PI / 6) {
-      speed = Math.cbrt(angleRemaining / Math.PI);
+      speed = maxSpeed * Math.cbrt(angleRemaining / Math.PI);
     } else if (angleRemaining >= 0) {
-      speed = Math.sqrt(1.415 * angleRemaining);
+      speed = maxSpeed * Math.sqrt(1.415 * angleRemaining);
     } else {
-      speed = -Math.sqrt(1.415 * angleRemaining);
+      speed = maxSpeed * -Math.sqrt(1.415 * angleRemaining);
     }
 
     drivetrain.setVelocity(0.0, speed);
