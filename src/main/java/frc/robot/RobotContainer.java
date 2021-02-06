@@ -14,8 +14,12 @@ import frc.robot.subsystems.Localizer;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Map;
 import frc.robot.subsystems.OI;
+import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.PowerPortTracker;
+import frc.robot.subsystems.PowerCellTracker;
+
 // Import commands: Add commands here.
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
@@ -37,7 +41,8 @@ import frc.robot.commands.TurnCommand;
  */
 public class RobotContainer {
 
-  // Subsystems: Add subsystems here
+ // Subsystems: Add subsystems here
+  private final OI oi = new OI();
   private final Bling bling = new Bling();
   private final Drivetrain drivetrain = new Drivetrain();
   private final Collector collector = new Collector();
@@ -46,7 +51,9 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Map map = new Map();
   private final Localizer localizer = new Localizer(drivetrain);
-  private final OI oi = new OI();
+  private final PowerPortTracker portTracker = new PowerPortTracker();
+  private final PowerCellTracker cellTracker = new PowerCellTracker();
+
 
   // Commands: Add commands here.
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
