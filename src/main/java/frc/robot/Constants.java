@@ -17,4 +17,8 @@ package frc.robot;
 public final class Constants {
     public static final double CONTROLLER_DEADZONE = 0.1;
     public static final double THROTTLE_FALLOFF = 1.5;
+
+    //Power cell diameter in meters
+    public static final double POWER_CELL_DIAMETER = 0.18;
+    public static final double POWER_CELL_SPACING = 0.20;
 }
