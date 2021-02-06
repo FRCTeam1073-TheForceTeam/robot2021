@@ -50,6 +50,11 @@ public class PowerPortTracker extends OpenMVSubsystem {
     private long failedReadCount = 0;
     private PowerPortData m_portData;
 
+    private double m_range = -1.0;
+    private double m_rangeSignalStrength = 0.0;
+    private long m_rangeFailedCount = 0;
+    private long m_lastRangeUpdate = 0;
+
     public PowerPortTracker() {
       super(1); // Constructor with device ID for OpenMVProtocol.
       targetData = new CANData();
@@ -84,8 +89,14 @@ public class PowerPortTracker extends OpenMVSubsystem {
 
     // Returns range sent by range sensor or -1.0 if there is an error.
     public double getRange() {
-      // TODO:
-      return -1.0;
+      if (m_rangeSignalStrength < 10)
+        return -1.0;
+      else
+        return m_range;
+    }
+
+    public double getRangeSignalStrength() {
+      return m_rangeSignalStrength;
     }
 
     // Updates our config and mode:
@@ -107,12 +118,36 @@ public class PowerPortTracker extends OpenMVSubsystem {
         return true;
       }
       else {
-        if(failedReadCount++ >= 7){
+        // 10 Failures is ~ 0.5 seconds of no data @ 50Hz loop.
+        if(failedReadCount++ >= 10){
           m_portData.quality = 0;
           failedReadCount = 0;
           return false;
         }
         else return true;
+      }
+    }
+
+    private boolean readRange() {
+      if (read(apiIndex(6, 1), targetData) == true && targetData.length == 3) {
+        // Range is 16-bit distance in mm.
+        int rangehi = targetData.data[0] & 0xFF;
+        int rangelo = targetData.data[1] & 0xFF;
+        m_range = ((rangehi << 8) | rangelo) * 0.001; // Convert mm reading to meters.
+        m_rangeSignalStrength = targetData.data[2];
+        m_lastRangeUpdate = targetData.timestamp;
+        return true;
+      } else {
+        // 10 Failures is ~ 0.5 seconds of no data @ 50Hz loop.
+        if (m_rangeFailedCount++ >= 10) {
+          m_rangeSignalStrength = 0.0;
+          m_range = -1.0;
+          m_rangeFailedCount = 0;
+          return false;
+        }
+        else {
+          return true;
+        }
       }
     }
 
@@ -122,12 +157,15 @@ public class PowerPortTracker extends OpenMVSubsystem {
       super.periodic(); // The OpenMVSubsystem needs you to call this in your periodic method.
 
       // Now do PowerPortTracker specific things.
-      if (readAdvancedTracking()) {
-        SmartDashboard.putNumber("PowerPort.CX", m_portData.cx);
-        SmartDashboard.putNumber("PowerPort.CY", m_portData.cy);
-        SmartDashboard.putNumber("PowerPort.Qual", m_portData.quality);
-        SmartDashboard.putNumber("PowerPort.Area", m_portData.area);
-      }
+      readAdvancedTracking();
+      SmartDashboard.putNumber("PowerPort.CX", m_portData.cx);
+      SmartDashboard.putNumber("PowerPort.CY", m_portData.cy);
+      SmartDashboard.putNumber("PowerPort.Qual", m_portData.quality);
+      SmartDashboard.putNumber("PowerPort.Area", m_portData.area);
+
+     readRange();
+     SmartDashboard.putNumber("PowerPort.Range", m_range);
+     SmartDashboard.putNumber("PowerPort.RangeSignal", m_rangeSignalStrength);
     }
     
 }

@@ -49,6 +49,12 @@ public class PowerCellTracker extends OpenMVSubsystem {
     private long failedReadCount = 0;
     private PowerCellData m_cellData;
 
+    
+    private double m_range = -1.0;
+    private double m_rangeSignalStrength = 0.0;
+    private long m_rangeFailedCount = 0;
+    private long m_lastRangeUpdate = 0;
+
     public PowerCellTracker() {
       super(2);
       targetData = new CANData();
@@ -72,6 +78,18 @@ public class PowerCellTracker extends OpenMVSubsystem {
       }
     }
 
+    // Returns range sent by range sensor or -1.0 if there is an error.
+    public double getRange() {
+      if (m_rangeSignalStrength < 10)
+        return -1.0;
+      else
+        return m_range;
+    }
+
+    public double getRangeSignalStrength() {
+      return m_rangeSignalStrength;
+    }
+
     // Updates our config and mode:
     private boolean readAdvancedTracking() {
       if (read(apiIndex(5, 1), targetData) == true && targetData.length == 8) {
@@ -91,12 +109,36 @@ public class PowerCellTracker extends OpenMVSubsystem {
         return true;
       }
       else {
-        if(failedReadCount++ >= 7){
+        // 10 Failures is ~ 0.5 seconds with 50Hz loop.
+        if(failedReadCount++ >= 10){
           m_cellData.quality = 0;
           failedReadCount = 0;
           return false;
         }
         else return true;
+      }
+    }
+
+    private boolean readRange() {
+      if (read(apiIndex(6, 1), targetData) == true && targetData.length == 3) {
+        // Range is 16-bit distance in mm.
+        int rangehi = targetData.data[0] & 0xFF;
+        int rangelo = targetData.data[1] & 0xFF;
+        m_range = ((rangehi << 8) | rangelo) * 0.001; // Convert mm reading to meters.
+        m_rangeSignalStrength = targetData.data[2];
+        m_lastRangeUpdate = targetData.timestamp;
+        return true;
+      } else {
+        // 10 Failures is ~ 0.5 seconds of no data @ 50Hz loop.
+        if (m_rangeFailedCount++ >= 10) {
+          m_rangeSignalStrength = 0.0;
+          m_range = -1.0;
+          m_rangeFailedCount = 0;
+          return false;
+        }
+        else {
+          return true;
+        }
       }
     }
 
@@ -106,11 +148,14 @@ public class PowerCellTracker extends OpenMVSubsystem {
       super.periodic();
 
       // Now do PowerPortTracker specific things.
-      if (readAdvancedTracking()) {
-        SmartDashboard.putNumber("PowerCell.CX", m_cellData.cx);
-        SmartDashboard.putNumber("PowerCell.CY", m_cellData.cy);
-        SmartDashboard.putNumber("PowerCell.Qual", m_cellData.quality);
-        SmartDashboard.putNumber("PowerCell.Area", m_cellData.area);
-      }
+      readAdvancedTracking();
+      SmartDashboard.putNumber("PowerCell.CX", m_cellData.cx);
+      SmartDashboard.putNumber("PowerCell.CY", m_cellData.cy);
+      SmartDashboard.putNumber("PowerCell.Qual", m_cellData.quality);
+      SmartDashboard.putNumber("PowerCell.Area", m_cellData.area);
+
+     readRange();
+     SmartDashboard.putNumber("PowerCell.Range", m_range);
+     SmartDashboard.putNumber("PowerCell.RangeSignal", m_rangeSignalStrength);
     }
 }
