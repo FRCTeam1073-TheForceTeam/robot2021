@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Utility;
@@ -44,6 +45,7 @@ public class Magazine extends SubsystemBase {
     setPID();
   }
 
+
   public void setPID() {
     magazineMotor.config_kP(0, P);
     magazineMotor.config_kI(0, I);
@@ -72,7 +74,7 @@ public class Magazine extends SubsystemBase {
 
   /// Return the accumulated position of the magazine.
   public double getPosition() {
-    return magazineMotor.getSelectedSensorPosition(0);
+    return magazineMotor.getSelectedSensorPosition(0) / magazineTicksPerMeter;
   }
 
   /// Return the current power cell count.
