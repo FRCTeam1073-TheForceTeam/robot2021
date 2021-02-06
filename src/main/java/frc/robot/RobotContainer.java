@@ -14,9 +14,12 @@ import frc.robot.subsystems.Localizer;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Map;
 import frc.robot.subsystems.OI;
+import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker;
+import frc.robot.subsystems.PowerCellTracker;
+
 // Import commands: Add commands here.
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
@@ -49,6 +52,7 @@ public class RobotContainer {
   private final Map map = new Map();
   private final Localizer localizer = new Localizer(drivetrain);
   private final PowerPortTracker portTracker = new PowerPortTracker();
+  private final PowerCellTracker cellTracker = new PowerCellTracker();
 
 
   // Commands: Add commands here.
