@@ -20,5 +20,4 @@ public final class Constants {
 
     //Power cell diameter in meters
     public static final double POWER_CELL_DIAMETER = 0.18;
-    public static final double POWER_CELL_SPACING = 0.20;
 }
