@@ -158,6 +158,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         loopsWithoutData = 0;
         collectedCells = 0;
         shouldCollect = false;
+        skipScan = true;
         collect = new CollectCommand(collector, magazine, bling, 0.6, 5500);
     }
 
@@ -248,7 +249,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
                 shouldCollect = true;
             }
 
-        } else {
+        } else if (!skipScan) {
             rotationalSpeedMultiplier = 0.0;
             velocityMultiplier = 0.0;
 
@@ -270,7 +271,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
                 rotationalSpeedMultiplier = -0.5;
             }
 
-            while (!hasData && initRotation.minus(currentRotation).getRadians() <= 2 * Math.PI) {
+            if (!hasData && initRotation.minus(currentRotation).getRadians() >= 2 * Math.PI) {
                 drivetrain.setVelocity(0.0, rotationalSpeedMultiplier * maxRotationalSpeed);
                 hasData = powerCellTracker.getCellData(powerCellData);
                 currentRotation = drivetrain.getRobotPose().getRotation();
