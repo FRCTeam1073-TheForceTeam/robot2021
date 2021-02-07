@@ -21,7 +21,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.PowerCellTracker;
-import frc.robot.commands.AlignTrackedCellCommand;
+import frc.robot.commands.ChaseAndCollectCellsCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
@@ -67,8 +67,8 @@ public class RobotContainer {
   private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, Math.PI / 2, 0.15);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleCollect);
-  private final AlignTrackedCellCommand alignWithPowerCell = new AlignTrackedCellCommand(drivetrain, cellTracker,
-      bling);
+  private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
+      magazine, cellTracker, bling);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -107,7 +107,7 @@ public class RobotContainer {
     // return squareTest;
     // collector.manipulateIsDeployed(true);
     // return collect;
-    return alignWithPowerCell;
+    return chaseAndCollect;
   }
 
   public Command getTeleopCommand() {
