@@ -17,11 +17,11 @@ public class AlignTrackedCellCommand extends CommandBase {
     private PowerCellData powerCellData;
     private final Bling bling;
 
-    private enum IsAligned {
+    private enum AlignState {
         NOT_VISIBLE, LEFT, ALIGNED, RIGHT;
     }
 
-    private IsAligned isAligned;
+    private AlignState alignState;
 
     /**
      * Creates a new Command.
@@ -36,18 +36,18 @@ public class AlignTrackedCellCommand extends CommandBase {
         addRequirements(bling);
     }
 
-    private IsAligned isAligned() {
-        IsAligned isAligned;
+    private AlignState alignState() {
+        AlignState alignState;
         if (!powerCellTracker.getCellData(powerCellData)) {
-            isAligned = IsAligned.NOT_VISIBLE;
+            alignState = AlignState.NOT_VISIBLE;
         } else if (powerCellData.cx >= 156 && powerCellData.cx <= 165) {
-            isAligned = IsAligned.ALIGNED;
+            alignState = AlignState.ALIGNED;
         } else if (powerCellData.cx < 156) {
-            isAligned = IsAligned.LEFT;
+            alignState = AlignState.LEFT;
         } else {
-            isAligned = IsAligned.RIGHT;
+            alignState = AlignState.RIGHT;
         }
-        return isAligned;
+        return alignState;
     }
 
     // Called when the command is initially scheduled.
@@ -58,10 +58,10 @@ public class AlignTrackedCellCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        isAligned = isAligned();
-        if (isAligned == IsAligned.LEFT) {
+        alignState = alignState();
+        if (alignState == AlignState.LEFT) {
             drivetrain.setVelocity(0.0, 0.4);
-        } else if (isAligned == IsAligned.RIGHT) {
+        } else if (alignState == AlignState.RIGHT) {
             drivetrain.setVelocity(0.0, -0.4);
         }
     }
