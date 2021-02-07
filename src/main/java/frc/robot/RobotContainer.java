@@ -21,7 +21,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.PowerCellTracker;
-
+import frc.robot.commands.AlignTrackedCellCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
@@ -43,7 +43,7 @@ import frc.robot.commands.TurnCommand;
  */
 public class RobotContainer {
 
- // Subsystems: Add subsystems here
+  // Subsystems: Add subsystems here
   private final OI oi = new OI();
   private final Bling bling = new Bling();
   private final Drivetrain drivetrain = new Drivetrain();
@@ -56,7 +56,6 @@ public class RobotContainer {
   private final PowerPortTracker portTracker = new PowerPortTracker();
   private final PowerCellTracker cellTracker = new PowerCellTracker();
 
-
   // Commands: Add commands here.
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
@@ -68,7 +67,9 @@ public class RobotContainer {
   private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, Math.PI / 2, 0.15);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleCollect);
-  
+  private final AlignTrackedCellCommand alignWithPowerCell = new AlignTrackedCellCommand(drivetrain, cellTracker,
+      bling);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -100,11 +101,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return (new PrintCommand("[RobotContainer] Starting autonomous test (driving forward).")
-        .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
-//    return squareTest;
+    // return (new PrintCommand("[RobotContainer] Starting autonomous test (driving
+    // forward).")
+    // .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
+    // return squareTest;
     // collector.manipulateIsDeployed(true);
     // return collect;
+    return alignWithPowerCell;
   }
 
   public Command getTeleopCommand() {
@@ -114,7 +117,7 @@ public class RobotContainer {
   }
 
   public Command getTestCommand() {
-        return teleDrive;
+    return teleDrive;
 
   }
 
