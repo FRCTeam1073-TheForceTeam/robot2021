@@ -12,7 +12,6 @@ import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.subsystems.PowerCellTracker.PowerCellData;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class ChaseAndCollectCellsCommand extends CommandBase {
@@ -28,7 +27,12 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     private final double maxRotationalSpeed;
     private final double maxVelocity;
     private CollectCommand collect;
+    private boolean isFinished;
 
+    /**
+     * The enum for the states the tracked powercell can be in: NOT_VISIBLE, LEFT,
+     * ALIGNED, and RIGHT
+     */
     private enum AlignState {
         NOT_VISIBLE, LEFT, ALIGNED, RIGHT;
     }
@@ -46,9 +50,30 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     private Rotation2d currentRotation;
 
     /**
-     * Creates a new Command.
+     * Creates a new ChaseAndCollectCellsCommand. This command will chase and
+     * collect as many powercells (in it's field of vision) as you input. It will
+     * stop after scanning for it unsuccessfully if you want this command to make
+     * the robot scan for powercells. You can also decide how many loops of not
+     * receiving updated data this command can use old data for. Maximum rotational
+     * speed and maximum velocity can also be set.
      *
-     * @param subsystem The subsystem used by this command.
+     * @param drivetrain             The drivetrain used by this command.
+     * @param collector              The collector used by this command.
+     * @param magazine               The magazine used by this command.
+     * @param powerCellTracker       The powerCellTracker used by this command.
+     * @param bling                  The bling used by this command.
+     * @param numCollectCells        The number of power cells that this command
+     *                               will try to collect.
+     * @param shouldScan360          If this command should turn up to two radians
+     *                               (360 degrees) scanning for powercells if it
+     *                               can't see any.
+     * @param runNumLoopsWithoutData The amount of execute loops this command should
+     *                               pretend nothing changed from the last time it
+     *                               could update its tracker data.
+     * @param maxRotationalSpeed     The maximum speed this command will rotate the
+     *                               robot at (the minimum is 25% of this).
+     * @param maxVelocity            The maximum velocity this command will move the
+     *                               robot at (the minimum is 25% of this).
      */
     public ChaseAndCollectCellsCommand(Drivetrain drivetrain, Collector collector, Magazine magazine,
             PowerCellTracker powerCellTracker, Bling bling, int numCollectCells, boolean shouldScan360,
@@ -67,6 +92,31 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         addRequirements(bling);
     }
 
+    /**
+     * Creates a new ChaseAndCollectCellsCommand. This command will chase and
+     * collect as many powercells (in it's field of vision) as you input. It will
+     * stop after scanning for it unsuccessfully if you want this command to make
+     * the robot scan for powercells. You can also decide how many loops of not
+     * receiving updated data this command can use old data for.
+     *
+     * @param drivetrain             The drivetrain used by this command.
+     * @param collector              The collector used by this command.
+     * @param magazine               The magazine used by this command.
+     * @param powerCellTracker       The powerCellTracker used by this command.
+     * @param bling                  The bling used by this command.
+     * @param numCollectCells        The number of power cells that this command
+     *                               will try to collect.
+     * @param shouldScan360          If this command should turn up to two radians
+     *                               (360 degrees) scanning for powercells if it
+     *                               can't see any.
+     * @param runNumLoopsWithoutData The amount of execute loops this command should
+     *                               pretend nothing changed from the last time it
+     *                               could update its tracker data.
+     * @param maxRotationalSpeed     Is set to 1.5 radians per second for the
+     *                               overloaded version of this command.
+     * @param maxVelocity            Is set to 2.0 meters per second for the
+     *                               overloaded version of this command.
+     */
     public ChaseAndCollectCellsCommand(Drivetrain drivetrain, Collector collector, Magazine magazine,
             PowerCellTracker powerCellTracker, Bling bling, int numCollectCells, boolean shouldScan360,
             int runNumLoopsWithoutData) {
@@ -74,6 +124,28 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
                 runNumLoopsWithoutData, 1.5, 2.0);
     }
 
+    /**
+     * Creates a new ChaseAndCollectCellsCommand. This command will chase and
+     * collect as many powercells (in it's field of vision) as you input.
+     *
+     * @param drivetrain             The drivetrain used by this command.
+     * @param collector              The collector used by this command.
+     * @param magazine               The magazine used by this command.
+     * @param powerCellTracker       The powerCellTracker used by this command.
+     * @param bling                  The bling used by this command.
+     * @param numCollectCells        is set to 5 for the overloaded version of this
+     *                               command will try to collect.
+     * @param shouldScan360          The overloaded version of this command does not
+     *                               make the robot scan for powercells if it can't
+     *                               see any.
+     * @param runNumLoopsWithoutData The overloaded version of this command can run
+     *                               two execute loops on old data if it doesn't
+     *                               update.
+     * @param maxRotationalSpeed     Is set to 1.5 radians per second for the
+     *                               overloaded version of this command.
+     * @param maxVelocity            Is set to 2.0 meters per second for the
+     *                               overloaded version of this command.
+     */
     public ChaseAndCollectCellsCommand(Drivetrain drivetrain, Collector collector, Magazine magazine,
             PowerCellTracker powerCellTracker, Bling bling) {
         this(drivetrain, collector, magazine, powerCellTracker, bling, 5, false, 2, 1.5, 2.0);
@@ -89,6 +161,11 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         collect = new CollectCommand(collector, magazine, bling, 0.6, 5500);
     }
 
+    /**
+     * Updates powerCellData if possible and calls alignState() if it updated or if
+     * the number of loopsWithoutData is still acceptable. It also manages the
+     * boolean skipScan.
+     */
     private void update() {
         hasData = powerCellTracker.getCellData(powerCellData);
 
@@ -109,6 +186,10 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         }
     }
 
+    /**
+     * Sets the enum AlignState alignState (that keeps track of the states of the
+     * tracked powercell) based on powerCellData.
+     */
     private AlignState alignState() {
         AlignState alignState;
 
@@ -128,6 +209,10 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         return alignState;
     }
 
+    /**
+     * Sets the multipliers for rotation and velovity (rotationalSpeedMultiplier and
+     * velocityMultiplier) based on enum AlignState alignState and powerCellData.
+     */
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
             rotationalSpeedMultiplier = -(powerCellData.cx - 160) / 160.0;
@@ -170,16 +255,30 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         }
     }
 
+    /**
+     * Will turn in the direction the last tracked cell rolled (based on
+     * powerCellData) until it tracks one or made a whole rotation around its own
+     * axis if skipScan is false.
+     */
     private void scan360() {
         if (!skipScan) {
             initRotation = drivetrain.getRobotPose().getRotation();
             currentRotation = drivetrain.getRobotPose().getRotation();
+            if (powerCellData.vx < 0) {
+                rotationalSpeedMultiplier = 0.5;
+            } else {
+                rotationalSpeedMultiplier = -0.5;
+            }
 
-            while (!hasData && initRotation.minus(currentRotation).getRadians() < 2 * Math.PI) {
-                drivetrain.setVelocity(0.0, 0.25 * maxRotationalSpeed);
+            while (!hasData && initRotation.minus(currentRotation).getRadians() <= 2 * Math.PI) {
+                drivetrain.setVelocity(0.0, rotationalSpeedMultiplier * maxRotationalSpeed);
                 hasData = powerCellTracker.getCellData(powerCellData);
                 currentRotation = drivetrain.getRobotPose().getRotation();
 
+            }
+
+            if (initRotation.minus(currentRotation).getRadians() <= 2 * Math.PI) {
+                isFinished = true;
             }
         }
     }
@@ -196,6 +295,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
             ParallelCommandGroup.parallel(collect);
             collectedCells++;
         }
+        isFinished = collectedCells >= numCollectCells;
         if (shouldScan360) {
             scan360();
         }
@@ -209,6 +309,6 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return collectedCells >= numCollectCells;
+        return isFinished;
     }
 }
