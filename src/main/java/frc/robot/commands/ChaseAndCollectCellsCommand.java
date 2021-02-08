@@ -12,7 +12,6 @@ import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.subsystems.PowerCellTracker.PowerCellData;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class ChaseAndCollectCellsCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
@@ -26,7 +25,6 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     private final int runNumLoopsWithoutData;
     private final double maxRotationalSpeed;
     private final double maxVelocity;
-    private CollectCommand collect;
     private boolean isFinished;
 
     /**
@@ -37,17 +35,22 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         NOT_VISIBLE, LEFT, ALIGNED, RIGHT;
     }
 
+    private AlignState alignState;
     private int collectedCells;
     private PowerCellData powerCellData;
     private boolean hasData;
     private int loopsWithoutData;
     private boolean skipScan;
-    private AlignState alignState;
     private double rotationalSpeedMultiplier;
     private double velocityMultiplier;
     private boolean shouldCollect;
+    private boolean isCollecting;
     private Rotation2d initRotation;
     private Rotation2d currentRotation;
+    private long initTime;
+    private long currentTime;
+    private double collectPower;
+    private double magVelocity;
 
     /**
      * Creates a new ChaseAndCollectCellsCommand. This command will chase and
@@ -158,8 +161,10 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         loopsWithoutData = 0;
         collectedCells = 0;
         shouldCollect = false;
+        isCollecting = false;
         skipScan = true;
-        collect = new CollectCommand(collector, magazine, bling, 0.6, 5500);
+        collectPower = 0.0;
+        magVelocity = 0.0;
     }
 
     /**
@@ -170,20 +175,41 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     private void update() {
         hasData = powerCellTracker.getCellData(powerCellData);
 
-        if (hasData) {
+        if (shouldCollect) {
+            initTime = System.currentTimeMillis();
+            shouldCollect = false;
+            isCollecting = true;
+            skipScan = true;
+
+        } else if (isCollecting) {
+
+        } else if (hasData) {
             loopsWithoutData = 0;
             skipScan = true;
-            alignState = alignState();
+            alignState();
 
         } else if (!hasData && loopsWithoutData < runNumLoopsWithoutData) {
+            loopsWithoutData++;
+
+        } else if (skipScan) {
+            System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
+            skipScan = false;
+            initRotation = drivetrain.getRobotPose().getRotation();
+            initTime = System.currentTimeMillis();
+            if (powerCellData.vx < 0) {
+                rotationalSpeedMultiplier = 0.5;
+            } else {
+                rotationalSpeedMultiplier = -0.5;
+            }
+            velocityMultiplier = 0.0;
+            alignState();
             loopsWithoutData++;
 
         } else {
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
             skipScan = false;
-            alignState = alignState();
+            alignState();
             loopsWithoutData++;
-
         }
     }
 
@@ -191,9 +217,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
      * Sets the enum AlignState alignState (that keeps track of the states of the
      * tracked powercell) based on powerCellData.
      */
-    private AlignState alignState() {
-        AlignState alignState;
-
+    private void alignState() {
         if (!hasData) {
             alignState = AlignState.NOT_VISIBLE;
 
@@ -207,7 +231,6 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
             alignState = AlignState.RIGHT;
 
         }
-        return alignState;
     }
 
     /**
@@ -247,12 +270,28 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
 
             if (powerCellData.cy <= 40) {
                 shouldCollect = true;
+                collectPower = 0.6;
+                magVelocity = 1.0;
             }
 
-        } else if (!skipScan) {
+        } else {
             rotationalSpeedMultiplier = 0.0;
             velocityMultiplier = 0.0;
+        }
+    }
 
+    private void collect() {
+        currentTime = System.currentTimeMillis();
+
+        if (initTime - currentTime >= 1000) {
+            velocityMultiplier = 0.0;
+        }
+
+        if (initTime - currentTime >= 5000) {
+            collectPower = 0.0;
+            magVelocity = 0.0;
+            isCollecting = false;
+            collectedCells++;
         }
     }
 
@@ -262,25 +301,14 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
      * axis if skipScan is false.
      */
     private void scan360() {
-        if (!skipScan) {
-            initRotation = drivetrain.getRobotPose().getRotation();
-            currentRotation = drivetrain.getRobotPose().getRotation();
-            if (powerCellData.vx < 0) {
-                rotationalSpeedMultiplier = 0.5;
-            } else {
-                rotationalSpeedMultiplier = -0.5;
-            }
+        currentRotation = drivetrain.getRobotPose().getRotation();
+        currentTime = System.currentTimeMillis();
 
-            if (!hasData && initRotation.minus(currentRotation).getRadians() >= 2 * Math.PI) {
-                drivetrain.setVelocity(0.0, rotationalSpeedMultiplier * maxRotationalSpeed);
-                hasData = powerCellTracker.getCellData(powerCellData);
-                currentRotation = drivetrain.getRobotPose().getRotation();
-
-            }
-
-            if (initRotation.minus(currentRotation).getRadians() <= 2 * Math.PI) {
-                isFinished = true;
-            }
+        if (initTime - currentTime >= 1000
+                && initRotation.minus(currentRotation).getRadians() <= rotationalSpeedMultiplier * maxRotationalSpeed
+                && initRotation.minus(currentRotation).getRadians() >= 0) {
+            drivetrain.setVelocity(0.0, 0.0);
+            isFinished = true;
         }
     }
 
@@ -288,16 +316,17 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     @Override
     public void execute() {
         update();
-        if (hasData) {
+        if (!isCollecting && skipScan) {
             multipliers();
         }
-        drivetrain.setVelocity(velocityMultiplier * maxVelocity, rotationalSpeedMultiplier * maxRotationalSpeed);
-        if (shouldCollect) {
-            ParallelCommandGroup.parallel(collect);
-            collectedCells++;
+        if (isCollecting || shouldCollect) {
+            collect();
         }
+        drivetrain.setVelocity(velocityMultiplier * maxVelocity, rotationalSpeedMultiplier * maxRotationalSpeed);
+        collector.setCollect(collectPower);
+        magazine.setVelocity(magVelocity);
         isFinished = collectedCells >= numCollectCells;
-        if (shouldScan360) {
+        if (shouldScan360 && !skipScan) {
             scan360();
         }
     }
