@@ -177,12 +177,14 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         hasData = powerCellTracker.getCellData(powerCellData);
 
         if (shouldCollect) {
+            System.out.println("COLLECTING");
             initTime = System.currentTimeMillis();
             shouldCollect = false;
             isCollecting = true;
             skipScan = true;
 
         } else if (isCollecting) {
+            System.out.println("COLLECTING");
 
         } else if (hasData) {
             loopsWithoutData = 0;
