@@ -307,7 +307,6 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         if (initTime - currentTime >= 1000
                 && initRotation.minus(currentRotation).getRadians() <= rotationalSpeedMultiplier * maxRotationalSpeed
                 && initRotation.minus(currentRotation).getRadians() >= 0) {
-            drivetrain.setVelocity(0.0, 0.0);
             isFinished = true;
         }
     }
@@ -334,6 +333,9 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        drivetrain.setVelocity(0.0, 0.0);
+        collector.setCollect(0.0);
+        magazine.setVelocity(0.0);
     }
 
     // Returns true when the command should end.
