@@ -169,8 +169,9 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
 
     /**
      * Updates powerCellData if possible and calls alignState() if it updated or if
-     * the number of loopsWithoutData is still acceptable. It also manages the
-     * boolean skipScan.
+     * the number of loopsWithoutData is not acceptable. It also manages the all the
+     * variables that keep track of what to run in the execute loop (for example
+     * skipScan).
      */
     private void update() {
         hasData = powerCellTracker.getCellData(powerCellData);
@@ -235,7 +236,9 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
 
     /**
      * Sets the multipliers for rotation and velovity (rotationalSpeedMultiplier and
-     * velocityMultiplier) based on enum AlignState alignState and powerCellData.
+     * velocityMultiplier), the collectPower, and the magVelocity based on enum
+     * AlignState alignState and powerCellData - unless the robot is collecting or
+     * scanning for powercells.
      */
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
@@ -281,7 +284,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     }
 
     /**
-     * while the collector is running this function will stop the drivetrain,
+     * While the collector is running, this function will stop the drivetrain,
      * collector, and magazine after a set time (1 second for the drivetrain and 5
      * seconds for the collector and the magazine).
      */
@@ -301,9 +304,10 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     }
 
     /**
-     * Will turn in the direction the last tracked cell rolled (based on
-     * powerCellData) until it tracks one or made a whole rotation around its own
-     * axis if skipScan is false.
+     * Will make the robot turn in the direction the last tracked powercell rolled
+     * (based on powerCellData) until it tracks a powercell or made a whole rotation
+     * around its own axis. If it makes a whole rotation without tracking any
+     * powercell the command ends.
      */
     private void scan360() {
         currentRotation = drivetrain.getRobotPose().getRotation();
