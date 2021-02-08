@@ -4,6 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Collector;
@@ -24,13 +30,17 @@ public class CollectorControls extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-
+        collector.setCollect(0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        power = OI.operatorController.getRawAxis(5);
+        if (OI.operatorController.getBumper(Hand.kLeft)) {
+            power = -0.5;
+        } else {
+            power = 0;
+        }
         SmartDashboard.putNumber("Collector Power", power);
         collector.setCollect(power);
     }
@@ -38,7 +48,7 @@ public class CollectorControls extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-
+        collector.setCollect(0);
     }
 
     // Returns true when the command should end.

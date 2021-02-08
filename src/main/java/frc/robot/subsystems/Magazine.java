@@ -6,7 +6,11 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Utility;
@@ -15,13 +19,15 @@ public class Magazine extends SubsystemBase {
 
   private WPI_TalonSRX magazineMotor;
   private int cellCount;
-  private double P = 0;
-  private double I = 0;
+  private double P = 0.6;
+  private double I = 0.01;
   private double D = 0;
   private double F = 0;
   private boolean cellCheck, cellEntering, cellExiting;
+  private double magazineTicksPerMeter = ((18054.0 + 18271.0 + 18296.0 + 18282.0 + 18243.0) / 5.0) / Units.inchesToMeters(25.0);
 
   public Magazine() {
+    SmartDashboard.putNumber("AAAAA", magazineTicksPerMeter);
     magazineMotor = new WPI_TalonSRX(26);
     cellCount = 0;
     cellCheck = false;
@@ -36,15 +42,24 @@ public class Magazine extends SubsystemBase {
       System.out.println("[Magazine] Error: Magazine motor (CAN ID 26) cannot find encoder (Error code: "
           + magazineEncoderAttached.value + ").");
     }
+    setPID();
+  }
+
+
+  public void setPID() {
     magazineMotor.config_kP(0, P);
     magazineMotor.config_kI(0, I);
     magazineMotor.config_kD(0, D);
     magazineMotor.config_kF(0, F);
   }
 
-  /// Set the induct forward/reverse velocity.
+  double magazineVelocity = 0;
+
+  /// Set the induct forward/reverse velocity in meters/second.
   public void setVelocity(double inductVelocity) {
-    magazineMotor.set(ControlMode.Velocity, inductVelocity);
+    // Converting meters/second to ticks/0.1s (or if you're feeling fancy, ticks/decisecond)
+    magazineVelocity = inductVelocity * magazineTicksPerMeter * 0.1;
+    magazineMotor.set(ControlMode.Velocity, magazineVelocity);
   }
 
   /// Set the induct forward/reverse velocity.
@@ -59,7 +74,7 @@ public class Magazine extends SubsystemBase {
 
   /// Return the accumulated position of the magazine.
   public double getPosition() {
-    return magazineMotor.getSelectedSensorPosition(0);
+    return magazineMotor.getSelectedSensorPosition(0) / magazineTicksPerMeter;
   }
 
   /// Return the current power cell count.
@@ -84,10 +99,14 @@ public class Magazine extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Magazine Velocity", magazineMotor.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Magazine Position", magazineMotor.getSelectedSensorPosition() * 679.0);
-    if (OI.operatorController.getAButtonPressed()) {
-      magazineMotor.setSelectedSensorPosition(0);
-    }
+    // if (OI.operatorController.getBumper(Hand.kRight)) {
+    //   magazineMotor.setSelectedSensorPosition(0);
+    // }
+    SmartDashboard.putNumber("Magazine Velocity [MAG]",
+        magazineMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Magazine Target Velocity [MAG]", magazineVelocity);
+    SmartDashboard.putNumber("Magazine Position [MAG]", magazineMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Magazine Power [MAG]", magazineMotor.get());
+    SmartDashboard.putNumber("Magazine Error [MAG]", magazineMotor.getClosedLoopError());
   }
 }
