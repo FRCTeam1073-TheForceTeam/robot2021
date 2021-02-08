@@ -280,6 +280,11 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         }
     }
 
+    /**
+     * while the collector is running this function will stop the drivetrain,
+     * collector, and magazine after a set time (1 second for the drivetrain and 5
+     * seconds for the collector and the magazine).
+     */
     private void collect() {
         currentTime = System.currentTimeMillis();
 
