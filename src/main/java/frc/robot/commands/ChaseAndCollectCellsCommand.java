@@ -41,10 +41,10 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     private boolean hasData;
     private int loopsWithoutData;
     private boolean skipScan;
+    private boolean isScanning;
     private double rotationalSpeedMultiplier;
     private double velocityMultiplier;
     private boolean shouldCollect;
-    private boolean isScanning;
     private boolean isCollecting;
     private Rotation2d initRotation;
     private Rotation2d currentRotation;
@@ -239,7 +239,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         } else if (powerCellData.cx >= 146 && powerCellData.cx <= 175) {
             alignState = AlignState.ALIGNED;
 
-        } else if (powerCellData.cx < 156) {
+        } else if (powerCellData.cx < 146) {
             alignState = AlignState.LEFT;
 
         } else {
@@ -304,9 +304,8 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
      */
     private void collect() {
         currentTime = System.currentTimeMillis();
-        System.out.println("Bro");
 
-        if (currentTime - initTime >= 1000) {
+        if (currentTime - initTime >= 750) {
             velocityMultiplier = 0.0;
         }
 
@@ -328,7 +327,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         currentRotation = drivetrain.getRobotPose().getRotation();
         currentTime = System.currentTimeMillis();
 
-        if (initTime - currentTime >= 1000
+        if (currentTime - initTime >= 1000
                 && initRotation.minus(currentRotation).getRadians() <= rotationalSpeedMultiplier * maxRotationalSpeed
                 && initRotation.minus(currentRotation).getRadians() >= 0) {
             isFinished = true;
@@ -339,7 +338,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     @Override
     public void execute() {
         update();
-        if (!isCollecting && skipScan) {
+        if (!isCollecting && (!isScanning || skipScan)) {
             multipliers();
         }
         if (isCollecting || shouldCollect) {
@@ -349,7 +348,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         collector.setCollect(collectPower);
         magazine.setVelocity(magVelocity);
         isFinished = collectedCells >= numCollectCells;
-        if (shouldScan360 && (!skipScan || isScanning)) {
+        if (shouldScan360 && (isScanning || !skipScan)) {
             scan360();
         }
     }
