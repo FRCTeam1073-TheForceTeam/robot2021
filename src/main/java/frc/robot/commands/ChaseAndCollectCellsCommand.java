@@ -44,6 +44,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     private double rotationalSpeedMultiplier;
     private double velocityMultiplier;
     private boolean shouldCollect;
+    private boolean isScanning;
     private boolean isCollecting;
     private Rotation2d initRotation;
     private Rotation2d currentRotation;
@@ -164,6 +165,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         shouldCollect = false;
         isCollecting = false;
         skipScan = true;
+        isScanning = false;
         collectPower = 0.0;
         magVelocity = 0.0;
     }
@@ -178,11 +180,11 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         hasData = powerCellTracker.getCellData(powerCellData);
 
         if (shouldCollect) {
-            System.out.println("COLLECTING");
             initTime = System.currentTimeMillis();
             shouldCollect = false;
             isCollecting = true;
             skipScan = true;
+            isScanning = false;
 
         } else if (isCollecting) {
             System.out.println("COLLECTING FOR " + (System.currentTimeMillis() - initTime));
@@ -190,6 +192,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         } else if (hasData) {
             loopsWithoutData = 0;
             skipScan = true;
+            isScanning = false;
             alignState();
 
         } else if (!hasData && loopsWithoutData < runNumLoopsWithoutData) {
@@ -197,7 +200,8 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
 
         } else if (skipScan) {
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
-            skipScan = false;
+            skipScan = true;
+            isScanning = true;
             initRotation = drivetrain.getRobotPose().getRotation();
             initTime = System.currentTimeMillis();
             if (powerCellData.vx < 0) {
@@ -208,6 +212,9 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
             velocityMultiplier = 0.0;
             alignState();
             loopsWithoutData++;
+
+        } else if (isScanning) {
+            System.out.println("SCANNING FOR " + (System.currentTimeMillis() - initTime));
 
         } else {
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
@@ -229,7 +236,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         if (!hasData) {
             alignState = AlignState.NOT_VISIBLE;
 
-        } else if (powerCellData.cx >= 156 && powerCellData.cx <= 165) {
+        } else if (powerCellData.cx >= 146 && powerCellData.cx <= 175) {
             alignState = AlignState.ALIGNED;
 
         } else if (powerCellData.cx < 156) {
@@ -342,7 +349,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         collector.setCollect(collectPower);
         magazine.setVelocity(magVelocity);
         isFinished = collectedCells >= numCollectCells;
-        if (shouldScan360 && !skipScan) {
+        if (shouldScan360 && (!skipScan || isScanning)) {
             scan360();
         }
     }
