@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
@@ -22,6 +24,7 @@ import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.commands.ChaseAndCollectCellsCommand;
+import frc.robot.commands.AdvanceMagazineCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
@@ -66,9 +69,10 @@ public class RobotContainer {
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, Math.PI / 2, 0.15);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleCollect);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, false, 0, 0.0, 0.0);
+
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -92,7 +96,8 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
+    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kY.value);
+    magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
   }
 
   /**

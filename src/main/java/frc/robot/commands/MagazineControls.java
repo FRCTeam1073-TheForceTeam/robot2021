@@ -30,9 +30,9 @@ public class MagazineControls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    magazineVelocity = OI.operatorController.getRawAxis(1);
-    SmartDashboard.putNumber("Magazine Power", magazineVelocity);
-    magazine.setPower(magazineVelocity);
+    magazineVelocity = -OI.operatorController.getRawAxis(1);
+    //SmartDashboard.putNumber("Magazine Power", magazineVelocity);
+    magazine.setVelocity(magazineVelocity);
     // magazine.setVelocity(magazineVelocity);
   }
 
