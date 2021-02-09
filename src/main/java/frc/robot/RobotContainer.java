@@ -45,7 +45,7 @@ public class RobotContainer {
 
  // Subsystems: Add subsystems here
   private final OI oi = new OI();
-  private final Bling bling = new Bling();
+  private static final Bling bling = new Bling();
   private final Drivetrain drivetrain = new Drivetrain();
   private final Collector collector = new Collector();
   private final Magazine magazine = new Magazine();
@@ -116,6 +116,10 @@ public class RobotContainer {
   public Command getTestCommand() {
         return teleDrive;
 
+  }
+
+  public static Bling getBling() {
+    return bling;
   }
 
 }
