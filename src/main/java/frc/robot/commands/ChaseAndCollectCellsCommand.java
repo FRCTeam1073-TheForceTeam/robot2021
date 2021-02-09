@@ -157,6 +157,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        collector.manipulateIsDeployed(true);
         powerCellData = new PowerCellData();
         loopsWithoutData = 0;
         collectedCells = 0;
@@ -184,7 +185,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
             skipScan = true;
 
         } else if (isCollecting) {
-            System.out.println("COLLECTING");
+            System.out.println("COLLECTING FOR " + (System.currentTimeMillis() - initTime));
 
         } else if (hasData) {
             loopsWithoutData = 0;
@@ -213,6 +214,10 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
             skipScan = false;
             alignState();
             loopsWithoutData++;
+            rotationalSpeedMultiplier = 0.0;
+            velocityMultiplier = 0.0;
+            collectPower = 0.0;
+            magVelocity = 0.0;
         }
     }
 
@@ -245,7 +250,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
             rotationalSpeedMultiplier = -(powerCellData.cx - 160) / 160.0;
-            velocityMultiplier = powerCellData.cy / 240.0;
+            velocityMultiplier = -(powerCellData.cy - 240) / 240.0;
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.25) {
                 rotationalSpeedMultiplier = 0.25;
@@ -255,7 +260,7 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
 
             }
 
-            if (powerCellData.cy > 40) {
+            if (powerCellData.cy < -40) {
                 velocityMultiplier = 1.0;
 
             } else if (velocityMultiplier < 0.25) {
@@ -264,16 +269,16 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
 
         } else if (alignState == AlignState.ALIGNED) {
             rotationalSpeedMultiplier = 0.0;
-            velocityMultiplier = powerCellData.cy / 240.0;
+            velocityMultiplier = -(powerCellData.cy - 240) / 240.0;
 
-            if (powerCellData.cy > 40) {
+            if (powerCellData.cy < -40) {
                 velocityMultiplier = 1.0;
 
             } else if (velocityMultiplier < 0.25) {
                 velocityMultiplier = 0.25;
             }
 
-            if (powerCellData.cy <= 40) {
+            if (powerCellData.cy >= 150) {
                 shouldCollect = true;
                 collectPower = 0.6;
                 magVelocity = 1.0;
@@ -292,12 +297,13 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
      */
     private void collect() {
         currentTime = System.currentTimeMillis();
+        System.out.println("Bro");
 
-        if (initTime - currentTime >= 1000) {
+        if (currentTime - initTime >= 1000) {
             velocityMultiplier = 0.0;
         }
 
-        if (initTime - currentTime >= 5000) {
+        if (currentTime - initTime >= 5000) {
             collectPower = 0.0;
             magVelocity = 0.0;
             isCollecting = false;
