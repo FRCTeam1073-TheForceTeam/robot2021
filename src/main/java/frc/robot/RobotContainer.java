@@ -28,6 +28,7 @@ import frc.robot.commands.AdvanceMagazineCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveForwardCommand;
+import frc.robot.commands.DrivetrainPowerTestCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MagazineControls;
@@ -60,6 +61,7 @@ public class RobotContainer {
 
 
   // Commands: Add commands here.
+  private final DrivetrainPowerTestCommand drivetrainTestCommand = new DrivetrainPowerTestCommand(drivetrain, 0.1);
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
   private final DriveControls teleDrive = new DriveControls(drivetrain);
@@ -113,7 +115,8 @@ public class RobotContainer {
   public Command getTeleopCommand() {
     // Command that we run in teleoperation mode.
     collector.manipulateIsDeployed(true);
-    return teleopCommand;
+
+    return drivetrainTestCommand;
   }
 
   public Command getTestCommand() {

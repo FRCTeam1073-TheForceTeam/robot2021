@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -14,11 +15,32 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
+
+import javax.annotation.PropertyKey;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+
+/*
+
+    Left:
+        0.10 1360
+        0.25 4759
+        0.50 10250
+        0.75 
+        0.85
+
+    Right:
+        0.10 1425
+        0.25 4844
+        0.50 10603
+        0.75 
+        0.85
+
+*/
 
 public class Drivetrain extends SubsystemBase  {
     private static WPI_TalonFX leftMotorLeader;
@@ -33,7 +55,12 @@ public class Drivetrain extends SubsystemBase  {
     Solenoid winch = new Solenoid(1, 1);
     Solenoid drivetrain = new Solenoid(1, 7);
 
-   //private double wheelDiameter = 0.15;
+    double Fconstant = (
+        (0.10 / 1360.0) + (0.25 / 4759.0) + (0.50 / 10250.0) +
+        (0.10 / 1425.0) + (0.25 / 4844.0) + (0.50 / 10603.0)
+    ) / 6.0;
+
+    //private double wheelDiameter = 0.15;
     // private double ticksPerWheelRotation =
     // ((52352+56574+54036+56452+53588+57594)/6.0)*0.1;//7942.8;
     private double ticksPerMeter = (
@@ -238,6 +265,25 @@ public class Drivetrain extends SubsystemBase  {
         rightPower = right;
     }
 
+    /**WARNING: Intended as an emergency feature for if the drivetrain fails during competition. May or may not do literally nothing
+     * 
+    */
+    public void resetPneumatics(){
+
+    }
+
+    /**
+     * Returns *raw* linear wheel speeds.
+     * 
+     * @return Speed of left and right sides of the robot in ticks/0.1s.
+     */
+    public double[] getRawWheelSpeeds() {
+        return new double[]{
+            leftMotorLeader.getSelectedSensorVelocity(),
+            rightMotorLeader.getSelectedSensorVelocity()
+        };
+    }
+
     /**
      * Returns linear wheel speeds.
      * 
@@ -264,9 +310,11 @@ public class Drivetrain extends SubsystemBase  {
         leftMotorLeader.config_kP(0, P);
         leftMotorLeader.config_kI(0, I);
         leftMotorLeader.config_kD(0, D);
+        leftMotorLeader.config_kF(0, 1023.0 * Fconstant);
         rightMotorLeader.config_kP(0, P);
         rightMotorLeader.config_kI(0, I);
         rightMotorLeader.config_kD(0, D);
+        leftMotorLeader.config_kF(0, 1023.0 * Fconstant);
     }
 
     public ChassisSpeeds getDrivetrainVelocity() {
