@@ -68,6 +68,7 @@ public class RobotContainer {
   private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, Math.PI / 2, 0.15);
+  private final TurnCommand turn = new TurnCommand(drivetrain, bling, 2 * Math.PI, 0.5);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
@@ -111,7 +112,7 @@ public class RobotContainer {
     // return squareTest;
     // collector.manipulateIsDeployed(true);
     // return collect;
-    return chaseAndCollect;
+    return turn;
   }
 
   public Command getTeleopCommand() {
