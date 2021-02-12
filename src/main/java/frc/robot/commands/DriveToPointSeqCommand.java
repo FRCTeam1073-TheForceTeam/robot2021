@@ -13,24 +13,24 @@ public class DriveToPointSeqCommand extends SequentialCommandGroup {
     private final double y;
     private double diffX;
     private double diffY;
-    private final double maxVelocity;
+    private final double velocity;
 
-    public DriveToPointSeqCommand(Drivetrain drivetrain, Bling bling, double x, double y, double maxVelocity) {
+    public DriveToPointSeqCommand(Drivetrain drivetrain, Bling bling, double x, double y, double velocity) {
         this.drivetrain = drivetrain;
         this.bling = bling;
         this.x = x;
         this.y = y;
-        this.maxVelocity = maxVelocity;
+        this.velocity = velocity;
         addRequirements(drivetrain);
         addRequirements(bling);
         diffX = diffX();
         diffY = diffY();
-        addCommands(new TurnCommand(drivetrain, bling, angle(diffX, diffY), maxVelocity),
-                new DriveForwardCommand(drivetrain, bling, Math.hypot(diffX, diffY), maxVelocity));
+        addCommands(new TurnCommand(drivetrain, bling, angle(diffX, diffY), velocity),
+                new DriveForwardCommand(drivetrain, bling, Math.hypot(diffX, diffY), velocity));
     }
 
     private double angle(double diffX, double diffY) {
-        return (new Rotation2d(Math.atan2(diffX, diffX)).minus(drivetrain.getAngleRadians())).getRadians();
+        return (new Rotation2d(Math.atan2(diffX, diffY)).minus(drivetrain.getAngleRadians())).getRadians();
     }
 
     private double diffX() {

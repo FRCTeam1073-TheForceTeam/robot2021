@@ -13,15 +13,15 @@ public class DriveToPointCommand extends CommandBase {
     private final double x;
     private final double y;
     private final double maxVelocity;
+    private Pose2d currentPose;
+    private Rotation2d currentRotation;
     private double diffX;
     private double diffY;
-    private double distanceToDrive;
-    private Rotation2d currentRotation;
     private Rotation2d rotationNeeded;
     private double angleToTurn;
-    private double velocity;
     private double rotationalSpeed;
-    private Pose2d pose;
+    private double distanceToDrive;
+    private double velocity;
 
     public DriveToPointCommand(Drivetrain drivetrain, Bling bling, double x, double y, double maxVelocity) {
         this.drivetrain = drivetrain;
@@ -35,34 +35,34 @@ public class DriveToPointCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        pose = drivetrain.getRobotPose();
+        diffX = x - currentPose.getX();
+        diffY = y - currentPose.getY();
     }
 
     private void update() {
-        diffX = diffX();
-        diffY = diffY();
-        currentRotation = drivetrain.getRobotPose().getRotation();
-        rotationNeeded = new Rotation2d(Math.atan2(diffX, diffX));
+        currentPose = drivetrain.getRobotPose();
+        currentRotation = currentPose.getRotation();
+        diffX = x - currentPose.getX();
+        diffY = y - currentPose.getY();
+        rotationNeeded = new Rotation2d(Math.atan2(diffX, diffY));
         angleToTurn = (rotationNeeded.minus(currentRotation)).getRadians();
+        rotationalSpeed = Math.max(0.25, Math.min(maxVelocity, angleToTurn / (0.5 * Math.PI)));
+        distanceToDrive = Math.hypot(diffX, diffY);
+        velocity = Math.max(0.25, Math.min(maxVelocity, distanceToDrive));
     }
 
-    private double diffX() {
-        return x - drivetrain.getRobotPose().getX();
-    }
-
-    private double diffY() {
-        return y - drivetrain.getRobotPose().getY();
-    }
-
-    private boolean isInDeadzone() {
-        return false;
+    private double deadzone(double doub) {
+        if (doub < 0.1 && doub > -0.1) {
+            doub = 0;
+        }
+        return doub;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         update();
-        drivetrain.setVelocity(0.0, 0.0);
+        drivetrain.setVelocity(velocity, rotationalSpeed);
     }
 
     // Called once the command ends or is interrupted.
@@ -74,6 +74,6 @@ public class DriveToPointCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return isInDeadzone();
+        return deadzone(diffX) == 0 && deadzone(diffY) == 0;
     }
 }
