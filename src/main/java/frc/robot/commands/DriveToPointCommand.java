@@ -1,28 +1,28 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 
-public class DriveToPointCommand extends SequentialCommandGroup {
+public class DriveToPointCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final Drivetrain drivetrain;
     private final Bling bling;
-    private double x;
-    private double y;
-    private double maxVelocity;
-    private boolean isFinished;
+    private final double x;
+    private final double y;
+    private final double maxVelocity;
+    private double diffX;
+    private double diffY;
+    private double distanceToDrive;
+    private Rotation2d currentRotation;
+    private Rotation2d rotationNeeded;
+    private double angleToTurn;
+    private double velocity;
+    private double rotationalSpeed;
+    private Pose2d pose;
 
-    /**
-     * Creates a new SquareTestCommand that drives a square with a given side
-     * length.
-     *
-     * @param drivetrain    The drivetrain used by this command.
-     * @param bling         The bling used by this command.
-     * @param distance      The side length the robot will drive a square in.
-     * @param driveVelocity The velocity of the robot while driving.
-     * @param turnSpeed     The speed the robot will turn at in radians per second.
-     */
     public DriveToPointCommand(Drivetrain drivetrain, Bling bling, double x, double y, double maxVelocity) {
         this.drivetrain = drivetrain;
         this.bling = bling;
@@ -31,10 +31,49 @@ public class DriveToPointCommand extends SequentialCommandGroup {
         this.maxVelocity = maxVelocity;
         addRequirements(drivetrain);
         addRequirements(bling);
-        double angle = 0;
-        double hypotnuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        addCommands(new TurnCommand(drivetrain, bling, angle, maxVelocity),
-                new DriveForwardCommand(drivetrain, bling, hypotnuse, maxVelocity));
     }
 
+    @Override
+    public void initialize() {
+        pose = drivetrain.getRobotPose();
+    }
+
+    private void update() {
+        diffX = diffX();
+        diffY = diffY();
+        currentRotation = drivetrain.getRobotPose().getRotation();
+        rotationNeeded = new Rotation2d(Math.atan2(diffX, diffX));
+        angleToTurn = (rotationNeeded.minus(currentRotation)).getRadians();
+    }
+
+    private double diffX() {
+        return x - drivetrain.getRobotPose().getX();
+    }
+
+    private double diffY() {
+        return y - drivetrain.getRobotPose().getY();
+    }
+
+    private boolean isInDeadzone() {
+        return false;
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        update();
+        drivetrain.setVelocity(0.0, 0.0);
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.setVelocity(0.0, 0.0);
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return isInDeadzone();
+    }
 }
