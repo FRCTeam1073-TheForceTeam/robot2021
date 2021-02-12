@@ -52,10 +52,13 @@ public class DriveControls extends CommandBase {
         }
     }
 
+    double maxForwardSpeed = 2.0; // in m/s
+    double maxRotationalSpeed = 2.0; // in radians/s
+
     public void execute() {
         multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * Utility.deadzone(OI.driverController.getRawAxis((3))));
-        forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier;
-        rotation = Utility.deadzone(OI.driverController.getRawAxis(4)) * multiplier;
+        forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier * maxForwardSpeed;
+        rotation = Utility.deadzone(OI.driverController.getRawAxis(4)) * multiplier * maxRotationalSpeed;
         arcadeCompute();
         // System.out.println("Output power: [" + leftOutput + "," + rightOutput + "]");
         

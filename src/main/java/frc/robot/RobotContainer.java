@@ -61,7 +61,7 @@ public class RobotContainer {
 
 
   // Commands: Add commands here.
-  private final DrivetrainPowerTestCommand drivetrainTestCommand = new DrivetrainPowerTestCommand(drivetrain, 0.1);
+  private final DrivetrainPowerTestCommand drivetrainTestCommand = new DrivetrainPowerTestCommand(drivetrain, 0.75);
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
   private final DriveControls teleDrive = new DriveControls(drivetrain);
@@ -116,7 +116,7 @@ public class RobotContainer {
     // Command that we run in teleoperation mode.
     collector.manipulateIsDeployed(true);
 
-    return drivetrainTestCommand;
+    return teleopCommand;
   }
 
   public Command getTestCommand() {
