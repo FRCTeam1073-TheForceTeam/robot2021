@@ -15,6 +15,16 @@ public class DriveToPointSeqCommand extends SequentialCommandGroup {
     private double diffY;
     private final double velocity;
 
+    /**
+     * Creates a new DriveToPointCommand that makes the robot turn to face the point
+     * it's supposed to be at and then drives there at a constant velocity.
+     * 
+     * @param drivetrain - the drivetrain used by this command
+     * @param bling      - the bling used by this command
+     * @param x          - the x coordinate that should be driven to
+     * @param y          - the y coordinate that should be driven to
+     * @param velocity   - the velocity the robot should drive at
+     */
     public DriveToPointSeqCommand(Drivetrain drivetrain, Bling bling, double x, double y, double velocity) {
         this.drivetrain = drivetrain;
         this.bling = bling;
