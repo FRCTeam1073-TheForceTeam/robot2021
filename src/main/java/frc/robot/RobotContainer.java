@@ -36,6 +36,7 @@ import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.TestCommand;
 import frc.robot.commands.TurnCommand;
+import frc.robot.commands.TurnVectorCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -46,7 +47,7 @@ import frc.robot.commands.TurnCommand;
  */
 public class RobotContainer {
 
- // Subsystems: Add subsystems here
+  // Subsystems: Add subsystems here
   private final OI oi = new OI();
   private final Bling bling = new Bling();
   private final Drivetrain drivetrain = new Drivetrain();
@@ -59,7 +60,6 @@ public class RobotContainer {
   private final PowerPortTracker portTracker = new PowerPortTracker();
   private final PowerCellTracker cellTracker = new PowerCellTracker();
 
-
   // Commands: Add commands here.
   private final DrivetrainPowerTestCommand drivetrainTestCommand = new DrivetrainPowerTestCommand(drivetrain, 0.75);
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
@@ -69,10 +69,11 @@ public class RobotContainer {
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
-  private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, Math.PI / 2, 0.15);
+  private final TurnCommand turn = new TurnCommand(drivetrain, bling, Math.PI / 2, 1.5);
+  private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.5);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
-  
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -105,11 +106,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return (new PrintCommand("[RobotContainer] Starting autonomous test (driving forward).")
-        .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
-//    return squareTest;
-    // collector.manipulateIsDeployed(true);
-    // return collect;
+    return turn90;
   }
 
   public Command getTeleopCommand() {
@@ -120,7 +117,7 @@ public class RobotContainer {
   }
 
   public Command getTestCommand() {
-        return teleDrive;
+    return teleDrive;
 
   }
 
