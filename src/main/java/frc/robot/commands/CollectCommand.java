@@ -27,7 +27,8 @@ public class CollectCommand extends CommandBase {
      * @param magazine The magazine used by this command.
      * @param bling    The bling used by this command.
      * @param power    The power the collector should run at for this command.
-     * @param time     The time the collector should run for for this command.
+     * @param time     The time the collector should run for for this command
+     *                 (milliseconds).
      */
     public CollectCommand(Collector collector, Magazine magazine, Bling bling, double power, long time) {
         this.collector = collector;

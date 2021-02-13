@@ -76,7 +76,6 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     CommandScheduler.getInstance().cancelAll(); // Stop all commands.
-
     // Start teleop command.
     Command teleop = m_robotContainer.getTeleopCommand();
     if (teleop != null) {

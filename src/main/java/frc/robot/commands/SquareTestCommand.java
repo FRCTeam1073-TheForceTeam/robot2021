@@ -8,10 +8,42 @@ public class SquareTestCommand extends SequentialCommandGroup {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final Drivetrain drivetrain;
     private final Bling bling;
-    private double distance;
+    private double distanceX;
+    private double distanceY;
     private double driveVelocity;
     private double turnSpeed;
     private boolean isFinished;
+
+    /**
+     * Creates a new SquareTestCommand that drives a rectangle with given side
+     * lengths.
+     *
+     * @param drivetrain    The drivetrain used by this command.
+     * @param bling         The bling used by this command.
+     * @param distanceX     The width of the rectangle.
+     * @param distanceY     The height of the rectangle.
+     * @param driveVelocity The velocity of the robot while driving.
+     * @param turnSpeed     The speed the robot will turn at in radians per second.
+     */
+    public SquareTestCommand(Drivetrain drivetrain, Bling bling, double distanceX, double distanceY, double driveVelocity,
+            double turnSpeed) {
+        this.drivetrain = drivetrain;
+        this.bling = bling;
+        this.distanceX = distanceX;
+        this.distanceY = distanceY;
+        this.driveVelocity = driveVelocity;
+        this.turnSpeed = turnSpeed;
+        addRequirements(drivetrain);
+        addRequirements(bling);
+        addCommands(new DriveForwardCommand(drivetrain, bling, distanceX, driveVelocity),
+                new TurnCommand(drivetrain, bling, -Math.PI / 2, turnSpeed),
+                new DriveForwardCommand(drivetrain, bling, distanceY, driveVelocity),
+                new TurnCommand(drivetrain, bling, -Math.PI / 2, turnSpeed),
+                new DriveForwardCommand(drivetrain, bling, distanceX, driveVelocity),
+                new TurnCommand(drivetrain, bling, -Math.PI / 2, turnSpeed),
+                new DriveForwardCommand(drivetrain, bling, distanceY, driveVelocity),
+                new TurnCommand(drivetrain, bling, -Math.PI / 2, turnSpeed));
+    }
 
     /**
      * Creates a new SquareTestCommand that drives a square with a given side
@@ -19,27 +51,13 @@ public class SquareTestCommand extends SequentialCommandGroup {
      *
      * @param drivetrain    The drivetrain used by this command.
      * @param bling         The bling used by this command.
-     * @param distance      The side length the robot will drive a square in.
+     * @param distance     The side length (width and height) of the rectangle.
      * @param driveVelocity The velocity of the robot while driving.
      * @param turnSpeed     The speed the robot will turn at in radians per second.
      */
     public SquareTestCommand(Drivetrain drivetrain, Bling bling, double distance, double driveVelocity,
             double turnSpeed) {
-        this.drivetrain = drivetrain;
-        this.bling = bling;
-        this.distance = distance;
-        this.driveVelocity = driveVelocity;
-        this.turnSpeed = turnSpeed;
-        addRequirements(drivetrain);
-        addRequirements(bling);
-        addCommands(new DriveForwardCommand(drivetrain, bling, distance, driveVelocity),
-                new TurnCommand(drivetrain, bling, Math.PI / 2, turnSpeed),
-                new DriveForwardCommand(drivetrain, bling, distance, driveVelocity),
-                new TurnCommand(drivetrain, bling, Math.PI / 2, turnSpeed),
-                new DriveForwardCommand(drivetrain, bling, distance, driveVelocity),
-                new TurnCommand(drivetrain, bling, Math.PI / 2, turnSpeed),
-                new DriveForwardCommand(drivetrain, bling, distance, driveVelocity),
-                new TurnCommand(drivetrain, bling, Math.PI / 2, turnSpeed));
+        this(drivetrain, bling, distance, distance, driveVelocity, turnSpeed);
     }
 
     /* 

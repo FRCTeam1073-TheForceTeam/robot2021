@@ -23,11 +23,13 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.PowerCellTracker;
+import frc.robot.commands.ChaseAndCollectCellsCommand;
 import frc.robot.commands.AdvanceMagazineCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveForwardCommand;
+import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.DrivetrainPowerTestCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
@@ -71,7 +73,9 @@ public class RobotContainer {
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn = new TurnCommand(drivetrain, bling, Math.PI / 2, 1.5);
   private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.2);
-  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
+  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1, 0.5, 1.75);
+  private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
+      magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
   /**
@@ -106,11 +110,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    drivetrain.resetRobotOdometry();
     return turn90;
   }
 
-  public Command getTeleopCommand() {
-    // Command that we run in teleoperation mode.
+  public Command getTeleopCommand() { // Command that we run in teleoperation mode.
+    drivetrain.resetRobotOdometry();
     collector.manipulateIsDeployed(true);
 
     return teleopCommand;
