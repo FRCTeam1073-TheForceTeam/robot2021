@@ -19,6 +19,7 @@ public class TurnCommand extends CommandBase {
   private final double angleToTurn;
   private Rotation2d initRotation;
   private Rotation2d endRotation;
+  private Rotation2d endRotationRotateBy;
   private Rotation2d currentRotation;
   private double angleTurned;
   private double angleRemaining;
@@ -55,20 +56,22 @@ public class TurnCommand extends CommandBase {
    * @param AngletoTurn The angle in radians the robot will turn
    */
   public TurnCommand(Drivetrain drivetrain, Bling bling, double AngletoTurn) {
-    this(drivetrain, bling, AngletoTurn, 0.25);
+    this(drivetrain, bling, AngletoTurn, 1.5);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    endRotation = drivetrain.getRobotPose().getRotation().plus(new Rotation2d(angleToTurn));
+    Rotation2d rotationToDo = new Rotation2d(angleToTurn);
+    endRotation = drivetrain.getRobotPose().getRotation();
+    endRotation = endRotation.plus(rotationToDo);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     currentRotation = drivetrain.getRobotPose().getRotation();
-    currentRotation.minus(endRotation);
+    currentRotation = endRotation.minus(currentRotation);
     angleRemaining = currentRotation.getRadians();
     System.out.println("R" + angleRemaining);
 
@@ -97,6 +100,6 @@ public class TurnCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(angleTurned) >= Math.abs(angleToTurn));
+    return (angleRemaining <= 0.2);
   }
 }
