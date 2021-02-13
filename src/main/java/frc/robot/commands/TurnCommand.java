@@ -68,7 +68,7 @@ public class TurnCommand extends CommandBase {
   @Override
   public void execute() {
     double angleRemaining = (angleTurned - angleToTurn);
-    speed = maxSpeed * Math.signum(angleRemaining) * Math.min(Math.pow(Math.abs(angleRemaining/angleToTurn), 0.5) + 0.5, 1);
+    speed = maxSpeed * Math.signum(angleRemaining) * Math.min(Math.pow(Math.abs(angleRemaining/angleToTurn), 0.5) + 0.2, 1);
     // if (Math.abs(angleRemaining) > Math.PI / 6.0) {
     //   speed = maxSpeed * Math.cbrt(angleRemaining / Math.PI);
     // } else {

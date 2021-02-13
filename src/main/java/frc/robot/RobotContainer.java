@@ -29,6 +29,7 @@ import frc.robot.commands.AdvanceMagazineCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveForwardCommand;
+import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.DrivetrainPowerTestCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
@@ -70,8 +71,8 @@ public class RobotContainer {
   private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, -Math.PI / 2, 2.00);
-  private final TurnCommand turn = new TurnCommand(drivetrain, bling, 2.75 * Math.PI, 1.20);
-  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
+  private final TurnCommand turn = new TurnCommand(drivetrain, bling, 0.9 * Math.PI, 1.20);
+  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1, 0.5, 1.75);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
@@ -108,16 +109,20 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    drivetrain.resetRobotOdometry();
     // return (new PrintCommand("[RobotContainer] Starting autonomous test (driving
     // forward).")
     // .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
     // return squareTest;
     // collector.manipulateIsDeployed(true);
     // return collect;
-    return turn;
+
+    // return squareTest;
+    return turn;//new DriveToPointCommand(drivetrain, bling, 1, 2, 1);
   }
 
   public Command getTeleopCommand() { // Command that we run in teleoperation mode.
+    drivetrain.resetRobotOdometry();
     collector.manipulateIsDeployed(true);
 
     return teleopCommand;
