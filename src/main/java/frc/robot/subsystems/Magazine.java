@@ -106,7 +106,7 @@ public class Magazine extends SubsystemBase {
         magazineMotor.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Magazine Target Velocity [MAG]", magazineVelocity);
     SmartDashboard.putNumber("Magazine Position [MAG]", magazineMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Magazine Power [MAG]", magazineMotor.get());
+    SmartDashboard.putNumber("Magazine Power [MAG]", magazineMotor.getOutputCurrent());
     SmartDashboard.putNumber("Magazine Error [MAG]", magazineMotor.getClosedLoopError());
   }
 }
