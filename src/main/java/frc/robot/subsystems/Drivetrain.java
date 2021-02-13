@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -14,11 +15,32 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
+
+import javax.annotation.PropertyKey;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+
+/*
+
+    Left:
+        0.10 1360
+        0.25 4759
+        0.50 10250
+        0.75 
+        0.85
+
+    Right:
+        0.10 1425
+        0.25 4844
+        0.50 10603
+        0.75 
+        0.85
+
+*/
 
 public class Drivetrain extends SubsystemBase  {
     private static WPI_TalonFX leftMotorLeader;
@@ -33,7 +55,18 @@ public class Drivetrain extends SubsystemBase  {
     Solenoid winch = new Solenoid(1, 1);
     Solenoid drivetrain = new Solenoid(1, 7);
 
-   //private double wheelDiameter = 0.15;
+    double kP = 0.007;//1.1e-1;
+    double kI = 0.002;//1e-2;
+    double kD = 0;
+    double kF = 0.05;
+
+    // double Fconstant = (
+    //     (0.10 / 1336.0) + (0.25 / 4746.0) + (0.50 / 10139.0) + (0.75/15255.0) +
+    //     (0.10 / 1313.0) + (0.25 / 4754.0) + (0.50 / 10187.0) + (0.75/15349)
+    // ) / 8.0;
+
+
+    //private double wheelDiameter = 0.15;
     // private double ticksPerWheelRotation =
     // ((52352+56574+54036+56452+53588+57594)/6.0)*0.1;//7942.8;
     private double ticksPerMeter = (
@@ -238,6 +271,25 @@ public class Drivetrain extends SubsystemBase  {
         rightPower = right;
     }
 
+    /**WARNING: Intended as an emergency feature for if the drivetrain fails during competition. May or may not do literally nothing
+     * 
+    */
+    public void resetPneumatics(){
+
+    }
+
+    /**
+     * Returns *raw* linear wheel speeds.
+     * 
+     * @return Speed of left and right sides of the robot in ticks/0.1s.
+     */
+    public double[] getRawWheelSpeeds() {
+        return new double[]{
+            leftMotorLeader.getSelectedSensorVelocity(),
+            rightMotorLeader.getSelectedSensorVelocity()
+        };
+    }
+
     /**
      * Returns linear wheel speeds.
      * 
@@ -260,13 +312,15 @@ public class Drivetrain extends SubsystemBase  {
      * Sets PID configurations
      */
 
-    public void setPID(double P, double I, double D) {
-        leftMotorLeader.config_kP(0, P);
-        leftMotorLeader.config_kI(0, I);
-        leftMotorLeader.config_kD(0, D);
-        rightMotorLeader.config_kP(0, P);
-        rightMotorLeader.config_kI(0, I);
-        rightMotorLeader.config_kD(0, D);
+    public void setPIDF() {
+        leftMotorLeader.config_kP(0, kP);
+        leftMotorLeader.config_kI(0, kI);
+        leftMotorLeader.config_kD(0, kD);
+        leftMotorLeader.config_kF(0, kF);
+        rightMotorLeader.config_kP(0, kP);
+        rightMotorLeader.config_kI(0, kI);
+        rightMotorLeader.config_kD(0, kD);
+        leftMotorLeader.config_kF(0, kF);
     }
 
     public ChassisSpeeds getDrivetrainVelocity() {
@@ -279,82 +333,89 @@ public class Drivetrain extends SubsystemBase  {
         drivetrain.set(true);
         winch.set(false);
 
+        //Factory default
         leftMotorLeader.configFactoryDefault();
         rightMotorLeader.configFactoryDefault();
         leftMotorFollower.configFactoryDefault();
         rightMotorFollower.configFactoryDefault();
 
-        leftMotorLeader.neutralOutput();
-        leftMotorFollower.neutralOutput();
-        rightMotorLeader.neutralOutput();
-        rightMotorFollower.neutralOutput();
-
-        leftMotorLeader.setSafetyEnabled(false);
-        rightMotorLeader.setSafetyEnabled(false);
-        leftMotorFollower.setSafetyEnabled(false);
-        rightMotorFollower.setSafetyEnabled(false);
-
-        leftMotorLeader.setNeutralMode(NeutralMode.Brake);
-        rightMotorLeader.setNeutralMode(NeutralMode.Brake);
-        leftMotorFollower.setNeutralMode(NeutralMode.Brake);
-        rightMotorFollower.setNeutralMode(NeutralMode.Brake);
-
-        leftMotorLeader.configClosedloopRamp(0.25);
-        rightMotorLeader.configClosedloopRamp(0.25);
-
-        leftMotorLeader.configPeakOutputForward(1.0);
-        leftMotorLeader.configPeakOutputReverse(-1.0);
-        leftMotorFollower.configPeakOutputForward(1.0);
-        leftMotorFollower.configPeakOutputReverse(-1.0);
-        rightMotorLeader.configPeakOutputForward(1.0);
-        rightMotorLeader.configPeakOutputReverse(-1.0);
-        rightMotorFollower.configPeakOutputForward(1.0);
-        rightMotorFollower.configPeakOutputReverse(-1.0);
-
-        leftMotorLeader.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 28, 33, 0.25));
-        rightMotorLeader.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 28, 33, 0.25));
-        leftMotorFollower.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 28, 33, 0.25));
-        rightMotorFollower.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 28, 33, 0.25));
-
-        leftMotorLeader.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        rightMotorLeader.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
-        leftMotorLeader.setSensorPhase(true);
-        rightMotorLeader.setSensorPhase(true);
-        double P = 1.1e-1;
-        double I = 1e-2;
-        double D = 0;
-        double F = 0.75 * 0.138 * 1023.0 / 1750.0;
-
-        leftMotorLeader.config_kP(0, P);
-        rightMotorLeader.config_kP(0, P);
-        leftMotorLeader.config_kI(0, I);
-        rightMotorLeader.config_kI(0, I);
-        leftMotorLeader.config_kD(0, D);
-        rightMotorLeader.config_kD(0, D);
-        leftMotorLeader.config_kF(0, F);
-        rightMotorLeader.config_kF(0, F);
-
-        leftMotorLeader.configMaxIntegralAccumulator(0, 400);
-        rightMotorLeader.configMaxIntegralAccumulator(0, 400);
-
+        //Followers
         leftMotorFollower.follow(leftMotorLeader);
         rightMotorFollower.follow(rightMotorLeader);
-
+        
+        //Inversions
         leftMotorLeader.setInverted(true);
         leftMotorFollower.setInverted(true);
         rightMotorLeader.setInverted(false);
         rightMotorFollower.setInverted(false);
+        
+        leftMotorLeader.neutralOutput();
+        // leftMotorFollower.neutralOutput();
+        rightMotorLeader.neutralOutput();
+        // rightMotorFollower.neutralOutput();
+        
+        leftMotorLeader.setSafetyEnabled(false);
+        rightMotorLeader.setSafetyEnabled(false);
+        // leftMotorFollower.setSafetyEnabled(false);
+        // rightMotorFollower.setSafetyEnabled(false);
+        
+        leftMotorLeader.setNeutralMode(NeutralMode.Brake);
+        rightMotorLeader.setNeutralMode(NeutralMode.Brake);
+        leftMotorFollower.setNeutralMode(NeutralMode.Brake);
+        rightMotorFollower.setNeutralMode(NeutralMode.Brake);
+        // leftMotorFollower.setNeutralMode(NeutralMode.Coast);
+        // rightMotorFollower.setNeutralMode(NeutralMode.Coast);
+
+        // leftMotorLeader.configClosedloopRamp(0.25);
+        // rightMotorLeader.configClosedloopRamp(0.25);
+        
+        leftMotorLeader.configPeakOutputForward(1.0);
+        leftMotorLeader.configPeakOutputReverse(-1.0);
+        // leftMotorFollower.configPeakOutputForward(1.0);
+        // leftMotorFollower.configPeakOutputReverse(-1.0);
+        rightMotorLeader.configPeakOutputForward(1.0);
+        rightMotorLeader.configPeakOutputReverse(-1.0);
+        // rightMotorFollower.configPeakOutputForward(1.0);
+        // rightMotorFollower.configPeakOutputReverse(-1.0);
+        
+        leftMotorLeader.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 28, 33, 0.25));
+        rightMotorLeader.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 28, 33, 0.25));
+        // leftMotorFollower.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 28, 33, 0.25));
+        // rightMotorFollower.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 28, 33, 0.25));
+        
+        leftMotorLeader.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        rightMotorLeader.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        
+        leftMotorLeader.setSensorPhase(true);
+        rightMotorLeader.setSensorPhase(true);
+        
+        leftMotorLeader.setSelectedSensorPosition(0);
+        rightMotorLeader.setSelectedSensorPosition(0);
+
+        leftMotorLeader.config_kP(0, kP);
+        rightMotorLeader.config_kP(0, kP);
+        leftMotorLeader.config_kI(0, kI);
+        rightMotorLeader.config_kI(0, kI);
+        leftMotorLeader.config_kD(0, kD);
+        rightMotorLeader.config_kD(0, kD);
+        leftMotorLeader.config_kF(0, kF);
+        rightMotorLeader.config_kF(0, kF);
+
+        leftMotorLeader.configMaxIntegralAccumulator(0, 400);
+        rightMotorLeader.configMaxIntegralAccumulator(0, 400);
+        
+        leftMotorLeader.setIntegralAccumulator(0);
+        rightMotorLeader.setIntegralAccumulator(0);
+        // leftMotorLeader.configVelocityMeasurementWindow(4);
+        // leftMotorLeader.configClosedLoopPeriod(0, 5);
+        // rightMotorLeader.configVelocityMeasurementWindow(4);
+        // rightMotorLeader.configClosedLoopPeriod(0, 5);
 
         // leftMotorFollower.setInverted(TalonFXInvertType.CounterClockwise);
         // rightMotorFollower.setInverted(TalonFXInvertType.CounterClockwise);
         // leftMotorLeader.setInverted(TalonFXInvertType.CounterClockwise);
         // rightMotorLeader.setInverted(TalonFXInvertType.CounterClockwise);
 
-        leftMotorLeader.setSelectedSensorPosition(0);
-        rightMotorLeader.setSelectedSensorPosition(0);
-        leftMotorLeader.setIntegralAccumulator(0);
-        rightMotorLeader.setIntegralAccumulator(0);
     }
 
     public double[] getOrientation() {
