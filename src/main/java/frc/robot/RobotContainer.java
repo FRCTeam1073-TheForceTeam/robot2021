@@ -114,11 +114,10 @@ public class RobotContainer {
     // return squareTest;
     // collector.manipulateIsDeployed(true);
     // return collect;
-    return turn;
+    return turn90;
   }
 
-  public Command getTeleopCommand() {
-    // Command that we run in teleoperation mode.
+  public Command getTeleopCommand() { // Command that we run in teleoperation mode.
     collector.manipulateIsDeployed(true);
 
     return teleopCommand;
