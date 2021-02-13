@@ -15,14 +15,14 @@ public class TurnCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final Drivetrain drivetrain;
   private final Bling bling;
-  private double speed;
   private final double maxSpeed;
-  private double angleToTurn;
+  private final double angleToTurn;
+  private Rotation2d initRotation;
+  private Rotation2d endRotation;
+  private Rotation2d currentRotation;
   private double angleTurned;
   private double angleRemaining;
-  private Rotation2d toTurn;
-  private Rotation2d initRotation;
-  private Rotation2d currentRotation;
+  private double speed;
 
   /**
    * Creates a new TurnCommand that makes the robot turn around its own axis for a
@@ -42,8 +42,8 @@ public class TurnCommand extends CommandBase {
     this.maxSpeed = Math.abs(maxSpeed);
     addRequirements(drivetrain);
     addRequirements(bling);
-    SmartDashboard.putNumber("[Turn] Angle", angleToTurn);
-    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
+    SmartDashboard.putNumber("[Turn] Angle Remaining", angleRemaining);
+    SmartDashboard.putNumber("[Turn] Current Angle", drivetrain.getRobotPose().getRotation().getRadians());
     SmartDashboard.putNumber("[Turn] Speed", speed);
   }
 
@@ -61,16 +61,16 @@ public class TurnCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    initRotation = drivetrain.getRobotPose().getRotation();
-    toTurn = new Rotation2d(angleToTurn);
+    endRotation = drivetrain.getRobotPose().getRotation().plus(new Rotation2d(angleToTurn));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     currentRotation = drivetrain.getRobotPose().getRotation();
-    angleTurned = (currentRotation.minus(initRotation)).getRadians();
-    angleRemaining = toTurn.minus(currentRotation.minus(initRotation)).getRadians();
+    currentRotation.minus(endRotation);
+    angleRemaining = currentRotation.getRadians();
+    System.out.println("R" + angleRemaining);
 
     if (angleRemaining > Math.PI / 6 || angleRemaining < -Math.PI / 6) {
       speed = maxSpeed * Math.cbrt(angleRemaining / Math.PI);
@@ -80,10 +80,11 @@ public class TurnCommand extends CommandBase {
       speed = maxSpeed * -Math.sqrt(1.415 * angleRemaining);
     }
 
+    System.out.println("TRYING TO TURN AT " + speed + " rad/sec");
     drivetrain.setVelocity(0.0, speed);
-    SmartDashboard.putNumber("[Turn] Angle", angleToTurn);
-    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
-    SmartDashboard.putNumber("[Turn] Rotational Speed", speed);
+    SmartDashboard.putNumber("[Turn] Angle Remaining", angleRemaining);
+    SmartDashboard.putNumber("[Turn] Current Angle", currentRotation.getRadians());
+    SmartDashboard.putNumber("[Turn] Speed", speed);
   }
 
   // Called once the command ends or is interrupted.
