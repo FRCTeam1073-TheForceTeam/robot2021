@@ -73,7 +73,7 @@ public class RobotContainer {
   private final TurnCommand turn = new TurnCommand(drivetrain, bling, 0.5 * Math.PI, 1.20);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
-      magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
+      magazine, cellTracker, bling, 5, true, 10, 1.5, 1.0);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
   /**
@@ -114,7 +114,7 @@ public class RobotContainer {
     // return squareTest;
     // collector.manipulateIsDeployed(true);
     // return collect;
-    return turn;
+    return chaseAndCollect;
   }
 
   public Command getTeleopCommand() { // Command that we run in teleoperation mode.
