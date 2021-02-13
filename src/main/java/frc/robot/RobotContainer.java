@@ -75,6 +75,7 @@ public class RobotContainer {
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1, 0.5, 1.75);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
+  private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
   /**
@@ -110,15 +111,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
-    // return (new PrintCommand("[RobotContainer] Starting autonomous test (driving
-    // forward).")
-    // .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
-    // return squareTest;
-    // collector.manipulateIsDeployed(true);
-    // return collect;
-
-    // return squareTest;
-    return turn;//new DriveToPointCommand(drivetrain, bling, 1, 2, 1);
+    return toPoint;
   }
 
   public Command getTeleopCommand() { // Command that we run in teleoperation mode.

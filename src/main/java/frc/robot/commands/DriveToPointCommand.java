@@ -67,9 +67,9 @@ public class DriveToPointCommand extends CommandBase {
         diffY = y - currentPose.getY();
         rotationNeeded = new Rotation2d(Math.atan2(diffX, diffY));
         angleToTurn = (rotationNeeded.minus(currentRotation)).getRadians();
-        rotationalSpeed = Math.max(0.25, Math.min(maxVelocity, angleToTurn / (0.5 * Math.PI)));
+        rotationalSpeed = Math.max(0.25, Math.min(maxVelocity * 2, angleToTurn / (0.075 * Math.PI)));
         distanceToDrive = Math.hypot(diffX, diffY);
-        velocity = Math.max(0.25, Math.min(maxVelocity, distanceToDrive));
+        velocity = Math.max(0.15, Math.min(maxVelocity, distanceToDrive * 10));
         drivetrain.setVelocity(velocity, rotationalSpeed);
     }
 
