@@ -70,7 +70,7 @@ public class RobotContainer {
   private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn = new TurnCommand(drivetrain, bling, Math.PI / 2, 1.5);
-  private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.5);
+  private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.2);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
