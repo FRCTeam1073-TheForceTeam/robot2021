@@ -23,9 +23,9 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.PowerCellTracker;
-import frc.robot.commands.ChaseAndCollectCellsCommand;
-import frc.robot.commands.AdvanceMagazineCommand;
 // Import commands: Add commands here.
+import frc.robot.commands.AdvanceMagazineCommand;
+import frc.robot.commands.ChaseAndCollectCellsCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveForwardCommand;
