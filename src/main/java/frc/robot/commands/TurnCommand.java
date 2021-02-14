@@ -7,8 +7,6 @@ package frc.robot.commands;
 import frc.robot.Utility;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.OI;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -67,15 +65,13 @@ public class TurnCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double angleRemaining = (angleTurned - angleToTurn);
-    speed = maxSpeed * Math.signum(angleRemaining) * Math.min(Math.pow(Math.abs(angleRemaining/angleToTurn), 0.5) + 0.2, 1);
-    // if (Math.abs(angleRemaining) > Math.PI / 6.0) {
-    //   speed = maxSpeed * Math.cbrt(angleRemaining / Math.PI);
-    // } else {
-    //   speed = maxSpeed * Math.signum(angleRemaining) * Math.sqrt(1.415 * Math.abs(angleRemaining));
-    // }
+    angleTurned = MathUtil.angleModulus(drivetrain.getRobotPose().getRotation().getRadians() - initAngle);
+    double angleRemaining = (angleToTurn - angleTurned);
+    speed = maxSpeed * Math.signum(angleRemaining)
+        * Math.min(Math.pow(Math.abs(angleRemaining / angleToTurn), 0.5) + 0.2, 1);
+    SmartDashboard.putNumber("[Turn] Target Angle", angleToTurn);
+    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
     System.out.println("[TurnCommand] Turn speed is " + speed + " rad/sec");
-    // speed = -Utility.deadzone(OI.driverController.getRawAxis(4));
     drivetrain.setVelocity(0.0, speed);
   }
 
@@ -87,7 +83,7 @@ public class TurnCommand extends CommandBase {
     if (interrupted) {
       System.out.println("[TurnCommand] Turn has been interrupted!");
     } else {
-      System.out.println("[TurnCommand] Turn has finished.");      
+      System.out.println("[TurnCommand] Turn has finished.");
     }
     SmartDashboard.putBoolean("aaaaa", true);
   }
@@ -95,9 +91,6 @@ public class TurnCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    angleTurned=MathUtil.angleModulus(drivetrain.getRobotPose().getRotation().getRadians()-initAngle);
-    SmartDashboard.putNumber("[Turn] Target Angle", angleToTurn);
-    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
     return (angleToTurn - angleTurned) * Math.signum(angleToTurn) <= 0.02;
   }
 }

@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 
@@ -13,11 +14,11 @@ public class DriveToPointCommand extends CommandBase {
     private final double x;
     private final double y;
     private final double maxVelocity;
-    private Pose2d currentPose;
-    private Rotation2d currentRotation;
+    private Pose2d pose;
+    private double currentAngle;
     private double diffX;
     private double diffY;
-    private Rotation2d rotationNeeded;
+    private double angleNeeded;
     private double angleToTurn;
     private double rotationalSpeed;
     private double distanceToDrive;
@@ -45,9 +46,9 @@ public class DriveToPointCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        currentPose = drivetrain.getRobotPose();
-        diffX = x - currentPose.getX();
-        diffY = y - currentPose.getY();
+        pose = drivetrain.getRobotPose();
+        diffX = x - pose.getX();
+        diffY = y - pose.getY();
     }
 
     /** If the inputted value is between -0.1 and 0.1 then this outputs 0.0 */
@@ -61,15 +62,19 @@ public class DriveToPointCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        currentPose = drivetrain.getRobotPose();
-        currentRotation = currentPose.getRotation();
-        diffX = x - currentPose.getX();
-        diffY = y - currentPose.getY();
-        rotationNeeded = new Rotation2d(Math.atan2(diffX, diffY));
-        angleToTurn = (rotationNeeded.minus(currentRotation)).getRadians();
-        rotationalSpeed = Math.max(0.25, Math.min(maxVelocity, angleToTurn / (0.5 * Math.PI)));
+        pose = drivetrain.getRobotPose();
+        currentAngle = pose.getRotation().getRadians();
+        diffX = x - pose.getX();
+        diffY = y - pose.getY();
+        angleNeeded = (new Rotation2d(Math.atan2(diffX, diffY))).getRadians();
+        angleToTurn = MathUtil.angleModulus(angleNeeded - currentAngle);
+        rotationalSpeed = MathUtil.clamp(angleToTurn / (Math.PI / 4), 0.25, maxVelocity * 2);
         distanceToDrive = Math.hypot(diffX, diffY);
-        velocity = Math.max(0.25, Math.min(maxVelocity, distanceToDrive));
+        if (Math.abs(angleToTurn) >= Math.PI / 4) {
+            velocity = MathUtil.clamp(1.5 * distanceToDrive, 0.1, maxVelocity);
+        } else {
+            velocity = 0.0;
+        }
         drivetrain.setVelocity(velocity, rotationalSpeed);
     }
 

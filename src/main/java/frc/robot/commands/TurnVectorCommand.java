@@ -7,9 +7,9 @@ package frc.robot.commands;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.drive.Vector2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 
 /** An example command that uses an example subsystem. */
 public class TurnVectorCommand extends CommandBase {
@@ -18,12 +18,12 @@ public class TurnVectorCommand extends CommandBase {
   private final Bling bling;
   private final double angleToTurn;
   private final double maxSpeed;
-  private Rotation2d rotation;
-  private Vector2d vector;
   private Vector2d endVector;
   private Vector2d endVector90off;
-  private double angle;
+  private Vector2d vector;
+  private double initAngle;
   private double endAngle;
+  private double angle;
   private double dot;
   private double sign;
   private double sign2;
@@ -52,9 +52,8 @@ public class TurnVectorCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    angle = drivetrain.getRobotPose().getRotation().getRadians();
-    vector = new Vector2d(Math.cos(angle), Math.sin(angle));
-    endAngle = angle + angleToTurn;
+    initAngle = drivetrain.getRobotPose().getRotation().getRadians();
+    endAngle = MathUtil.angleModulus(initAngle + angleToTurn);
     endVector = new Vector2d(Math.cos(endAngle), Math.sin(endAngle));
     sign = Math.signum(angleToTurn);
     endVector90off = new Vector2d(Math.cos(endAngle + sign * 0.5 * Math.PI), Math.sin(endAngle + sign * 0.5 * Math.PI));
@@ -71,7 +70,7 @@ public class TurnVectorCommand extends CommandBase {
     if (sign != sign2 && sign2 != 0.0) {
       sign = sign2;
     }
-    speedMultiplier = sign * (1.0 - ((dot + 1.0) / 2.0));
+    speedMultiplier = sign * Math.abs((angleToTurn + initAngle - angle) / angleToTurn);
     drivetrain.setVelocity(0.0, speedMultiplier * maxSpeed);
     SmartDashboard.putNumber("[TurnVector] dot", dot);
     SmartDashboard.putNumber("[TurnVector] angle", angle);
