@@ -29,8 +29,8 @@ public class DriveToPointCommand extends CommandBase {
      * 
      * @param drivetrain  - the drivetrain used by this command
      * @param bling       - the bling used by this command
-     * @param x           - the x coordinate that should be driven to
-     * @param y           - the y coordinate that should be driven to
+     * @param x           - the x coordinate that should be driven to (in meters)
+     * @param y           - the y coordinate that should be driven to (in meters)
      * @param maxVelocity - the maximum velocity the robot should drive at
      */
     public DriveToPointCommand(Drivetrain drivetrain, Bling bling, double x, double y, double maxVelocity) {
@@ -45,6 +45,7 @@ public class DriveToPointCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        currentPose = drivetrain.getRobotPose();
         diffX = x - currentPose.getX();
         diffY = y - currentPose.getY();
     }
