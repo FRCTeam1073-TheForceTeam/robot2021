@@ -77,7 +77,6 @@ public class RobotContainer {
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
-      magazine, cellTracker, bling, 5, true, 10, 1.5, 1.0);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
   /**
