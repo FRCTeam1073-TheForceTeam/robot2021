@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
@@ -21,11 +23,14 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.PowerCellTracker;
-
+import frc.robot.commands.ChaseAndCollectCellsCommand;
+import frc.robot.commands.AdvanceMagazineCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveForwardCommand;
+import frc.robot.commands.DriveToPointCommand;
+import frc.robot.commands.DrivetrainPowerTestCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MagazineControls;
@@ -43,7 +48,7 @@ import frc.robot.commands.TurnCommand;
  */
 public class RobotContainer {
 
- // Subsystems: Add subsystems here
+  // Subsystems: Add subsystems here
   private final OI oi = new OI();
   private static final Bling bling = new Bling();
   private final Drivetrain drivetrain = new Drivetrain();
@@ -56,8 +61,8 @@ public class RobotContainer {
   private final PowerPortTracker portTracker = new PowerPortTracker();
   private final PowerCellTracker cellTracker = new PowerCellTracker();
 
-
   // Commands: Add commands here.
+  private final DrivetrainPowerTestCommand drivetrainTestCommand = new DrivetrainPowerTestCommand(drivetrain, 0.75);
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
   private final DriveControls teleDrive = new DriveControls(drivetrain);
@@ -65,10 +70,13 @@ public class RobotContainer {
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
-  private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, Math.PI / 2, 0.15);
-  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.25, 0.5, 1.75);
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleCollect);
-  
+  private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, -Math.PI / 2, 2.00);
+  private final TurnCommand turn = new TurnCommand(drivetrain, bling, 0.9 * Math.PI, 1.20);
+  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1, 0.5, 1.75);
+  private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
+      magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -91,7 +99,8 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
+    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kY.value);
+    magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
   }
 
   /**
@@ -100,21 +109,27 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return (new PrintCommand("[RobotContainer] Starting autonomous test (driving forward).")
-        .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
-//    return squareTest;
+    drivetrain.resetRobotOdometry();
+    // return (new PrintCommand("[RobotContainer] Starting autonomous test (driving
+    // forward).")
+    // .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
+    // return squareTest;
     // collector.manipulateIsDeployed(true);
     // return collect;
+
+    // return squareTest;
+    return turn;//new DriveToPointCommand(drivetrain, bling, 1, 2, 1);
   }
 
-  public Command getTeleopCommand() {
-    // Command that we run in teleoperation mode.
+  public Command getTeleopCommand() { // Command that we run in teleoperation mode.
+    drivetrain.resetRobotOdometry();
     collector.manipulateIsDeployed(true);
+
     return teleopCommand;
   }
 
   public Command getTestCommand() {
-        return teleDrive;
+    return teleDrive;
 
   }
 

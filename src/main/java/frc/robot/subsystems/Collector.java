@@ -43,13 +43,13 @@ public class Collector extends SubsystemBase {
    */
   public void setCollect(double power) {
     // TODO: SmartDashboard or ShuffleBoard
-    if (!(isStalled()) && isDeployed) {
-      collectorMotor.set(ControlMode.PercentOutput, power);
-    } else if (!(isDeployed)) {
-      System.out.println("Collector is NOT deployed");
-    } else {
-      System.out.println("Motor is stalled");
-    }
+    // if (!(isStalled()) && isDeployed) {
+    collectorMotor.set(ControlMode.PercentOutput, power);
+    // } else if (!(isDeployed)) {
+    // System.out.println("Collector is NOT deployed");
+    // } else {
+    // System.out.println("Motor is stalled");
+    // }
   }
 
   /**
