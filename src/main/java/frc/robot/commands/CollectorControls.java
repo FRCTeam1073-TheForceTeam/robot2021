@@ -36,13 +36,19 @@ public class CollectorControls extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (OI.operatorController.getBumper(Hand.kLeft)) {
+        if (OI.operatorController.getAButton()) {
             power = -0.5;
         } else {
             power = 0;
         }
         SmartDashboard.putNumber("Collector Power", power);
         collector.setCollect(power);
+        if (OI.operatorController.getXButtonPressed()) {
+            collector.lower();
+        }
+        if (OI.operatorController.getYButtonPressed()) {
+            collector.raise();
+        }
     }
 
     // Called once the command ends or is interrupted.

@@ -30,7 +30,9 @@ public class Turret extends SubsystemBase {
         System.out.println("[Magazine] Error: Turret motor (CAN ID 24) cannot find encoder (Error code: "
             + turretEncoderAttached.value + ").");
       }
+    
       setPIDF();
+      
     }
 
     /// Returns the accumulated position of the turret in radians.
@@ -49,6 +51,10 @@ public class Turret extends SubsystemBase {
       turretRotator.set(ControlMode.Velocity, turretVelocity);
     }
 
+    /// Directly sets the power of the turret motor.
+    public void setPower(double power) {
+      turretRotator.set(ControlMode.PercentOutput, power);
+    }
 
     @Override
     public void periodic() {

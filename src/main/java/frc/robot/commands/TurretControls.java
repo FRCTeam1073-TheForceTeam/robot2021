@@ -6,19 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.OI;
 
-public class MagazineControls extends CommandBase {
+public class TurretControls extends CommandBase {
 
-  private Magazine magazine;
-  private double magazineVelocity;
+  private Turret turret;
+  private double turretVelocity;
 
   /** Creates a new MagazineControls. */
-  public MagazineControls(Magazine magazine) {
-    this.magazine = magazine;
+  public TurretControls(Turret turret) {
+    this.turret = turret;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(magazine);
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
@@ -30,9 +30,9 @@ public class MagazineControls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    magazineVelocity = OI.operatorController.getRawAxis(2);
+    turretVelocity = 0.5 * OI.operatorController.getRawAxis(4);
     //SmartDashboard.putNumber("Magazine Power", magazineVelocity);
-    magazine.setVelocity(magazineVelocity);
+    turret.setVelocity(turretVelocity);
     // magazine.setVelocity(magazineVelocity);
   }
 
