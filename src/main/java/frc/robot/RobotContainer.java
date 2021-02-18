@@ -75,7 +75,7 @@ public class RobotContainer {
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1, 0.5, 1.75);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect).alongWith(teleMagazine);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
