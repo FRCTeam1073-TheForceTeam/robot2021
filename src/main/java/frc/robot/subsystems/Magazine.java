@@ -106,7 +106,7 @@ public class Magazine extends SubsystemBase {
     // if (OI.operatorController.getBumper(Hand.kRight)) {
     // magazineMotor.setSelectedSensorPosition(0);
     // }
-    isInTaking = inTakeSensor.get();
+    isInTaking = !inTakeSensor.get();
     SmartDashboard.putBoolean("inTakeSensor.get() [MAG]", isInTaking);
     SmartDashboard.putNumber("Magazine Velocity [MAG]", magazineMotor.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Magazine Target Velocity [MAG]", magazineVelocity);
