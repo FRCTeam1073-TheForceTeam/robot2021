@@ -73,7 +73,7 @@ public class RobotContainer {
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn = new TurnCommand(drivetrain, bling, Math.PI / 2, 1.5);
   private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.2);
-  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 1.5, 3, 0.5, 1.75);
+  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1.5, 0.5, 2.25);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
