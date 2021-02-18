@@ -6,33 +6,33 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Utility;
 
 public class Magazine extends SubsystemBase {
 
   private WPI_TalonSRX magazineMotor;
+  private final DigitalInput inTakeSensor = new DigitalInput(0);
+  private boolean isInTaking;
   private int cellCount;
   private double P = 0.6;
   private double I = 0.01;
   private double D = 0;
   private double F = 0;
-  private boolean cellCheck, cellEntering, cellExiting;
-  private double magazineTicksPerMeter = ((18054.0 + 18271.0 + 18296.0 + 18282.0 + 18243.0) / 5.0) / Units.inchesToMeters(25.0);
+  // private boolean cellCheck, cellEntering, cellExiting;
+  private double magazineTicksPerMeter = ((18054.0 + 18271.0 + 18296.0 + 18282.0 + 18243.0) / 5.0)
+      / Units.inchesToMeters(25.0);
 
   public Magazine() {
     SmartDashboard.putNumber("AAAAA", magazineTicksPerMeter);
     magazineMotor = new WPI_TalonSRX(26);
     cellCount = 0;
-    cellCheck = false;
-    cellEntering = false;
-    cellExiting = false;
+    // cellCheck = false;
+    // cellEntering = false;
+    // cellExiting = false;
     magazineMotor.configFactoryDefault();
     magazineMotor.setSafetyEnabled(false);
     magazineMotor.setNeutralMode(NeutralMode.Brake);
@@ -45,7 +45,6 @@ public class Magazine extends SubsystemBase {
     setPID();
   }
 
-
   public void setPID() {
     magazineMotor.config_kP(0, P);
     magazineMotor.config_kI(0, I);
@@ -57,7 +56,8 @@ public class Magazine extends SubsystemBase {
 
   /// Set the induct forward/reverse velocity in meters/second.
   public void setVelocity(double inductVelocity) {
-    // Converting meters/second to ticks/0.1s (or if you're feeling fancy, ticks/decisecond)
+    // Converting meters/second to ticks/0.1s (or if you're feeling fancy,
+    // ticks/decisecond)
     magazineVelocity = inductVelocity * magazineTicksPerMeter * 0.1;
     magazineMotor.set(ControlMode.Velocity, magazineVelocity);
   }
@@ -82,6 +82,10 @@ public class Magazine extends SubsystemBase {
     return cellCount;
   }
 
+  public boolean getSensor() {
+    return isInTaking;
+  }
+
   // Add to the number of power cells.
   public void addPowerCell() {
     cellCount++;
@@ -100,10 +104,11 @@ public class Magazine extends SubsystemBase {
   @Override
   public void periodic() {
     // if (OI.operatorController.getBumper(Hand.kRight)) {
-    //   magazineMotor.setSelectedSensorPosition(0);
+    // magazineMotor.setSelectedSensorPosition(0);
     // }
-    SmartDashboard.putNumber("Magazine Velocity [MAG]",
-        magazineMotor.getSelectedSensorVelocity());
+    isInTaking = inTakeSensor.get();
+    SmartDashboard.putBoolean("inTakeSensor.get() [MAG]", isInTaking);
+    SmartDashboard.putNumber("Magazine Velocity [MAG]", magazineMotor.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Magazine Target Velocity [MAG]", magazineVelocity);
     SmartDashboard.putNumber("Magazine Position [MAG]", magazineMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Magazine Power [MAG]", magazineMotor.get());
