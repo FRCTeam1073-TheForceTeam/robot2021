@@ -94,7 +94,7 @@ public class ChaseCommand extends CommandBase {
             alignState();
             loopsWithoutData = 0;
             skipScan = true;
-            isScanning = true;
+            isScanning = false;
 
         } else if (isScanning) {
             time = System.currentTimeMillis();
@@ -110,7 +110,11 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            rotationalSpeedMultiplier = Math.max(-(powerCellData.cx - 160) / 160.0, 0.25);
+            rotationalSpeedMultiplier = Math.signum(-(powerCellData.cx - 160) / 160.0)
+                    * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.25);
+            if (rotationalSpeedMultiplier < 0.3) {
+                rotationalSpeedMultiplier = 0.3;
+            }
             velocityMultiplier = 0.0;
         } else {
             loopsWithoutData++;
@@ -149,8 +153,8 @@ public class ChaseCommand extends CommandBase {
      */
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
-            rotationalSpeedMultiplier = Math.max(-(powerCellData.cx - 160) / 160.0, 0.25);
-            velocityMultiplier = -(powerCellData.cy - 240) / 240.0;
+            rotationalSpeedMultiplier = -(powerCellData.cx - 160) / 160.0;
+            velocityMultiplier = Math.max(-(powerCellData.cy - 240) / 240.0, 0.25);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.25) {
                 rotationalSpeedMultiplier = 0.25;
@@ -166,9 +170,16 @@ public class ChaseCommand extends CommandBase {
             }
 
         } else if (alignState == AlignState.ALIGNED) {
-            rotationalSpeedMultiplier = Math.max(-(powerCellData.cx - 160) / 160.0, 0.15);
-            ;
-            velocityMultiplier = -(powerCellData.cy - 240) / 240.0;
+            rotationalSpeedMultiplier = 0.25 * -(powerCellData.cx - 160) / 160.0;
+            velocityMultiplier = Math.max(-(powerCellData.cy - 240) / 240.0, 0.25);
+
+            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.25) {
+                rotationalSpeedMultiplier = 0.25;
+
+            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.25) {
+                rotationalSpeedMultiplier = -0.25;
+
+            }
 
             if (powerCellData.vy < -30) {
                 velocityMultiplier = 1.0;
@@ -176,7 +187,9 @@ public class ChaseCommand extends CommandBase {
 
             if (powerCellData.cy >= 200) {
                 System.out.println("DONEDONEDONE");
-                isFinished = true;
+                rotationalSpeedMultiplier = 0.0;
+                velocityMultiplier = 0.0;
+                // isFinished = true;
             }
 
         } else {
