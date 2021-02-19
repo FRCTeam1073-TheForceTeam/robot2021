@@ -26,6 +26,7 @@ import frc.robot.subsystems.PowerCellTracker;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
 import frc.robot.commands.ChaseAndCollectCellsCommand;
+import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveForwardCommand;
@@ -76,6 +77,7 @@ public class RobotContainer {
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1.5, 0.5, 2.25);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
+  private final ChaseCommand chase = new ChaseCommand(drivetrain, cellTracker, bling, 2.25, 1.0);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
@@ -112,7 +114,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
-    return squareTest;
+    return chase;
   }
 
   public Command getTeleopCommand() { // Command that we run in teleoperation mode.
