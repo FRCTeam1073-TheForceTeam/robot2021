@@ -69,7 +69,6 @@ public class PowerPortTracker extends OpenMVSubsystem {
    * @return true if there is a tracked target, false if there is not.
    */    
     public boolean getPortData(PowerPortData data) {
-     
       // If !visible => clear data and return false.
       // Else copy data and return true.
       if (m_portData.quality > 10) {
@@ -163,9 +162,8 @@ public class PowerPortTracker extends OpenMVSubsystem {
       SmartDashboard.putNumber("PowerPort.Qual", m_portData.quality);
       SmartDashboard.putNumber("PowerPort.Area", m_portData.area);
 
-     readRange();
-     SmartDashboard.putNumber("PowerPort.Range", m_range);
-     SmartDashboard.putNumber("PowerPort.RangeSignal", m_rangeSignalStrength);
+      readRange();
+      SmartDashboard.putNumber("PowerPort.Range", m_range);
+      SmartDashboard.putNumber("PowerPort.RangeSignal", m_rangeSignalStrength);
     }
-    
 }
