@@ -45,6 +45,8 @@ public class Bling extends SubsystemBase {
   int gameG;
   int gameB;
 
+  public int[] rgbArr = {0,0,0};
+
   public boolean cleared = false;
 
   public Bling() {
@@ -185,6 +187,48 @@ public class Bling extends SubsystemBase {
     cleared = false;
   }
 
+  public void setArray(String color) {
+    if (color.equals("red")) {
+      rgbArr[0] = 255;
+      rgbArr[1] = 0;
+      rgbArr[2] = 0;
+
+    } else if (color.equals("orange")) {
+      rgbArr[0] = 255;
+      rgbArr[1] = 165;
+      rgbArr[2] = 0;
+
+    } else if (color.equals("yellow")) {
+      rgbArr[0] = 255;
+      rgbArr[1] = 255;
+      rgbArr[2] = 0;
+
+    } else if (color.equals("green")) {
+      rgbArr[0] = 0;
+      rgbArr[1] = 255;
+      rgbArr[2] = 0;
+
+    } else if (color.equals("blue")) {
+      rgbArr[0] = 0;
+      rgbArr[1] = 0;
+      rgbArr[2] = 255;
+
+    } else if (color.equals("purple")) {
+      rgbArr[0] = 128;
+      rgbArr[1] = 0;
+      rgbArr[2] = 128;
+
+    } else if (color.equals("black")) {
+      rgbArr[0] = 0;
+      rgbArr[1] = 0;
+      rgbArr[2] = 0;
+
+    } else if (color.equals("white")) {
+      rgbArr[0] = 255;
+      rgbArr[1] = 255;
+      rgbArr[2] = 255;
+    }
+  }
 
 
   // setColorRGBAll sets the LEDs all to one color
