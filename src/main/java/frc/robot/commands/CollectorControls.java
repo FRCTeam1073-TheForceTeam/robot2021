@@ -36,8 +36,8 @@ public class CollectorControls extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (OI.operatorController.getBumper(Hand.kLeft)) {
-            power = -0.5;
+        if (OI.operatorController.getAButton()) {
+            power = OI.operatorController.getRawAxis(1);
         } else {
             power = 0;
         }
