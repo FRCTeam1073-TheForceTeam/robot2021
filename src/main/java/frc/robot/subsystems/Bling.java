@@ -41,16 +41,42 @@ public class Bling extends SubsystemBase {
 
   public Bling() {
     m_led = new AddressableLED(0);
-    m_ledBuffer = new AddressableLEDBuffer(79);
+    m_ledBuffer = new AddressableLEDBuffer(80);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
   }
 
+  public void initialize() {
+    time_burst = 0;
+    burst_done = 0;
+    time = 0;
+    time_blinkyLEDs = 0;
+    leds_from_middle = 0;
+    move = 0;
+    gameDataBlinkCount = 0;
+    // SmartDashboard.putBoolean("Winch", winch.isWinchEngaged());
+  }
+
   @Override
   public void periodic() {
     if (!cleared) {
-      LEDRainbow();
+
+      // if (burst_done == 0) {
+      //   burst(m_ledBuffer.getLength(), 0, 0, 255);
+      //   // setPatternRGBAll(0, 0, 0);
+      // } else {
+      batteryBling(0, 6, 8.0, 12.5);
+      
+
+        // LEDRainbow();
+        setPatternRGBAll(0, 0, 255);
+      // }
+
+      // setPatternRGBAll(0, 0, 255);
+
+    } else {
+      clearLEDs();
     }
     // rangeRGB(0, 5, 0, 0, 255);
     // gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -103,16 +129,11 @@ public class Bling extends SubsystemBase {
     cleared = true;
   }
 
-  public void initialize() {
-    time_burst = 0;
-    burst_done = 1;
-    time = 0;
-    time_blinkyLEDs = 0;
-    leds_from_middle = 0;
-    move = 0;
-    gameDataBlinkCount = 0;
-    // SmartDashboard.putBoolean("Winch", winch.isWinchEngaged());
+  public void uncleared() {
+    cleared = false;
   }
+
+
 
   // setPatternRGBAll sets the LEDs all to one color
   public void setPatternRGBAll(int r, int g, int b) {
