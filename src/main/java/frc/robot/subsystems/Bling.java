@@ -17,6 +17,7 @@ public class Bling extends SubsystemBase {
   public AddressableLED m_led;
   public AddressableLEDBuffer m_ledBuffer;
   public XboxController driverController;
+  Collector collector;
   MagazineControls magazine;
   PowerCellTracker portTracker;
 
@@ -36,6 +37,8 @@ public class Bling extends SubsystemBase {
   int move;
   String gameData;
   int i_mag;
+  int dash_num;
+  int dash_time;
 
   public boolean cleared = false;
 
@@ -55,6 +58,8 @@ public class Bling extends SubsystemBase {
     leds_from_middle = 0;
     move = 0;
     gameDataBlinkCount = 0;
+    dash_num = 0;
+    dash_time = 0;
     // SmartDashboard.putBoolean("Winch", winch.isWinchEngaged());
   }
 
@@ -64,16 +69,28 @@ public class Bling extends SubsystemBase {
 
       // if (burst_done == 0) {
       //   burst(m_ledBuffer.getLength(), 0, 0, 255);
-      //   // setPatternRGBAll(0, 0, 0);
+      //   // setColorRGBAll(0, 0, 0);
       // } else {
       batteryBling(0, 6, 8.0, 12.5);
+
+      dashing(12, 6, 255, 192, 203);
+
+      // if (collector.isDeployed()) {
+      //   rangeRGB(6, 6, 0, 255, 0);
+      // } else {
+      //   rangeRGB(6, 6, 255, 0, 0);
+      // }
+
+
+      
       
 
         // LEDRainbow();
-        setPatternRGBAll(0, 0, 255);
+      rangeRGB(6, 20, 0, 0, 255);
+        // setColorRGBAll(0, 0, 255);
       // }
 
-      // setPatternRGBAll(0, 0, 255);
+      // setColorRGBAll(0, 0, 255);
 
     } else {
       clearLEDs();
@@ -84,7 +101,7 @@ public class Bling extends SubsystemBase {
 
     // if (burst_done == 0) {
     //   // burst(bling.getM_LEDBuffer().getLength(), 0, 0, 255);
-    //   // bling.setPatternRGBAll(0, 0, 0);
+    //   // bling.setColorRGBAll(0, 0, 0);
     // } else {
     //   if (gameData.equals("R") && gameDataBlinkCount < 5) {
     //     blinkyLights(0, m_ledBuffer.getLength(), 255, 0, 0);
@@ -122,7 +139,7 @@ public class Bling extends SubsystemBase {
   }
 
   public void clearLEDs() {
-    setPatternRGBAll(0, 0, 0);
+    setColorRGBAll(0, 0, 0);
   }
 
   public void cleared() {
@@ -135,8 +152,8 @@ public class Bling extends SubsystemBase {
 
 
 
-  // setPatternRGBAll sets the LEDs all to one color
-  public void setPatternRGBAll(int r, int g, int b) {
+  // setColorRGBAll sets the LEDs all to one color
+  public void setColorRGBAll(int r, int g, int b) {
     for (var i = 0; i < (m_ledBuffer.getLength()); i++) {
       m_ledBuffer.setRGB(i, r, g, b);
     }
@@ -264,13 +281,13 @@ public class Bling extends SubsystemBase {
       // Moves the LEDs out from the center by one light
       leds_from_middle = leds_from_middle + 1;
       // Sets the LEDs
-      setPatternRGBAll(0, 0, 0);
+      setColorRGBAll(0, 0, 0);
       setLEDs2(middle1 - leds_from_middle, middle2 + leds_from_middle, r, g, b);
     } else {
       // Resets the time and says that the burst is finished
       burst_done = 1;
       time_burst = 0;
-      setPatternRGBAll(0, 0, 0);
+      setColorRGBAll(0, 0, 0);
     }
   }
 
@@ -283,12 +300,23 @@ public class Bling extends SubsystemBase {
       time = time + 1;
     } else if (time < 100) {
       // Sets the LEDs to the second color
-      setPatternRGBAll(r, g, b);
+      setColorRGBAll(r, g, b);
       time = time + 1;
     } else {
       // Resets the time
       time = 0;
     }
+  }
+
+  public void dashing(int min, int num, int r, int g, int b) {
+    if (dash_time >= 50) {
+      if (dash_num != 0) {
+        setLED(min + ((dash_num - 1) % num), 0, 0, 0);
+      }
+      setLED(min + (dash_num % num), r, g, b);
+      dash_num += 1;
+    }
+    dash_time += 1;
   }
 
 
