@@ -49,8 +49,7 @@ public class CollectCommand extends CommandBase {
     }
 
     /**
-     * Creates a new CollectCommand that runs the Collector at 100% power for two
-     * seconds.
+     * Creates a new CollectCommand that runs the Collector at 100%.
      *
      * @param colletor The collector used by this command.
      * @param magazine The magazine used by this command.
@@ -91,17 +90,17 @@ public class CollectCommand extends CommandBase {
                 isFinished = true;
             }
         } else {
-            if (time - initialTime >= 1500) {
-                velocity = 0.0;
-                bling.setArray("green");
-            } else if (!collector.isStalled()) {
-                bling.setArray("purple");
-            } else {
+            if (collector.isStalled()) {
                 bling.setArray("red");
                 initialTime = System.currentTimeMillis();
                 shouldUnstall = true;
                 velocity = 0.0;
                 powerMultiplier *= -1;
+            } else if (time - initialTime >= 1500) {
+                velocity = 0.0;
+                bling.setArray("purple");
+            } else {
+                bling.setArray("blue");
             }
         }
 

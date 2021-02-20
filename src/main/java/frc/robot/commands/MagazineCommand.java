@@ -13,11 +13,11 @@ public class MagazineCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final Magazine magazine;
     private final Bling bling;
-    private final double power;
+    private final double velocity;
     private boolean sensor;
     private boolean hadNothing;
     private boolean isFinished;
-    private int framesFalse;
+    private int loopsFalse;
 
     /**
      * Creates a new MagazineCommand.
@@ -26,10 +26,10 @@ public class MagazineCommand extends CommandBase {
      * @param bling    The bling used by this command.
      * @param power    The power the magazine isset to by this command.
      */
-    public MagazineCommand(Magazine magazine, Bling bling, double power) {
+    public MagazineCommand(Magazine magazine, Bling bling, double velocity) {
         this.magazine = magazine;
         this.bling = bling;
-        this.power = power;
+        this.velocity = velocity;
         addRequirements(magazine);
         addRequirements(bling);
     }
@@ -57,7 +57,7 @@ public class MagazineCommand extends CommandBase {
             hadNothing = true;
             isFinished = true;
         }
-        framesFalse = 0;
+        loopsFalse = 0;
     }
 
     public boolean hadNothing() {
@@ -69,17 +69,17 @@ public class MagazineCommand extends CommandBase {
     public void execute() {
         sensor = magazine.getSensor();
         if (sensor) {
-            magazine.setPower(0.15);
-            bling.setArray("yellow");
-            framesFalse = 0;
+            magazine.setVelocity(velocity);
+            bling.setArray("blue");
+            loopsFalse = 0;
         } else {
-            magazine.setPower(0.0);
-            bling.setArray("green");
-            framesFalse++;
+            magazine.setVelocity(0.0);
+            bling.setArray("purple");
+            loopsFalse++;
         }
         bling.setColorRGBAll((int) (bling.rgbArr[0] * 0.3), (int) (bling.rgbArr[1] * 0.3),
                 (int) (bling.rgbArr[2] * 0.3));
-        if (framesFalse > 2) {
+        if (loopsFalse > 2) {
             isFinished = true;
         }
     }
@@ -88,7 +88,6 @@ public class MagazineCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         magazine.setPower(0.0);
-        bling.setColorRGBAll(0, 0, 0);
     }
 
     // Returns true when the command should end.

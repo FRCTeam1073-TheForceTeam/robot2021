@@ -129,10 +129,11 @@ public class ChaseCommand extends CommandBase {
             initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
             initialTime = System.currentTimeMillis();
         } else {
-            bling.setArray("red");
+            bling.setArray("orange");
             loopsWithoutData++;
             System.out.println("2LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
             if (loopsWithoutData > 5) {
+                bling.setArray("red");
                 rotationalSpeedMultiplier = 0.0;
                 velocityMultiplier = 0.0;
             } else {
@@ -152,10 +153,10 @@ public class ChaseCommand extends CommandBase {
         if (!hasData) {
             alignState = AlignState.NOT_VISIBLE;
 
-        } else if (powerCellData.cx >= 141 && powerCellData.cx <= 180) {
+        } else if (powerCellData.cx >= 139 && powerCellData.cx <= 180) {
             alignState = AlignState.ALIGNED;
 
-        } else if (powerCellData.cx < 141) {
+        } else if (powerCellData.cx < 139) {
             alignState = AlignState.LEFT;
 
         } else {
@@ -172,8 +173,8 @@ public class ChaseCommand extends CommandBase {
      */
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
-            rotationalSpeedMultiplier = -(powerCellData.cx - 160) / 160.0;
-            velocityMultiplier = Math.max(-(powerCellData.cy - 240) / 240.0, 0.15);
+            rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.35, 1.0);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.15) {
                 rotationalSpeedMultiplier = 0.15;
@@ -189,8 +190,8 @@ public class ChaseCommand extends CommandBase {
             }
 
         } else if (alignState == AlignState.ALIGNED) {
-            rotationalSpeedMultiplier = 0.25 * -(powerCellData.cx - 160) / 160.0;
-            velocityMultiplier = Math.max(-(powerCellData.cy - 240) / 240.0, 0.25);
+            rotationalSpeedMultiplier = -(powerCellData.cx - 159) / 160.0;
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.35, 1.0);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.15) {
                 rotationalSpeedMultiplier = 0.15;
