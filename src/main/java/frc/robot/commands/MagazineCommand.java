@@ -17,6 +17,7 @@ public class MagazineCommand extends CommandBase {
     private boolean sensor;
     private boolean hadNothing;
     private boolean isFinished;
+    private int framesFalse;
 
     /**
      * Creates a new MagazineCommand.
@@ -40,7 +41,7 @@ public class MagazineCommand extends CommandBase {
      * @param bling    The bling used by this command.
      */
     public MagazineCommand(Magazine magazine, Bling bling) {
-        this(magazine, bling, 0.15);
+        this(magazine, bling, 0.35);
     }
 
     // Called when the command is initially scheduled.
@@ -56,6 +57,7 @@ public class MagazineCommand extends CommandBase {
             hadNothing = true;
             isFinished = true;
         }
+        framesFalse = 0;
     }
 
     public boolean hadNothing() {
@@ -69,13 +71,17 @@ public class MagazineCommand extends CommandBase {
         if (sensor) {
             magazine.setPower(0.15);
             bling.setArray("yellow");
+            framesFalse = 0;
         } else {
             magazine.setPower(0.0);
             bling.setArray("green");
-            isFinished = true;
+            framesFalse++;
         }
         bling.setColorRGBAll((int) (bling.rgbArr[0] * 0.3), (int) (bling.rgbArr[1] * 0.3),
                 (int) (bling.rgbArr[2] * 0.3));
+        if (framesFalse > 2) {
+            isFinished = true;
+        }
     }
 
     // Called once the command ends or is interrupted.

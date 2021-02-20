@@ -118,7 +118,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
-    return collect;
+    return runMag;
   }
 
   // Command that we run in teleoperation mode.

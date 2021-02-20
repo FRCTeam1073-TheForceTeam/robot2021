@@ -97,23 +97,21 @@ public class ChaseCommand extends CommandBase {
         hasData = powerCellTracker.getCellData(powerCellData);
 
         if (hasData) {
+            bling.setArray("green");
             alignState();
             loopsWithoutData = 0;
             skipScan = true;
             isScanning = false;
             lastData = powerCellData;
-            bling.setArray("green");
 
         } else if (isScanning) {
-            time = System.currentTimeMillis();
-            angle = drivetrain.getRobotPose().getRotation().getRadians();
-            System.out.println("SCANNING FOR " + (time - initialTime));
             bling.setArray("yellow");
+            angle = drivetrain.getRobotPose().getRotation().getRadians();
+            time = System.currentTimeMillis();
+            System.out.println("SCANNING FOR " + (time - initialTime));
 
         } else if (!skipScan && shouldScan) {
             loopsWithoutData++;
-            initialTime = System.currentTimeMillis();
-            initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
             alignState();
             skipScan = true;
@@ -127,8 +125,11 @@ public class ChaseCommand extends CommandBase {
             } else {
                 scanRotationalSpeedMultiplier = 0.25;
             }
-            timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity) - 250);
+            timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity));
+            initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
+            initialTime = System.currentTimeMillis();
         } else {
+            bling.setArray("red");
             loopsWithoutData++;
             System.out.println("2LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
             if (loopsWithoutData > 5) {
@@ -140,7 +141,6 @@ public class ChaseCommand extends CommandBase {
             skipScan = true;
             isScanning = false;
             alignState();
-            bling.setArray("red");
         }
     }
 

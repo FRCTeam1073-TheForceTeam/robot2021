@@ -65,7 +65,7 @@ public class CollectCommand extends CommandBase {
     public void initialize() {
         firstLoop = true;
         powerMultiplier = 1.0;
-        velocity = 0.25;
+        velocity = 0.35;
         shouldUnstall = false;
         isFinished = false;
     }
