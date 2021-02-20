@@ -208,7 +208,8 @@ public class ChaseCommand extends CommandBase {
                 System.out.println("DONEDONEDONE");
                 rotationalSpeedMultiplier = 0.0;
                 velocityMultiplier = 0.0;
-                // isFinished = true;
+                drivetrain.setVelocity(0.0, 0.0);
+                isFinished = true;
             }
 
         } else {
