@@ -82,7 +82,8 @@ public class RobotContainer {
   private final MagazineCommand runMag = new MagazineCommand(magazine, bling);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
-  private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
+  // private final SequentialCommandGroup chaseCollectAndRunMag =
+  // chase.andThen(collect, runMag);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
