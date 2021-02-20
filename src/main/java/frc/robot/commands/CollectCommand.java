@@ -20,9 +20,11 @@ public class CollectCommand extends CommandBase {
     private final double maxPower;
     private double powerMultiplier;
     private double velocity;
+    private boolean firstLoop;
     private long initialTime;
     private long time;
     private boolean shouldUnstall;
+    private boolean isFinished;
 
     /**
      * Creates a new CollectCommand.
@@ -61,10 +63,11 @@ public class CollectCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        initialTime = System.currentTimeMillis();
+        firstLoop = true;
         powerMultiplier = 1.0;
         velocity = 0.15;
         shouldUnstall = false;
+        isFinished = false;
     }
 
     public boolean didStall() {
@@ -74,11 +77,15 @@ public class CollectCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        if (firstLoop) {
+            firstLoop = false;
+            initialTime = System.currentTimeMillis();
+        }
         time = System.currentTimeMillis();
         if (shouldUnstall) {
             if (time - initialTime >= 500) {
                 powerMultiplier = 0.0;
-                this.end(true);
+                isFinished = true;
             }
         } else {
             if (time - initialTime >= 500) {
@@ -99,6 +106,7 @@ public class CollectCommand extends CommandBase {
         drivetrain.setVelocity(velocity, 0.0);
         bling.setColorRGBAll((int) (bling.rgbArr[0] * 0.3), (int) (bling.rgbArr[1] * 0.3),
                 (int) (bling.rgbArr[2] * 0.3));
+        isFinished = magazine.getSensor();
     }
 
     // Called once the command ends or is interrupted.
@@ -110,6 +118,6 @@ public class CollectCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return magazine.getSensor();
+        return isFinished;
     }
 }
