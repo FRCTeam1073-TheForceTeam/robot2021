@@ -137,6 +137,8 @@ public class ChaseCommand extends CommandBase {
             } else {
                 powerCellData = lastData;
             }
+            skipScan = true;
+            isScanning = false;
             alignState();
             bling.setArray("red");
         }
@@ -214,7 +216,9 @@ public class ChaseCommand extends CommandBase {
                 rotationalSpeedMultiplier = 0.0;
                 velocityMultiplier = 0.0;
             }
-            skipScan = false;
+            if (shouldScan) {
+                skipScan = false;
+            }
         }
     }
 
@@ -247,7 +251,7 @@ public class ChaseCommand extends CommandBase {
         update();
         if (!isScanning || skipScan) {
             multipliers();
-        } else {
+        } else if (shouldScan && (isScanning || !skipScan)) {
             scan360();
         }
         System.out.println("vmultiplier " + velocityMultiplier + " rmultiplier " + rotationalSpeedMultiplier);
