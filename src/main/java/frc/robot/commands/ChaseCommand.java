@@ -18,6 +18,7 @@ public class ChaseCommand extends CommandBase {
     private final Bling bling;
     private final double maxRotationalSpeed;
     private final double maxVelocity;
+    private final boolean shouldScan;
     private boolean isFinished;
 
     /**
@@ -38,15 +39,14 @@ public class ChaseCommand extends CommandBase {
     private double angle;
     private long initialTime;
     private long time;
+    private long timeToTurn;
     private boolean skipScan;
     private boolean isScanning;
 
     /**
-     * Creates a new ChaseAndCollectCellsCommand. This command will chase and
-     * collect as many powercells (in it's field of vision) as you input. It will
-     * stop after scanning for it unsuccessfully if you want this command to make
-     * the robot scan for powercells. You can also decide how many loops of not
-     * receiving updated data this command can use old data for. Maximum rotational
+     * Creates a new ChaseAndCollectCellsCommand. This command will find and line up
+     * to a powercells. It will stop after scanning for it unsuccessfully if you
+     * want this command to make the robot scan for powercells. Maximum rotational
      * speed and maximum velocity can also be set.
      *
      * @param drivetrain             The drivetrain used by this command.
@@ -59,14 +59,19 @@ public class ChaseCommand extends CommandBase {
      *                               robot at (the minimum is 25% of this).
      * @param maxVelocity            The maximum velocity this command will move the
      *                               robot at (the minimum is 25% of this).
+     * @param shouldScan360          If true this command should turn scanning for
+     *                               powercells until it can see one or has turned 2
+     *                               radians. If the latter is the case it will end
+     *                               the program.
      */
     public ChaseCommand(Drivetrain drivetrain, PowerCellTracker powerCellTracker, Bling bling,
-            double maxRotationalSpeed, double maxVelocity) {
+            double maxRotationalSpeed, double maxVelocity, boolean shouldScan) {
         this.drivetrain = drivetrain;
         this.powerCellTracker = powerCellTracker;
         this.bling = bling;
         this.maxRotationalSpeed = maxRotationalSpeed;
         this.maxVelocity = maxVelocity;
+        this.shouldScan = shouldScan;
         addRequirements(drivetrain);
         addRequirements(bling);
     }
@@ -75,6 +80,7 @@ public class ChaseCommand extends CommandBase {
     @Override
     public void initialize() {
         powerCellData = new PowerCellData();
+        hasData = false;
         loopsWithoutData = 0;
         skipScan = true;
         isScanning = false;
@@ -100,9 +106,8 @@ public class ChaseCommand extends CommandBase {
             time = System.currentTimeMillis();
             angle = drivetrain.getRobotPose().getRotation().getRadians();
             System.out.println("SCANNING FOR " + (time - initialTime));
-            velocityMultiplier = 0.0;
 
-        } else if (!skipScan) {
+        } else if (!skipScan && shouldScan) {
             loopsWithoutData++;
             initialTime = System.currentTimeMillis();
             initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
@@ -110,12 +115,16 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            rotationalSpeedMultiplier = Math.signum(-(powerCellData.cx - 160) / 160.0)
-                    * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.25);
-            if (rotationalSpeedMultiplier < 0.3) {
-                rotationalSpeedMultiplier = 0.3;
+            if (powerCellData.vx != 0) {
+                rotationalSpeedMultiplier = Math.signum(powerCellData.vx)
+                        * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.25);
+            } else if (powerCellData.cx > 0) {
+                rotationalSpeedMultiplier = Math.signum(-(powerCellData.cx - 160) / 160.0)
+                        * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.25);
+            } else {
+                rotationalSpeedMultiplier = 0.25;
             }
-            velocityMultiplier = 0.0;
+            timeToTurn = (long) (1000 * (2 * Math.PI) / (rotationalSpeedMultiplier * maxVelocity) - 500);
         } else {
             loopsWithoutData++;
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
@@ -206,10 +215,18 @@ public class ChaseCommand extends CommandBase {
      * powercell the command ends.
      */
     private void scan360() {
-        if (time - initialTime >= 1000
-                && MathUtil.angleModulus(angle - initialAngle) <= rotationalSpeedMultiplier * maxRotationalSpeed
-                && MathUtil.angleModulus(angle - initialAngle) >= 0) {
-            isFinished = true;
+
+        if (time - initialTime >= 125) {
+            velocityMultiplier = 0.0;
+        }
+
+        if ((Math.signum(rotationalSpeedMultiplier) == 1.0 && time - initialTime >= timeToTurn
+                && MathUtil.angleModulus(angle - initialAngle) >= initialAngle)
+                || (time - initialTime >= timeToTurn && MathUtil.angleModulus(angle - initialAngle) <= initialAngle)) {
+            System.out.println("SCAN_DONE_SCAN_DONE");
+            rotationalSpeedMultiplier = 0.0;
+            velocityMultiplier = 0.0;
+            // isFinished = true;
         }
     }
 
