@@ -70,7 +70,7 @@ public class RobotContainer {
   private final DriveControls teleDrive = new DriveControls(drivetrain);
   private final MagazineControls teleMagazine = new MagazineControls(magazine);
   private final CollectorControls teleCollect = new CollectorControls(collector);
-  private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
+  private final CollectCommand collect = new CollectCommand(drivetrain, collector, magazine, bling);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn = new TurnCommand(drivetrain, bling, Math.PI / 2, 1.5);
   private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.2);

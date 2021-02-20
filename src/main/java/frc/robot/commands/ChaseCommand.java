@@ -251,6 +251,7 @@ public class ChaseCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         drivetrain.setVelocity(0.0, 0.0);
+        bling.setColorRGBAll(0, 0, 0);
     }
 
     // Returns true when the command should end.

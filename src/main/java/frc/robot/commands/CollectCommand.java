@@ -6,19 +6,23 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Magazine;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class CollectCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+    private final Drivetrain drivetrain;
     private final Collector collector;
     private final Magazine magazine;
     private final Bling bling;
-    private double power;
+    private final double maxPower;
+    private double powerMultiplier;
+    private double velocity;
+    private long initialTime;
     private long time;
-    private long initTime = 0;
-    private long currentTime = 0;
+    private boolean shouldUnstall;
 
     /**
      * Creates a new CollectCommand.
@@ -30,52 +34,80 @@ public class CollectCommand extends CommandBase {
      * @param time     The time the collector should run for for this command
      *                 (milliseconds).
      */
-    public CollectCommand(Collector collector, Magazine magazine, Bling bling, double power, long time) {
+    public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling, double maxPower) {
+        this.drivetrain = drivetrain;
         this.collector = collector;
         this.magazine = magazine;
         this.bling = bling;
-        this.power = power;
-        this.time = time;
+        this.maxPower = maxPower;
         addRequirements(collector);
         addRequirements(magazine);
         addRequirements(bling);
     }
 
     /**
-     * Creates a new CollectCommand that runs the Collector at 10% power for two
+     * Creates a new CollectCommand that runs the Collector at 100% power for two
      * seconds.
      *
      * @param colletor The collector used by this command.
      * @param magazine The magazine used by this command.
      * @param bling    The bling used by this command.
      */
-    public CollectCommand(Collector collector, Magazine magazine, Bling bling) {
-        this(collector, magazine, bling, 0.1, 2000);
+    public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling) {
+        this(drivetrain, collector, magazine, bling, 1.0);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        initTime = System.currentTimeMillis();
-        collector.manipulateIsDeployed(true);
+        initialTime = System.currentTimeMillis();
+        powerMultiplier = 1.0;
+        velocity = 0.15;
+        shouldUnstall = false;
+    }
+
+    public boolean didStall() {
+        return shouldUnstall;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        collector.setCollect(power);
-        currentTime = System.currentTimeMillis();
-        // TODO: Bling
+        time = System.currentTimeMillis();
+        if (shouldUnstall) {
+            if (time - initialTime >= 500) {
+                powerMultiplier = 0.0;
+                this.end(true);
+            }
+        } else {
+            if (time - initialTime >= 500) {
+                velocity = 0.0;
+                bling.setArray("green");
+            } else if (!collector.isStalled()) {
+                bling.setArray("purple");
+            } else {
+                bling.setArray("red");
+                initialTime = System.currentTimeMillis();
+                shouldUnstall = true;
+                velocity = 0.0;
+                powerMultiplier *= -1;
+            }
+        }
+
+        collector.setCollect(powerMultiplier * maxPower);
+        drivetrain.setVelocity(velocity, 0.0);
+        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        bling.setColorRGBAll(0, 0, 0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return time <= currentTime - initTime;
+        return magazine.getSensor();
     }
 }
