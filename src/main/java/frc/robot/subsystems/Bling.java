@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 // import frc.robot.subsystems.interfaces.BlingInterface;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * Allow the commands running in the robot to express themselves visually.
@@ -26,6 +27,7 @@ public class Bling extends SubsystemBase {
 
   private double brightness = 0.5;
 
+  static Color red;
   int burst_done;
   int gameDataBlinkCount;
   int burstCount;
@@ -39,6 +41,9 @@ public class Bling extends SubsystemBase {
   int i_mag;
   int dash_num;
   int dash_time;
+  int gameR;
+  int gameG;
+  int gameB;
 
   public boolean cleared = false;
 
@@ -60,6 +65,9 @@ public class Bling extends SubsystemBase {
     gameDataBlinkCount = 0;
     dash_num = 0;
     dash_time = 0;
+    gameR = 0;
+    gameG = 0;
+    gameB = 0;
     // SmartDashboard.putBoolean("Winch", winch.isWinchEngaged());
   }
 
@@ -67,13 +75,15 @@ public class Bling extends SubsystemBase {
   public void periodic() {
     if (!cleared) {
 
+      gameData = DriverStation.getInstance().getGameSpecificMessage();
+
       // if (burst_done == 0) {
       //   burst(m_ledBuffer.getLength(), 0, 0, 255);
       //   // setColorRGBAll(0, 0, 0);
       // } else {
-      batteryBling(0, 6, 8.0, 12.5);
+      batteryBling(0, 10, 8.0, 12.5);
 
-      dashing(12, 6, 255, 192, 203);
+      dashing(20, 10, 255, 192, 203);
 
       // if (collector.isDeployed()) {
       //   rangeRGB(6, 6, 0, 255, 0);
@@ -81,12 +91,38 @@ public class Bling extends SubsystemBase {
       //   rangeRGB(6, 6, 255, 0, 0);
       // }
 
+      if (gameData.equals("R") && gameDataBlinkCount < 5) {
+        gameR = 255;
+        gameG = 0;
+        gameB = 0;
 
-      
+      } else if (gameData.equals("G") && gameDataBlinkCount < 5) {
+        gameR = 0;
+        gameG = 255;
+        gameB = 0;
+
+      } else if (gameData.equals("B") && gameDataBlinkCount < 5) {
+        gameR = 0;
+        gameG = 0;
+        gameB = 255;
+
+      } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
+        gameR = 252;
+        gameG = 227;
+        gameB = 0;
+      }
+
+
+
+      if (gameDataBlinkCount < 5) {
+        blinkyLights(0, m_ledBuffer.getLength(), gameR, gameG, gameB, true);
+      } else {
+        rangeRGB(70, 10, gameR, gameG, gameB);
+      }
       
 
         // LEDRainbow();
-      rangeRGB(6, 20, 0, 0, 255);
+      // rangeRGB(6, 20, 0, 0, 255);
         // setColorRGBAll(0, 0, 255);
       // }
 
@@ -116,7 +152,6 @@ public class Bling extends SubsystemBase {
     //     blinkyLights(0, m_ledBuffer.getLength(), 252, 227, 0);
 
     //   } else {
-    //     // TODO: Add other bling commands
           
     //     // The first two LEDs turn white if the winch is engaged
     //     // if (winch.isWinchEngaged()) {
@@ -265,7 +300,7 @@ public class Bling extends SubsystemBase {
   }
 
   // burst() lights LEDs from the middle out  
-  public void burst(int length, int r, int g, int b) {    
+  public void burst(int length, int r, int g, int b, boolean init) {    
     // Calculates the middle led(s) of the led string
     int middle1 = (int) (Math.floor((length / 2)));
     int middle2 = (int) (Math.ceil((length / 2)));
@@ -285,9 +320,11 @@ public class Bling extends SubsystemBase {
       setLEDs2(middle1 - leds_from_middle, middle2 + leds_from_middle, r, g, b);
     } else {
       // Resets the time and says that the burst is finished
-      burst_done = 1;
       time_burst = 0;
       setColorRGBAll(0, 0, 0);
+      if (init) {
+        burst_done = 1;
+      }
     }
   }
 
@@ -321,7 +358,7 @@ public class Bling extends SubsystemBase {
 
 
   // blinkyLights() flashes lights on and off in one color for a range of LEDs
-  public void blinkyLights(int minLEDsBlink, int numberLEDsBlink, int r, int g, int b) {
+  public void blinkyLights(int minLEDsBlink, int numberLEDsBlink, int r, int g, int b, boolean gameData) {
     if (time_blinkyLEDs < 30) {
       // Sets the LEDs to the specified color
       rangeRGB(minLEDsBlink, numberLEDsBlink, r, g, b);
@@ -333,7 +370,9 @@ public class Bling extends SubsystemBase {
     } else {
       // Resets the time counter
       time_blinkyLEDs = 0;
-      gameDataBlinkCount = gameDataBlinkCount + 1;
+      if (gameData) {
+        gameDataBlinkCount = gameDataBlinkCount + 1;
+      }
     }
   }
 
