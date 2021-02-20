@@ -40,6 +40,7 @@ public class CollectCommand extends CommandBase {
         this.magazine = magazine;
         this.bling = bling;
         this.maxPower = maxPower;
+        addRequirements(drivetrain);
         addRequirements(collector);
         addRequirements(magazine);
         addRequirements(bling);
