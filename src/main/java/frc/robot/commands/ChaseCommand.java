@@ -127,7 +127,7 @@ public class ChaseCommand extends CommandBase {
             } else {
                 scanRotationalSpeedMultiplier = 0.25;
             }
-            timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity) - 500);
+            timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity) - 250);
         } else {
             loopsWithoutData++;
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
@@ -220,7 +220,7 @@ public class ChaseCommand extends CommandBase {
      */
     private void scan360() {
 
-        if (time - initialTime >= 125) {
+        if (time - initialTime >= 100) {
             velocityMultiplier = 0.0;
             rotationalSpeedMultiplier = scanRotationalSpeedMultiplier;
         }
