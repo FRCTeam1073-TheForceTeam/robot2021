@@ -31,6 +31,7 @@ public class ChaseCommand extends CommandBase {
 
     private AlignState alignState;
     private PowerCellData powerCellData;
+    private PowerCellData lastData;
     private boolean hasData;
     private int loopsWithoutData;
     private double rotationalSpeedMultiplier;
@@ -77,6 +78,7 @@ public class ChaseCommand extends CommandBase {
     @Override
     public void initialize() {
         powerCellData = new PowerCellData();
+        lastData = new PowerCellData();
         hasData = false;
         loopsWithoutData = 0;
         skipScan = true;
@@ -98,6 +100,7 @@ public class ChaseCommand extends CommandBase {
             loopsWithoutData = 0;
             skipScan = true;
             isScanning = false;
+            lastData = powerCellData;
 
         } else if (isScanning) {
             time = System.currentTimeMillis();
@@ -112,12 +115,12 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            if (powerCellData.vx != 0) {
-                rotationalSpeedMultiplier = Math.signum(powerCellData.vx)
-                        * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.15);
-            } else if (powerCellData.cx > 0) {
-                rotationalSpeedMultiplier = Math.signum(-(powerCellData.cx - 160) / 160.0)
-                        * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.15);
+            if (lastData.vx != 0) {
+                rotationalSpeedMultiplier = Math.signum(lastData.vx)
+                        * Math.max(Math.abs(-(lastData.cx - 160) / 160.0), 0.15);
+            } else if (lastData.cx > 0) {
+                rotationalSpeedMultiplier = Math.signum(-(lastData.cx - 160) / 160.0)
+                        * Math.max(Math.abs(-(lastData.cx - 160) / 160.0), 0.15);
             } else {
                 rotationalSpeedMultiplier = 0.25;
             }
