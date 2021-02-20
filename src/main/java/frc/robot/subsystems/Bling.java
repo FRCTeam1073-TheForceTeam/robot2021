@@ -77,7 +77,7 @@ public class Bling extends SubsystemBase {
   public void periodic() {
     if (!cleared) {
 
-      gameData = DriverStation.getInstance().getGameSpecificMessage();
+      // gameData = DriverStation.getInstance().getGameSpecificMessage();
 
       // if (burst_done == 0) {
       //   burst(m_ledBuffer.getLength(), 0, 0, 255);
@@ -85,7 +85,7 @@ public class Bling extends SubsystemBase {
       // } else {
       batteryBling(0, 10, 8.0, 12.5);
 
-      dashing(20, 10, 255, 192, 203);
+      // dashing(20, 10, 255, 192, 203);
 
       // if (collector.isDeployed()) {
       //   rangeRGB(6, 6, 0, 255, 0);
@@ -93,34 +93,34 @@ public class Bling extends SubsystemBase {
       //   rangeRGB(6, 6, 255, 0, 0);
       // }
 
-      if (gameData.equals("R") && gameDataBlinkCount < 5) {
-        gameR = 255;
-        gameG = 0;
-        gameB = 0;
+      // if (gameData.equals("R") && gameDataBlinkCount < 5) {
+      //   gameR = 255;
+      //   gameG = 0;
+      //   gameB = 0;
 
-      } else if (gameData.equals("G") && gameDataBlinkCount < 5) {
-        gameR = 0;
-        gameG = 255;
-        gameB = 0;
+      // } else if (gameData.equals("G") && gameDataBlinkCount < 5) {
+      //   gameR = 0;
+      //   gameG = 255;
+      //   gameB = 0;
 
-      } else if (gameData.equals("B") && gameDataBlinkCount < 5) {
-        gameR = 0;
-        gameG = 0;
-        gameB = 255;
+      // } else if (gameData.equals("B") && gameDataBlinkCount < 5) {
+      //   gameR = 0;
+      //   gameG = 0;
+      //   gameB = 255;
 
-      } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
-        gameR = 252;
-        gameG = 227;
-        gameB = 0;
-      }
+      // } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
+      //   gameR = 252;
+      //   gameG = 227;
+      //   gameB = 0;
+      // }
 
 
 
-      if (gameDataBlinkCount < 5) {
-        blinkyLights(0, m_ledBuffer.getLength(), gameR, gameG, gameB, true);
-      } else {
-        rangeRGB(70, 10, gameR, gameG, gameB);
-      }
+      // if (gameDataBlinkCount < 5) {
+      //   blinkyLights(0, m_ledBuffer.getLength(), gameR, gameG, gameB, true);
+      // } else {
+      //   rangeRGB(70, 10, gameR, gameG, gameB);
+      // }
       
 
         // LEDRainbow();
