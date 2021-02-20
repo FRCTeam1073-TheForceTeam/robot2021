@@ -35,6 +35,7 @@ public class ChaseCommand extends CommandBase {
     private boolean hasData;
     private int loopsWithoutData;
     private double rotationalSpeedMultiplier;
+    private double scanRotationalSpeedMultiplier;
     private double velocityMultiplier;
     private double initialAngle;
     private double angle;
@@ -118,15 +119,15 @@ public class ChaseCommand extends CommandBase {
             skipScan = true;
             isScanning = true;
             if (lastData.vx != 0) {
-                rotationalSpeedMultiplier = Math.signum(lastData.vx)
+                scanRotationalSpeedMultiplier = Math.signum(lastData.vx)
                         * Math.max(Math.abs(-(lastData.cx - 160) / 160.0), 0.15);
             } else if (lastData.cx > 0) {
-                rotationalSpeedMultiplier = Math.signum(-(lastData.cx - 160) / 160.0)
+                scanRotationalSpeedMultiplier = Math.signum(-(lastData.cx - 160) / 160.0)
                         * Math.max(Math.abs(-(lastData.cx - 160) / 160.0), 0.15);
             } else {
-                rotationalSpeedMultiplier = 0.25;
+                scanRotationalSpeedMultiplier = 0.25;
             }
-            timeToTurn = (long) (1000 * (2 * Math.PI) / (rotationalSpeedMultiplier * maxVelocity) - 500);
+            timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity) - 500);
         } else {
             loopsWithoutData++;
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
@@ -221,6 +222,7 @@ public class ChaseCommand extends CommandBase {
 
         if (time - initialTime >= 125) {
             velocityMultiplier = 0.0;
+            rotationalSpeedMultiplier = scanRotationalSpeedMultiplier;
         }
 
         if ((Math.signum(rotationalSpeedMultiplier) == 1.0 && time - initialTime >= timeToTurn
