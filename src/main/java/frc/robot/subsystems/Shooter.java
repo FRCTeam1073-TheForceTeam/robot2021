@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -45,10 +47,16 @@ public class Shooter extends SubsystemBase {
 
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
-  private final double minAngle = 19.64 * Math.PI / 180;
-  private final double maxAngle = 49.18 * Math.PI / 180;
+  private final double minHoodPosition = 0;
+  private final double maxHoodPosition = 16.306 * 2.0 * Math.PI;
+//  private final double minAngle = 19.64 * Math.PI / 180;
+//  private final double maxAngle = 49.18 * Math.PI / 180;
+
+  private static final double hoodAngleLow = 19.64 * Math.PI / 180.0;
+  private static final double hoodAngleHigh = 49.18 * Math.PI / 180.0;
+
   public final double kRawMotorRange = 2.523808240890503;
-  public final double kMotorRadiansPerHoodRadian = kRawMotorRange * 2 * Math.PI / (maxAngle - minAngle);
+//  public final double kMotorRadiansPerHoodRadian = kRawMotorRange * 2 * Math.PI / (maxAngle - minAngle);
   private boolean usingExternalHoodEncoder = false;
 
   public Shooter() {
@@ -89,7 +97,7 @@ public class Shooter extends SubsystemBase {
     hood.clearFaults();
     hood.restoreFactoryDefaults();
     hood.setIdleMode(IdleMode.kBrake);
-    hood.setInverted(false);
+    hood.setInverted(true);
 
     hoodHallSensor = hood.getEncoder(EncoderType.kHallSensor, 1);
     hoodHallSensor.setPosition(0);
@@ -128,13 +136,44 @@ public class Shooter extends SubsystemBase {
    * Directly sets the power to the hood motor.
    */
   public void setHoodPower(double power) {
+    if ((getHoodPosition() > maxHoodPosition && power > 0) || (getHoodPosition() < maxHoodPosition && power < 0)) {
+      power = 0;
+    }
     hood.set(power);
   }
+
+  public double getHoodPosition() {
+    if (usingExternalHoodEncoder) {
+      return hoodEncoder.getPosition() * 2.0 * Math.PI;
+    } else {
+      return hoodHallSensor.getPosition() * 2.0 * Math.PI;
+    }
+  }
+
+  public double getHoodAngle() {
+    return hoodAngleHigh + (hoodAngleLow - hoodAngleHigh)
+        * ((getHoodPosition() - minHoodPosition) / (maxHoodPosition - minHoodPosition));
+  }
+
+  public void setHoodPosition(double position) {
+    hoodController.setReference(position, ControlType.kPosition);
+  }
+
+  // public void setHoodAngle(double angle) {
+  //   double position = minHoodPosition
+  //       + (maxHoodPosition - minHoodPosition) * ((angle - hoodAngleHigh) / (hoodAngleLow - hoodAngleHigh));
+  //   hoodController.setReference(position, ControlType.kPosition);
+  // }
 
   @Override
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
+    SmartDashboard.putNumber("Raw hood position (motor radians) [S-HD]", getHoodPosition() * 2.0 * Math.PI);
+    SmartDashboard.putNumber("Hood angle (degs) [S-HD]", getHoodAngle() * 180.0 / Math.PI);
+    // SmartDashboard.putNumber("Hood velocity (motor radians/sec) [S-HD]",
+    //     hoodEncoder.getVelocity() * Math.PI / 30.0);
+
     // This method will be called once per scheduler run
   }
 }

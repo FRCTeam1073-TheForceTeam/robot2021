@@ -34,10 +34,12 @@ import frc.robot.commands.DrivetrainPowerTestCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MagazineControls;
+import frc.robot.commands.ShooterControls;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.TestCommand;
 import frc.robot.commands.TurnCommand;
+import frc.robot.commands.TurretControls;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -67,15 +69,17 @@ public class RobotContainer {
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
   private final DriveControls teleDrive = new DriveControls(drivetrain);
   private final MagazineControls teleMagazine = new MagazineControls(magazine);
+  private final ShooterControls teleShooter = new ShooterControls(shooter);
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
+  private final TurretControls teleTurret = new TurretControls(turret);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, -Math.PI / 2, 2.00);
   private final TurnCommand turn = new TurnCommand(drivetrain, bling, 0.9 * Math.PI, 1.20);
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1, 0.5, 1.75);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect).alongWith(teleMagazine);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect).alongWith(teleShooter);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -130,7 +134,6 @@ public class RobotContainer {
 
   public Command getTestCommand() {
     return teleDrive;
-
   }
 
 }

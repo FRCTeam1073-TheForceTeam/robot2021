@@ -15,24 +15,34 @@ public class Turret extends SubsystemBase {
     private double P = 0;
     private double I = 0;
     private double D = 0;
-    private double F = 0;
+    private double F = 0.591;
+      //0.25 375
+      //0.50 904
+      //0.75 1458
+
     private double turretVelocity;
-    private double turretTicksPerRadian = 6441.318;
+    private double turretTicksPerRadian = 4163.175;
+
+    public double turretMinimumAngle = -2.039;
+    public double turretMaximumAngle = 3.795;
 
     public Turret() {
       turretRotator = new WPI_TalonSRX(24);
       turretRotator.configFactoryDefault();
       turretRotator.setSafetyEnabled(false);
+      turretRotator.setInverted(true);
       turretRotator.setNeutralMode(NeutralMode.Brake);
+      turretRotator.configPeakCurrentLimit(10);
+      turretRotator.configContinuousCurrentLimit(10);
       ErrorCode turretEncoderAttached = turretRotator
           .configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
       if (turretEncoderAttached.value != 0) {
         System.out.println("[Magazine] Error: Turret motor (CAN ID 24) cannot find encoder (Error code: "
             + turretEncoderAttached.value + ").");
       }
-    
+      turretRotator.setSelectedSensorPosition(0); //Note: turret does not have limit switches and needs to be indexed manually.
+      turretRotator.setIntegralAccumulator(0);
       setPIDF();
-      
     }
 
     /// Returns the accumulated position of the turret in radians.
@@ -47,12 +57,20 @@ public class Turret extends SubsystemBase {
 
     /// Sets the velocity of the turret in radians/second.
     public void setVelocity(double angularVelocity) {
+      if ((getPosition() < turretMinimumAngle && angularVelocity < 0) || (getPosition() > turretMaximumAngle && angularVelocity > 0)) {
+        turretRotator.set(ControlMode.Velocity, 0);
+        return;
+      }
       turretVelocity = angularVelocity * turretTicksPerRadian * 0.1;
       turretRotator.set(ControlMode.Velocity, turretVelocity);
     }
 
     /// Directly sets the power of the turret motor.
     public void setPower(double power) {
+      if ((getPosition() < turretMinimumAngle && power < 0) || (getPosition() > turretMaximumAngle && power > 0)) {
+        turretRotator.set(ControlMode.PercentOutput, 0);
+        return;
+      }
       turretRotator.set(ControlMode.PercentOutput, power);
     }
 
@@ -68,6 +86,12 @@ public class Turret extends SubsystemBase {
           turretRotator.getSelectedSensorPosition(0) / turretTicksPerRadian);
       SmartDashboard.putNumber("Turret Velocity (radians/s) [TURRET]",
           turretRotator.getSelectedSensorVelocity(0) * 10.0 / turretTicksPerRadian);
+      SmartDashboard.putNumber("Raw Turret Velocity (ticks/0.1) [TURRET]",
+          turretRotator.getSelectedSensorVelocity(0));
+      SmartDashboard.putNumber("Turret current load (amperes) [TURRET]",
+          turretRotator.getSupplyCurrent());
+      SmartDashboard.putNumber("Turret temperature (degs C) [TURRET]",
+          turretRotator.getTemperature());
     }
 
     public void setPIDF() {

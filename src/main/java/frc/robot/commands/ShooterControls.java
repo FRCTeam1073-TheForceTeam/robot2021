@@ -27,7 +27,6 @@ public class ShooterControls extends CommandBase {
   public void initialize() {
     shooter.setFlywheelPower(0);
     shooter.setHoodPower(0);
-    shooter.setFlywheelPower(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,11 +44,10 @@ public class ShooterControls extends CommandBase {
     //   OI.operatorController.setRumble(RumbleType.kLeftRumble, 0);
     //   OI.operatorController.setRumble(RumbleType.kRightRumble, 0.5);
     // }
-    flywheelPower = 0.01 * OI.operatorController.getRawAxis(3);
-    hoodPower = OI.operatorController.getRawAxis(1) * 0.5;
-    shooter.setFlywheelPower(flywheelPower);
-    shooter.setHoodPower(hoodPower);
-    shooter.setFlywheelPower(flywheelPower);
+    //flywheelPower = 0.01 * OI.operatorController.getRawAxis(3);
+    hoodPower = MathUtil.clamp(OI.operatorController.getRawAxis(1) * 0.1, -0.05, 0.05);
+//    shooter.setFlywheelPower(flywheelPower);
+    shooter.setHoodPosition(16.306*0.5+16.306*0.4*OI.operatorController.getRawAxis(1));
   }
 
   // Called once the command ends or is interrupted.
