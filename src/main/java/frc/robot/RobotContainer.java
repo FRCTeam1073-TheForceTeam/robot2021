@@ -34,6 +34,7 @@ import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.DrivetrainPowerTestCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.MagazineControls;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TeleopCommand;
@@ -70,7 +71,6 @@ public class RobotContainer {
   private final DriveControls teleDrive = new DriveControls(drivetrain);
   private final MagazineControls teleMagazine = new MagazineControls(magazine);
   private final CollectorControls teleCollect = new CollectorControls(collector);
-  private final CollectCommand collect = new CollectCommand(drivetrain, collector, magazine, bling);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn = new TurnCommand(drivetrain, bling, Math.PI / 2, 1.5);
   private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.2);
@@ -78,8 +78,11 @@ public class RobotContainer {
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
   private final ChaseCommand chase = new ChaseCommand(drivetrain, cellTracker, bling, 3.0, 2.0, true);
+  private final CollectCommand collect = new CollectCommand(drivetrain, collector, magazine, bling);
+  private final MagazineCommand runMag = new MagazineCommand(magazine, bling);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
+  private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

@@ -13,7 +13,7 @@ public class MagazineCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final Magazine magazine;
     private final Bling bling;
-    private final double speed;
+    private final double power;
     private boolean sensor;
     private boolean hadNothing;
     private boolean isFinished;
@@ -22,13 +22,25 @@ public class MagazineCommand extends CommandBase {
      * Creates a new MagazineCommand.
      *
      * @param magazine The magazine used by this command.
+     * @param bling    The bling used by this command.
+     * @param power    The power the magazine isset to by this command.
      */
-    public MagazineCommand(Magazine magazine, Bling bling, double speed) {
+    public MagazineCommand(Magazine magazine, Bling bling, double power) {
         this.magazine = magazine;
         this.bling = bling;
-        this.speed = speed;
+        this.power = power;
         addRequirements(magazine);
         addRequirements(bling);
+    }
+
+    /**
+     * Creates a new MagazineCommand that runs at 15% power.
+     *
+     * @param magazine The magazine used by this command.
+     * @param bling    The bling used by this command.
+     */
+    public MagazineCommand(Magazine magazine, Bling bling) {
+        this(magazine, bling, 0.15);
     }
 
     // Called when the command is initially scheduled.
