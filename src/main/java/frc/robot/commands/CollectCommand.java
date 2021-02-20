@@ -65,7 +65,7 @@ public class CollectCommand extends CommandBase {
     public void initialize() {
         firstLoop = true;
         powerMultiplier = 1.0;
-        velocity = 0.15;
+        velocity = 0.25;
         shouldUnstall = false;
         isFinished = false;
     }
@@ -83,12 +83,15 @@ public class CollectCommand extends CommandBase {
         }
         time = System.currentTimeMillis();
         if (shouldUnstall) {
-            if (time - initialTime >= 500) {
+            if (time - initialTime >= 1500) {
                 powerMultiplier = 0.0;
+                velocity = 0.0;
+                drivetrain.setVelocity(0.0, 0.0);
+                collector.setCollect(0.0);
                 isFinished = true;
             }
         } else {
-            if (time - initialTime >= 500) {
+            if (time - initialTime >= 1500) {
                 velocity = 0.0;
                 bling.setArray("green");
             } else if (!collector.isStalled()) {
@@ -112,6 +115,8 @@ public class CollectCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        drivetrain.setVelocity(0.0, 0.0);
+        collector.setCollect(0.0);
         bling.setColorRGBAll(0, 0, 0);
     }
 
