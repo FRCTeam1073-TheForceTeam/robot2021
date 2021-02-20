@@ -130,10 +130,14 @@ public class ChaseCommand extends CommandBase {
             timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity) - 250);
         } else {
             loopsWithoutData++;
-            System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
+            System.out.println("2LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
+            if (loopsWithoutData > 5) {
+                rotationalSpeedMultiplier = 0.0;
+                velocityMultiplier = 0.0;
+            } else {
+                powerCellData = lastData;
+            }
             alignState();
-            rotationalSpeedMultiplier = 0.0;
-            velocityMultiplier = 0.0;
             bling.setArray("red");
         }
     }
@@ -206,8 +210,10 @@ public class ChaseCommand extends CommandBase {
             }
 
         } else {
-            rotationalSpeedMultiplier = 0.0;
-            velocityMultiplier = 0.0;
+            if (loopsWithoutData > 5) {
+                rotationalSpeedMultiplier = 0.0;
+                velocityMultiplier = 0.0;
+            }
             skipScan = false;
         }
     }
