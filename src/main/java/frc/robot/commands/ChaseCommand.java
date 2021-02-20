@@ -49,20 +49,17 @@ public class ChaseCommand extends CommandBase {
      * want this command to make the robot scan for powercells. Maximum rotational
      * speed and maximum velocity can also be set.
      *
-     * @param drivetrain             The drivetrain used by this command.
-     * @param powerCellTracker       The powerCellTracker used by this command.
-     * @param bling                  The bling used by this command.
-     * @param runNumLoopsWithoutData The amount of execute loops this command should
-     *                               pretend nothing changed from the last time it
-     *                               could update its tracker data.
-     * @param maxRotationalSpeed     The maximum speed this command will rotate the
-     *                               robot at (the minimum is 25% of this).
-     * @param maxVelocity            The maximum velocity this command will move the
-     *                               robot at (the minimum is 25% of this).
-     * @param shouldScan360          If true this command should turn scanning for
-     *                               powercells until it can see one or has turned 2
-     *                               radians. If the latter is the case it will end
-     *                               the program.
+     * @param drivetrain         The drivetrain used by this command.
+     * @param powerCellTracker   The powerCellTracker used by this command.
+     * @param bling              The bling used by this command.
+     * @param maxRotationalSpeed The maximum speed this command will rotate the
+     *                           robot at (the minimum is 25% of this).
+     * @param maxVelocity        The maximum velocity this command will move the
+     *                           robot at (the minimum is 25% of this).
+     * @param shouldScan360      If true this command should turn scanning for
+     *                           powercells until it can see one or has turned 2
+     *                           radians. If the latter is the case it will end the
+     *                           program.
      */
     public ChaseCommand(Drivetrain drivetrain, PowerCellTracker powerCellTracker, Bling bling,
             double maxRotationalSpeed, double maxVelocity, boolean shouldScan) {
@@ -117,10 +114,10 @@ public class ChaseCommand extends CommandBase {
             isScanning = true;
             if (powerCellData.vx != 0) {
                 rotationalSpeedMultiplier = Math.signum(powerCellData.vx)
-                        * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.25);
+                        * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.15);
             } else if (powerCellData.cx > 0) {
                 rotationalSpeedMultiplier = Math.signum(-(powerCellData.cx - 160) / 160.0)
-                        * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.25);
+                        * Math.max(Math.abs(-(powerCellData.cx - 160) / 160.0), 0.15);
             } else {
                 rotationalSpeedMultiplier = 0.25;
             }
@@ -142,10 +139,10 @@ public class ChaseCommand extends CommandBase {
         if (!hasData) {
             alignState = AlignState.NOT_VISIBLE;
 
-        } else if (powerCellData.cx >= 146 && powerCellData.cx <= 175) {
+        } else if (powerCellData.cx >= 141 && powerCellData.cx <= 180) {
             alignState = AlignState.ALIGNED;
 
-        } else if (powerCellData.cx < 146) {
+        } else if (powerCellData.cx < 141) {
             alignState = AlignState.LEFT;
 
         } else {
@@ -163,13 +160,13 @@ public class ChaseCommand extends CommandBase {
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
             rotationalSpeedMultiplier = -(powerCellData.cx - 160) / 160.0;
-            velocityMultiplier = Math.max(-(powerCellData.cy - 240) / 240.0, 0.25);
+            velocityMultiplier = Math.max(-(powerCellData.cy - 240) / 240.0, 0.15);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.25) {
-                rotationalSpeedMultiplier = 0.25;
+            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.15) {
+                rotationalSpeedMultiplier = 0.15;
 
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.25) {
-                rotationalSpeedMultiplier = -0.25;
+            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.15) {
+                rotationalSpeedMultiplier = -0.15;
 
             }
 
@@ -182,11 +179,11 @@ public class ChaseCommand extends CommandBase {
             rotationalSpeedMultiplier = 0.25 * -(powerCellData.cx - 160) / 160.0;
             velocityMultiplier = Math.max(-(powerCellData.cy - 240) / 240.0, 0.25);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.25) {
-                rotationalSpeedMultiplier = 0.25;
+            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.15) {
+                rotationalSpeedMultiplier = 0.15;
 
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.25) {
-                rotationalSpeedMultiplier = -0.25;
+            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.15) {
+                rotationalSpeedMultiplier = -0.15;
 
             }
 
