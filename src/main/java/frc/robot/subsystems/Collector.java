@@ -25,14 +25,14 @@ public class Collector extends SubsystemBase {
     this.collectorDeployPneumatic = new Solenoid(1, 0);
     this.collectorMotor = new WPI_TalonSRX(27);
     this.collectorMotor.configFactoryDefault();
-    this.collectorMotor.setNeutralMode(NeutralMode.Brake);
+    this.collectorMotor.setNeutralMode(NeutralMode.Coast);
 
     this.collectorMotor.enableCurrentLimit(true);
     this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 40.0, 0.25), 500);
     this.collectorMotor.configPeakCurrentLimit(40, 500);
     this.collectorMotor.configPeakCurrentDuration(250, 500);
 
-    filter = LinearFilter.singlePoleIIR(0.25, 0.02);
+    this.filter = LinearFilter.singlePoleIIR(0.25, 0.02);
   }
 
   // Is the collector motor stalled?
