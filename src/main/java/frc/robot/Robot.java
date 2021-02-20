@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Bling;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -50,6 +51,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     // TODO: Any additional disable logic.
+    RobotContainer.getBling().clearLEDs();
+    RobotContainer.getBling().cleared();
   }
 
   @Override
@@ -75,6 +78,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    RobotContainer.getBling().uncleared();
     CommandScheduler.getInstance().cancelAll(); // Stop all commands.
     // Start teleop command.
     Command teleop = m_robotContainer.getTeleopCommand();
