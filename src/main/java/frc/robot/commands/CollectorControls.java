@@ -37,7 +37,7 @@ public class CollectorControls extends CommandBase {
     @Override
     public void execute() {
         if (OI.operatorController.getAButton()) {
-            power = 0.75;
+            power = OI.operatorController.getRawAxis(1);
         } else {
             power = 0;
         }

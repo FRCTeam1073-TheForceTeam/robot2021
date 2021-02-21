@@ -52,7 +52,7 @@ public class RobotContainer {
 
   // Subsystems: Add subsystems here
   private final OI oi = new OI();
-  private final Bling bling = new Bling();
+  private static final Bling bling = new Bling();
   private final Drivetrain drivetrain = new Drivetrain();
   private final Collector collector = new Collector();
   private final Magazine magazine = new Magazine();
@@ -122,18 +122,21 @@ public class RobotContainer {
     // return collect;
 
     // return squareTest;
-    return turn;//new DriveToPointCommand(drivetrain, bling, 1, 2, 1);
+    return turn;// new DriveToPointCommand(drivetrain, bling, 1, 2, 1);
   }
 
-  public Command getTeleopCommand() { // Command that we run in teleoperation mode.
+  // Command that we run in teleoperation mode.
+  public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
-    collector.manipulateIsDeployed(true);
-
     return teleopCommand;
   }
 
   public Command getTestCommand() {
     return teleDrive;
+  }
+
+  public static Bling getBling() {
+    return bling;
   }
 
 }
