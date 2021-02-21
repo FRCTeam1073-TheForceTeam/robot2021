@@ -198,7 +198,10 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
         } else if (!hasData && loopsWithoutData < runNumLoopsWithoutData) {
             loopsWithoutData++;
 
-        } else if (skipScan) {
+        } else if (isScanning) {
+            System.out.println("SCANNING FOR " + (System.currentTimeMillis() - initTime));
+
+        } else if (skipScan && shouldScan360) {
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
             skipScan = true;
             isScanning = true;
@@ -212,9 +215,6 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
             velocityMultiplier = 0.0;
             alignState();
             loopsWithoutData++;
-
-        } else if (isScanning) {
-            System.out.println("SCANNING FOR " + (System.currentTimeMillis() - initTime));
 
         } else {
             System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
