@@ -52,8 +52,7 @@ public class MagazineCommand extends CommandBase {
         isFinished = false;
         if (!sensor) {
             bling.setArray("red");
-            bling.setColorRGBAll((int) (bling.rgbArr[0] * 0.3), (int) (bling.rgbArr[1] * 0.3),
-                    (int) (bling.rgbArr[2] * 0.3));
+            bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
             hadNothing = true;
             isFinished = true;
         }
@@ -77,8 +76,7 @@ public class MagazineCommand extends CommandBase {
             bling.setArray("purple");
             loopsFalse++;
         }
-        bling.setColorRGBAll((int) (bling.rgbArr[0] * 0.3), (int) (bling.rgbArr[1] * 0.3),
-                (int) (bling.rgbArr[2] * 0.3));
+        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
         if (loopsFalse > 2) {
             isFinished = true;
         }

@@ -106,8 +106,7 @@ public class CollectCommand extends CommandBase {
 
         collector.setCollect(powerMultiplier * maxPower);
         drivetrain.setVelocity(velocity, 0.0);
-        bling.setColorRGBAll((int) (bling.rgbArr[0] * 0.3), (int) (bling.rgbArr[1] * 0.3),
-                (int) (bling.rgbArr[2] * 0.3));
+        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
         isFinished = magazine.getSensor();
     }
 

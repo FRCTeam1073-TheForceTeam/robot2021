@@ -258,8 +258,7 @@ public class ChaseCommand extends CommandBase {
         }
         System.out.println("vmultiplier " + velocityMultiplier + " rmultiplier " + rotationalSpeedMultiplier);
         drivetrain.setVelocity(velocityMultiplier * maxVelocity, rotationalSpeedMultiplier * maxRotationalSpeed);
-        bling.setColorRGBAll((int) (bling.rgbArr[0] * 0.3), (int) (bling.rgbArr[1] * 0.3),
-                (int) (bling.rgbArr[2] * 0.3));
+        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
     }
 
     // Called once the command ends or is interrupted.
