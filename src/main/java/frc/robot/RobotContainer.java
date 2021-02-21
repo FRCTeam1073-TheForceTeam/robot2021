@@ -23,9 +23,10 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.PowerCellTracker;
-import frc.robot.commands.ChaseAndCollectCellsCommand;
-import frc.robot.commands.AdvanceMagazineCommand;
 // Import commands: Add commands here.
+import frc.robot.commands.AdvanceMagazineCommand;
+import frc.robot.commands.ChaseAndCollectCellsCommand;
+import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveForwardCommand;
@@ -33,6 +34,7 @@ import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.DrivetrainPowerTestCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.MagazineControls;
 import frc.robot.commands.ShooterControls;
 import frc.robot.commands.SquareTestCommand;
@@ -40,6 +42,7 @@ import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.TestCommand;
 import frc.robot.commands.TurnCommand;
 import frc.robot.commands.TurretControls;
+import frc.robot.commands.TurnVectorCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -71,15 +74,20 @@ public class RobotContainer {
   private final MagazineControls teleMagazine = new MagazineControls(magazine);
   private final ShooterControls teleShooter = new ShooterControls(shooter);
   private final CollectorControls teleCollect = new CollectorControls(collector);
-  private final CollectCommand collect = new CollectCommand(collector, magazine, bling, 0.5, 5000);
   private final TurretControls teleTurret = new TurretControls(turret);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
-  private final TurnCommand turn90 = new TurnCommand(drivetrain, bling, -Math.PI / 2, 2.00);
-  private final TurnCommand turn = new TurnCommand(drivetrain, bling, 0.9 * Math.PI, 1.20);
-  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1, 0.5, 1.75);
+  private final TurnCommand turn = new TurnCommand(drivetrain, bling, Math.PI / 2, 1.5);
+  private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.2);
+  private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1.5, 0.5, 2.25);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect).alongWith(teleShooter);
+  private final ParallelCommandGroup teleopCommand3 = teleDrive.alongWith(teleCollect).alongWith(teleShooter);
+  private final ChaseCommand chase = new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true);
+  private final CollectCommand collect = new CollectCommand(drivetrain, collector, magazine, bling);
+  private final MagazineCommand runMag = new MagazineCommand(magazine, bling);
+  private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
+  private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -114,21 +122,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
-    // return (new PrintCommand("[RobotContainer] Starting autonomous test (driving
-    // forward).")
-    // .andThen(new TurnCommand(drivetrain, bling, Math.PI * 2, 1.0)));
-    // return squareTest;
-    // collector.manipulateIsDeployed(true);
-    // return collect;
-
-    // return squareTest;
-    return turn;// new DriveToPointCommand(drivetrain, bling, 1, 2, 1);
+    return chaseCollectAndRunMag;
   }
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
-    return teleopCommand;
+    return teleopCommand3;
   }
 
   public Command getTestCommand() {

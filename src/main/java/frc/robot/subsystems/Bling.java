@@ -45,7 +45,7 @@ public class Bling extends SubsystemBase {
   int gameG;
   int gameB;
 
-  public int[] rgbArr = {0,0,0};
+  public int[] rgbArr = { 0, 0, 0 };
 
   public boolean cleared = false;
 
@@ -80,52 +80,54 @@ public class Bling extends SubsystemBase {
       // gameData = DriverStation.getInstance().getGameSpecificMessage();
 
       // if (burst_done == 0) {
-      //   burst(m_ledBuffer.getLength(), 0, 0, 255);
-      //   // setColorRGBAll(0, 0, 0);
+      // burst(m_ledBuffer.getLength(), 0, 0, 255);
+      // // setColorRGBAll(0, 0, 0);
       // } else {
       batteryBling(0, 10, 8.0, 12.5);
 
       // dashing(20, 10, 255, 192, 203);
 
       // if (collector.isDeployed()) {
-      //   rangeRGB(6, 6, 0, 255, 0);
+      // rangeRGB(6, 6, 0, 255, 0);
       // } else {
-      //   rangeRGB(6, 6, 255, 0, 0);
+      // rangeRGB(6, 6, 255, 0, 0);
       // }
 
       // if (gameData.equals("R") && gameDataBlinkCount < 5) {
-      //   gameR = 255;
-      //   gameG = 0;
-      //   gameB = 0;
-
-      // } else if (gameData.equals("G") && gameDataBlinkCount < 5) {
-      //   gameR = 0;
-      //   gameG = 255;
-      //   gameB = 0;
-
-      // } else if (gameData.equals("B") && gameDataBlinkCount < 5) {
-      //   gameR = 0;
-      //   gameG = 0;
-      //   gameB = 255;
-
-      // } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
-      //   gameR = 252;
-      //   gameG = 227;
-      //   gameB = 0;
-      // }
-
-
+      // gameR = 255;
+      // gameG = 0;
+      // gameB = 0;
 
       // if (gameDataBlinkCount < 5) {
-      //   blinkyLights(0, m_ledBuffer.getLength(), gameR, gameG, gameB, true);
+      // blinkyLights(0, m_ledBuffer.getLength(), gameR, gameG, gameB, true);
       // } else {
-      //   rangeRGB(70, 10, gameR, gameG, gameB);
+      // rangeRGB(70, 10, gameR, gameG, gameB);
       // }
-      
+      // } else if (gameData.equals("G") && gameDataBlinkCount < 5) {
+      // gameR = 0;
+      // gameG = 255;
+      // gameB = 0;
 
-        // LEDRainbow();
+      // } else if (gameData.equals("B") && gameDataBlinkCount < 5) {
+      // gameR = 0;
+      // gameG = 0;
+      // gameB = 255;
+
+      // } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
+      // gameR = 252;
+      // gameG = 227;
+      // gameB = 0;
+      // }
+
+      // if (gameDataBlinkCount < 5) {
+      // blinkyLights(0, m_ledBuffer.getLength(), gameR, gameG, gameB, true);
+      // } else {
+      // rangeRGB(70, 10, gameR, gameG, gameB);
+      // }
+
+      // LEDRainbow();
       // rangeRGB(6, 20, 0, 0, 255);
-        // setColorRGBAll(0, 0, 255);
+      // setColorRGBAll(0, 0, 255);
       // }
 
       // setColorRGBAll(0, 0, 255);
@@ -138,36 +140,36 @@ public class Bling extends SubsystemBase {
     // match_time = DriverStation.getInstance().getMatchTime();
 
     // if (burst_done == 0) {
-    //   // burst(bling.getM_LEDBuffer().getLength(), 0, 0, 255);
-    //   // bling.setColorRGBAll(0, 0, 0);
+    // // burst(bling.getM_LEDBuffer().getLength(), 0, 0, 255);
+    // // bling.setColorRGBAll(0, 0, 0);
     // } else {
-    //   if (gameData.equals("R") && gameDataBlinkCount < 5) {
-    //     blinkyLights(0, m_ledBuffer.getLength(), 255, 0, 0);
+    // if (gameData.equals("R") && gameDataBlinkCount < 5) {
+    // blinkyLights(0, m_ledBuffer.getLength(), 255, 0, 0);
 
-    //   } else if (gameData.equals("G") && gameDataBlinkCount < 5) {
-    //     blinkyLights(0, m_ledBuffer.getLength(), 0, 255, 0);
+    // } else if (gameData.equals("G") && gameDataBlinkCount < 5) {
+    // blinkyLights(0, m_ledBuffer.getLength(), 0, 255, 0);
 
-    //   } else if (gameData.equals("B") && gameDataBlinkCount < 5) {
-    //     blinkyLights(0, m_ledBuffer.getLength(), 0, 0, 255);
+    // } else if (gameData.equals("B") && gameDataBlinkCount < 5) {
+    // blinkyLights(0, m_ledBuffer.getLength(), 0, 0, 255);
 
-    //   } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
-    //     blinkyLights(0, m_ledBuffer.getLength(), 252, 227, 0);
+    // } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
+    // blinkyLights(0, m_ledBuffer.getLength(), 252, 227, 0);
 
-    //   } else {
-          
-    //     // The first two LEDs turn white if the winch is engaged
-    //     // if (winch.isWinchEngaged()) {
-    //     //   rangeRGB(0, 2, 255, 255, 255);
-    //     // } else {
-    //     //   rangeRGB(0, 2, 0, 0, 0);
-    //     // }
+    // } else {
 
-    //     // Changes the number and color of LEDS 3-9 based on the battery voltage
-    //     // batteryBling(2, 6, 8.0, 12.5);
+    // // The first two LEDs turn white if the winch is engaged
+    // // if (winch.isWinchEngaged()) {
+    // // rangeRGB(0, 2, 255, 255, 255);
+    // // } else {
+    // // rangeRGB(0, 2, 0, 0, 0);
+    // // }
 
-    //     // magazineBallCountBling(8, 252, 227, 0);
-    //     LEDRainbow();
-    //   }
+    // // Changes the number and color of LEDS 3-9 based on the battery voltage
+    // // batteryBling(2, 6, 8.0, 12.5);
+
+    // // magazineBallCountBling(8, 252, 227, 0);
+    // LEDRainbow();
+    // }
     // }
   }
 
@@ -189,34 +191,34 @@ public class Bling extends SubsystemBase {
 
   public void setArray(String color) {
     if (color.equals("red")) {
-      rgbArr[0] = 255;
+      rgbArr[0] = 85;
       rgbArr[1] = 0;
       rgbArr[2] = 0;
 
     } else if (color.equals("orange")) {
-      rgbArr[0] = 255;
-      rgbArr[1] = 165;
+      rgbArr[0] = 85;
+      rgbArr[1] = 55;
       rgbArr[2] = 0;
 
     } else if (color.equals("yellow")) {
-      rgbArr[0] = 255;
-      rgbArr[1] = 255;
+      rgbArr[0] = 85;
+      rgbArr[1] = 85;
       rgbArr[2] = 0;
 
     } else if (color.equals("green")) {
       rgbArr[0] = 0;
-      rgbArr[1] = 255;
+      rgbArr[1] = 85;
       rgbArr[2] = 0;
 
     } else if (color.equals("blue")) {
       rgbArr[0] = 0;
       rgbArr[1] = 0;
-      rgbArr[2] = 255;
+      rgbArr[2] = 85;
 
     } else if (color.equals("purple")) {
-      rgbArr[0] = 128;
+      rgbArr[0] = 42;
       rgbArr[1] = 0;
-      rgbArr[2] = 128;
+      rgbArr[2] = 42;
 
     } else if (color.equals("black")) {
       rgbArr[0] = 0;
@@ -224,12 +226,11 @@ public class Bling extends SubsystemBase {
       rgbArr[2] = 0;
 
     } else if (color.equals("white")) {
-      rgbArr[0] = 255;
-      rgbArr[1] = 255;
-      rgbArr[2] = 255;
+      rgbArr[0] = 85;
+      rgbArr[1] = 85;
+      rgbArr[2] = 85;
     }
   }
-
 
   // setColorRGBAll sets the LEDs all to one color
   public void setColorRGBAll(int r, int g, int b) {
@@ -239,7 +240,8 @@ public class Bling extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  // alternateRGB sets a range of LEDs where the even are one color and the odd are another
+  // alternateRGB sets a range of LEDs where the even are one color and the odd
+  // are another
   public void alternateRGB(int min, int number, int r1, int g1, int b1, int r2, int g2, int b2) {
     int max = min + number;
     for (int i = min; i < (max); i = i + 2) {
@@ -269,7 +271,8 @@ public class Bling extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  // alternateHSV() has the same functionality as alternateRGB() except with HSV (hue, saturation + value)
+  // alternateHSV() has the same functionality as alternateRGB() except with HSV
+  // (hue, saturation + value)
   public void alternateHSV(int min, int number, int h1, int s1, int v1, int h2, int s2, int v2) {
     int max = min + number;
     for (int i = min; i < (max); i = i + 2) {
@@ -304,6 +307,7 @@ public class Bling extends SubsystemBase {
     m_ledBuffer.setRGB(i2, r, g, b);
     m_led.setData(m_ledBuffer);
   }
+
   public AddressableLEDBuffer getM_LEDBuffer() {
     return m_ledBuffer;
   }
@@ -315,22 +319,22 @@ public class Bling extends SubsystemBase {
 
       if (((i + move_rainbow) % 12) == 0 || ((i + move_rainbow) % 12) == 1) {
         // Sets first LED, then sets every 6 after it "red"
-        m_ledBuffer.setRGB(i, (int)(255 * brightness), 0, 0);
+        m_ledBuffer.setRGB(i, (int) (255 * brightness), 0, 0);
       } else if (((i + 2 + move_rainbow) % 12) == 0 || ((i + 2 + move_rainbow) % 12) == 1) {
         // Sets second LED, then sets every 6 after it "orange"
-        m_ledBuffer.setRGB(i, (int)(255 * brightness), (int)(69 * brightness), 0);
+        m_ledBuffer.setRGB(i, (int) (255 * brightness), (int) (69 * brightness), 0);
       } else if (((i + 4 + move_rainbow) % 12) == 0 || ((i + 4 + move_rainbow) % 12) == 1) {
         // Sets third LED, then sets every 6 after it "yellow"
-        m_ledBuffer.setRGB(i, (int)(252 * brightness), (int)(227 * brightness), 0);
+        m_ledBuffer.setRGB(i, (int) (252 * brightness), (int) (227 * brightness), 0);
       } else if (((i + 6 + move_rainbow) % 12) == 0 || ((i + 6 + move_rainbow) % 12) == 1) {
         // Sets fourth LED, then sets every 6 after it "green"
-        m_ledBuffer.setRGB(i, 0, (int)(255 * brightness), 0);
+        m_ledBuffer.setRGB(i, 0, (int) (255 * brightness), 0);
       } else if (((i + 8 + move_rainbow) % 12) == 0 || ((i + 8 + move_rainbow) % 12) == 1) {
         // Sets fifth LED, then sets every 6 after it "blue"
-        m_ledBuffer.setRGB(i, 0, 0, (int)(255 * brightness));
+        m_ledBuffer.setRGB(i, 0, 0, (int) (255 * brightness));
       } else if (((i + 10 + move_rainbow) % 12) == 0 || ((i + 10 + move_rainbow) % 12) == 1) {
         // Sets sixth LED, then sets every 6 after it "purple"
-        m_ledBuffer.setRGB(i, (int)(128 * brightness), 0, (int)(128 * brightness));
+        m_ledBuffer.setRGB(i, (int) (128 * brightness), 0, (int) (128 * brightness));
       }
 
       if (counter_rainbow < 100) {
@@ -343,12 +347,12 @@ public class Bling extends SubsystemBase {
     }
   }
 
-  // burst() lights LEDs from the middle out  
-  public void burst(int length, int r, int g, int b, boolean init) {    
+  // burst() lights LEDs from the middle out
+  public void burst(int length, int r, int g, int b, boolean init) {
     // Calculates the middle led(s) of the led string
     int middle1 = (int) (Math.floor((length / 2)));
     int middle2 = (int) (Math.ceil((length / 2)));
-    
+
     if ((leds_from_middle + middle2) < (length - 1) && time_burst < 15) {
       // If there are still more LEDs to change and it is not yet time to change
       // Wait until the 2000th time
@@ -371,7 +375,6 @@ public class Bling extends SubsystemBase {
       }
     }
   }
-
 
   // blinkyLightsTwoColors() switches the lights between two colors for all LEDs
   public void blinkyLightsTwoColors(int h, int s, int v, int r, int g, int b) {
@@ -399,7 +402,6 @@ public class Bling extends SubsystemBase {
     }
     dash_time += 1;
   }
-
 
   // blinkyLights() flashes lights on and off in one color for a range of LEDs
   public void blinkyLights(int minLEDsBlink, int numberLEDsBlink, int r, int g, int b, boolean gameData) {
@@ -460,21 +462,22 @@ public class Bling extends SubsystemBase {
     }
   }
 
-  // driverControlledLEDs() allows the driver to control the LEDs using start, B, X, and Y
-  public void driverControlledLEDs(int minLEDsDriver, int numberLEDsDriver){
-    if (OI.driverController.getStartButtonPressed()){
+  // driverControlledLEDs() allows the driver to control the LEDs using start, B,
+  // X, and Y
+  public void driverControlledLEDs(int minLEDsDriver, int numberLEDsDriver) {
+    if (OI.driverController.getStartButtonPressed()) {
       // If start was pressed
       // set color orange
       rangeRGB(minLEDsDriver, numberLEDsDriver, 255, 42, 0);
-    } else if (OI.driverController.getBButtonPressed()){
+    } else if (OI.driverController.getBButtonPressed()) {
       // If b was pressed
       // set colors to have alternating orange and blue
       alternateRGB(minLEDsDriver, numberLEDsDriver, 255, 42, 0, 0, 0, 255);
-    } else if (OI.driverController.getXButtonPressed()){
+    } else if (OI.driverController.getXButtonPressed()) {
       // If x was pressed
       // set color blue
       rangeRGB(minLEDsDriver, numberLEDsDriver, 0, 0, 255);
-    } else if (OI.driverController.getYButtonPressed()){
+    } else if (OI.driverController.getYButtonPressed()) {
       // If y was pressed
       // turn the light off
       rangeRGB(minLEDsDriver, numberLEDsDriver, 0, 0, 0);
@@ -483,48 +486,50 @@ public class Bling extends SubsystemBase {
 
   public void magazineBallCountBling(int min_LEDs, int r, int g, int b) {
     // if (magazine != null) {
-    //   int ballCount = magazine.getCellCount();
-    //   if (ballCount == 0) {
-    //     rangeRGB(min_LEDs, 5, 0, 0, 0);
-    //   } else if (ballCount > 5){
-    //     rangeRGB(min_LEDs, 5, 0, 0, 0);
-    //   } else {
-    //     rangeRGB(min_LEDs, ballCount, r, g, b);
-    //   }
+    // int ballCount = magazine.getCellCount();
+    // if (ballCount == 0) {
+    // rangeRGB(min_LEDs, 5, 0, 0, 0);
+    // } else if (ballCount > 5){
+    // rangeRGB(min_LEDs, 5, 0, 0, 0);
+    // } else {
+    // rangeRGB(min_LEDs, ballCount, r, g, b);
+    // }
     // }
   }
 
-  public void powerPortTrackingBling(int minLEDs, int numLEDs, double min_meters, double max_meters, int r, int g, int b) {
+  public void powerPortTrackingBling(int minLEDs, int numLEDs, double min_meters, double max_meters, int r, int g,
+      int b) {
     // if (portTracker != null) {
-    //   if (portTracker.getAdvancedTargets()[0].quality > 0) {
-    //     int num = (int) (Math.round(((portTracker.getAdvancedTargets()[0].range - min_meters) /
-    //         (max_meters - min_meters)) * (numLEDs - 1)) + 1);
-    //     rangeRGB(minLEDs, num, 0, 0, 0);
-    //     rangeRGB(minLEDs, num, r, g, b);
-    //   }
+    // if (portTracker.getAdvancedTargets()[0].quality > 0) {
+    // int num = (int) (Math.round(((portTracker.getAdvancedTargets()[0].range -
+    // min_meters) /
+    // (max_meters - min_meters)) * (numLEDs - 1)) + 1);
+    // rangeRGB(minLEDs, num, 0, 0, 0);
+    // rangeRGB(minLEDs, num, r, g, b);
+    // }
     // }
   }
 
   public void movingPowerPortTrackingBling(int min_LED, int num_LEDs, int r, int g, int b) {
     // if (portTracker != null) {
-    //   if (portTracker.getAdvancedTargets()[0].quality > 0) {
-    //     int min_LED_move = min_LED + 1;
-    //     int num_LEDs_move = num_LEDs - 2;
+    // if (portTracker.getAdvancedTargets()[0].quality > 0) {
+    // int min_LED_move = min_LED + 1;
+    // int num_LEDs_move = num_LEDs - 2;
 
-    //     int x_value = portTracker.getAdvancedTargets()[0].cx;
-    //     int moving_LED = ((x_value / 320) * num_LEDs_move) + min_LED_move;
+    // int x_value = portTracker.getAdvancedTargets()[0].cx;
+    // int moving_LED = ((x_value / 320) * num_LEDs_move) + min_LED_move;
 
-    //     rangeRGB((moving_LED - 1), 3, r, g, b);
-    //   }
+    // rangeRGB((moving_LED - 1), 3, r, g, b);
+    // }
     // }
   }
 
   public void winchVSdrivetrain(int min_LEDs, int num_LEDs) {
     // The first two LEDs turn white if the winch is engaged
-  //   if (winch.isWinchEngaged()) {
-  //     rangeRGB(min_LEDs, num_LEDs, 255, 255, 255);
-  //   } else {
-  //     rangeRGB(min_LEDs, num_LEDs, 0, 0, 0);
-  //   }
+    // if (winch.isWinchEngaged()) {
+    // rangeRGB(min_LEDs, num_LEDs, 255, 255, 255);
+    // } else {
+    // rangeRGB(min_LEDs, num_LEDs, 0, 0, 0);
+    // }
   }
 }

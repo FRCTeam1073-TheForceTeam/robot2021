@@ -4,24 +4,30 @@
 
 package frc.robot.commands;
 
-import frc.robot.Utility;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
 /** An example command that uses an example subsystem. */
-public class TurnCommand extends CommandBase {
+public class TurnVectorCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final Drivetrain drivetrain;
   private final Bling bling;
-  private final double maxSpeed;
   private final double angleToTurn;
-
+  private final double maxSpeed;
+  private Vector2d endVector;
+  private Vector2d endVector90off;
+  private Vector2d vector;
   private double initAngle;
-  private double angleTurned;
-  private double speed;
+  private double endAngle;
+  private double angle;
+  private double dot;
+  private double sign;
+  private double sign2;
+  private double speedMultiplier;
 
   /**
    * Creates a new TurnCommand that makes the robot turn around its own axis for a
@@ -34,63 +40,52 @@ public class TurnCommand extends CommandBase {
    * @param maxSpeed    The max speed the robot's drivetrain should rotate at in
    *                    radians per second.
    */
-  public TurnCommand(Drivetrain drivetrain, Bling bling, double angleToTurn, double maxSpeed) {
+  public TurnVectorCommand(Drivetrain drivetrain, Bling bling, double angleToTurn, double maxSpeed) {
     this.drivetrain = drivetrain;
     this.bling = bling;
-    this.angleToTurn = MathUtil.angleModulus(angleToTurn);
+    this.angleToTurn = angleToTurn;
     this.maxSpeed = Math.abs(maxSpeed);
     addRequirements(drivetrain);
     addRequirements(bling);
-  }
-
-  /**
-   * Creates a new TurnCommand that makes the robot turn around its own axis for a
-   * given angle with a max speed of 0.25 radians per second.
-   *
-   * @param subsystem   The subsystem used by this command.
-   * @param AngletoTurn The angle in radians the robot will turn
-   */
-  public TurnCommand(Drivetrain drivetrain, Bling bling, double AngletoTurn) {
-    this(drivetrain, bling, AngletoTurn, 1.5);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     initAngle = drivetrain.getRobotPose().getRotation().getRadians();
-    System.out.println("[TurnCommand] Turn has been initialized.");
-    SmartDashboard.putBoolean("aaaaa", false);
+    endAngle = MathUtil.angleModulus(initAngle + angleToTurn);
+    endVector = new Vector2d(Math.cos(endAngle), Math.sin(endAngle));
+    sign = Math.signum(angleToTurn);
+    endVector90off = new Vector2d(Math.cos(endAngle + sign * 0.5 * Math.PI), Math.sin(endAngle + sign * 0.5 * Math.PI));
+    SmartDashboard.putNumber("[TurnVector] endAngle", endAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    angleTurned = MathUtil.angleModulus(drivetrain.getRobotPose().getRotation().getRadians() - initAngle);
-    double angleRemaining = (angleToTurn - angleTurned);
-    speed = maxSpeed * Math.signum(angleRemaining)
-        * Math.min(Math.pow(Math.abs(angleRemaining / angleToTurn), 0.5) + 0.2, 1);
-    SmartDashboard.putNumber("[Turn] Target Angle", angleToTurn);
-    SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
-    System.out.println("[TurnCommand] Turn speed is " + speed + " rad/sec");
-    drivetrain.setVelocity(0.0, speed);
+    angle = drivetrain.getRobotPose().getRotation().getRadians();
+    vector = new Vector2d(Math.cos(angle), Math.sin(angle));
+    dot = vector.dot(endVector);
+    sign2 = Math.signum(vector.dot(endVector90off));
+    if (sign != sign2 && sign2 != 0.0) {
+      sign = sign2;
+    }
+    speedMultiplier = sign * Math.abs((angleToTurn + initAngle - angle) / angleToTurn);
+    drivetrain.setVelocity(0.0, speedMultiplier * maxSpeed);
+    SmartDashboard.putNumber("[TurnVector] dot", dot);
+    SmartDashboard.putNumber("[TurnVector] angle", angle);
+    SmartDashboard.putNumber("[TurnVector] sign", sign);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     drivetrain.setVelocity(0.0, 0.0);
-    System.out.println("!!!TurnAngle: " + angleTurned);
-    if (interrupted) {
-      System.out.println("[TurnCommand] Turn has been interrupted!");
-    } else {
-      System.out.println("[TurnCommand] Turn has finished.");
-    }
-    SmartDashboard.putBoolean("aaaaa", true);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (angleToTurn - angleTurned) * Math.signum(angleToTurn) <= 0.02;
+    return dot >= 0.8;
   }
 }
