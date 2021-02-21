@@ -14,8 +14,8 @@ public class ShootCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final Shooter shooter;
     private final Bling bling;
-    private final double hoodAngle;
-    private final double maxVelocity;
+    private final double hoodPosition;
+    private final double maxPower;
     private final long milliseconds;
     private boolean getInit;
     private long initialTime;
@@ -32,11 +32,11 @@ public class ShootCommand extends CommandBase {
      *                     to.
      * @param milliseconds The milliseconds this command will run for.
      */
-    public ShootCommand(Shooter shooter, Bling bling, double hoodAngle, double maxVelocity, long milliseconds) {
+    public ShootCommand(Shooter shooter, Bling bling, double hoodPosition, double maxPower, long milliseconds) {
         this.shooter = shooter;
         this.bling = bling;
-        this.hoodAngle = MathUtil.clamp(hoodAngle, shooter.getMinHoodAngle(), shooter.getMaxHoodAngle());
-        this.maxVelocity = maxVelocity;
+        this.hoodPosition = hoodPosition;
+        this.maxPower = maxPower;
         this.milliseconds = milliseconds;
         addRequirements(shooter);
         addRequirements(bling);
@@ -50,7 +50,7 @@ public class ShootCommand extends CommandBase {
      * @param bling   The bling used by this command.
      */
     public ShootCommand(Shooter shooter, Bling bling) {
-        this(shooter, bling, shooter.getHoodAngle(), 2.0, 3000);
+        this(shooter, bling, shooter.getHoodPosition(), 0.5, 3000);
     }
 
     // Called when the command is initially scheduled.
@@ -63,22 +63,22 @@ public class ShootCommand extends CommandBase {
     @Override
     public void execute() {
         // TODO: Bling
-        if (getInit && Math.abs(shooter.getHoodAngle() - hoodAngle) < 0.02) {
+        if (getInit && Math.abs(shooter.getHoodPosition() - hoodPosition) < 0.02) {
             initialTime = System.currentTimeMillis();
             getInit = false;
         } else if (getInit) {
-            shooter.setHoodAngle(hoodAngle);
+            shooter.setHoodPosition(hoodPosition);
         }
         time = System.currentTimeMillis();
         if (time - initialTime < milliseconds) {
-            shooter.setFlywheelVelocity(maxVelocity);
+            shooter.setFlywheelPower(maxPower);
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        shooter.setFlywheelVelocity(0.0);
+        shooter.setFlywheelPower(0.0);
     }
 
     // Returns true when the command should end.
