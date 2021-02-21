@@ -2,8 +2,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.LinearFilter;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Collector extends SubsystemBase {
@@ -11,27 +15,29 @@ public class Collector extends SubsystemBase {
   private boolean isRelaxed = false;
   private WPI_TalonSRX collectorMotor;
   private Solenoid collectorWithdrawPneumatic, collectorDeployPneumatic;
+  private LinearFilter filter;
+  private double power;
+  private double rawCurrent;
+  private double filteredCurrent;
 
   public Collector() {
     this.collectorWithdrawPneumatic = new Solenoid(1, 6);
     this.collectorDeployPneumatic = new Solenoid(1, 0);
     this.collectorMotor = new WPI_TalonSRX(27);
     this.collectorMotor.configFactoryDefault();
-    this.collectorMotor.setNeutralMode(NeutralMode.Brake);
+    this.collectorMotor.setNeutralMode(NeutralMode.Coast);
 
     this.collectorMotor.enableCurrentLimit(true);
-    // The TalonSRX is said to have a hardware limit of 100 amps and can only stay
-    // there for 2 seconds
-    // And a normal current of 60 amps so I put the limit at 75 and it can stay
-    // there for half a second
-    this.collectorMotor.configPeakCurrentLimit(75, 0);
-    this.collectorMotor.configPeakCurrentDuration(500, 0);
+    this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 30.0, 0.25), 500);
+    this.collectorMotor.configPeakCurrentLimit(28, 500);
+    this.collectorMotor.configPeakCurrentDuration(250, 500);
+
+    this.filter = LinearFilter.singlePoleIIR(0.25, 0.02);
   }
 
-  /// Is the collector motor stalled?
+  // Is the collector motor stalled?
   public boolean isStalled() {
-    // TODO: make this actually do stuff
-    return false;
+    return 25.0 < Math.abs(getfilteredCurrent());
   }
 
   /**
@@ -42,14 +48,9 @@ public class Collector extends SubsystemBase {
    *              colector at going from full speed turning outwards to inwards
    */
   public void setCollect(double power) {
-    // TODO: SmartDashboard or ShuffleBoard
-    // if (!(isStalled()) && isDeployed) {
+    this.power = power;
     collectorMotor.set(ControlMode.PercentOutput, power);
-    // } else if (!(isDeployed)) {
-    // System.out.println("Collector is NOT deployed");
-    // } else {
-    // System.out.println("Motor is stalled");
-    // }
+
   }
 
   /**
@@ -62,19 +63,22 @@ public class Collector extends SubsystemBase {
     isDeployed = manipulateTo;
   }
 
-  /// Return the collector motor power.
+  // Return the collector motor power.
   public double getPower() {
-    // TODO:
-    return 0.0;
+    return power;
   }
 
-  /// Return the collector load current.
-  public double getLoad() {
-    // TODO:
-    return 0.0;
+  // Return the collector load current.
+  public double getfilteredCurrent() {
+    return filteredCurrent;
   }
 
-  /// Is the collector deployed?
+  // Return the collector load current.
+  public double getRawCurrent() {
+    return rawCurrent;
+  }
+
+  // Is the collector deployed?
   public boolean isDeployed() {
     return isDeployed;
   }
@@ -132,5 +136,8 @@ public class Collector extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    rawCurrent = collectorMotor.getStatorCurrent();
+    filteredCurrent = filter.calculate(rawCurrent);
+    SmartDashboard.putNumber("[collector] filteredOutputCurrent", filteredCurrent);
   }
 }
