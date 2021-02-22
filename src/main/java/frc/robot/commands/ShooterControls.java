@@ -46,8 +46,8 @@ public class ShooterControls extends CommandBase {
     // }
     //flywheelPower = 0.01 * OI.operatorController.getRawAxis(3);
     hoodPower = MathUtil.clamp(OI.operatorController.getRawAxis(1) * 0.1, -0.05, 0.05);
-//    shooter.setFlywheelPower(flywheelPower);
-    shooter.setHoodPosition(16.306*0.5+16.306*0.4*OI.operatorController.getRawAxis(1));
+    //    shooter.setFlywheelPower(flywheelPower);
+    shooter.setHoodPosition(shooter.minHoodPosition + 2.0 * Math.PI);
   }
 
   // Called once the command ends or is interrupted.

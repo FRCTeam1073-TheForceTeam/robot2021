@@ -48,7 +48,7 @@ public class Shooter extends SubsystemBase {
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
   public final double minHoodPosition = 0;
-  public final double maxHoodPosition = 16.306 * 2.0 * Math.PI;
+  public final double maxHoodPosition = 16.306;// * 2.0 * Math.PI;
 //  private final double minAngle = 19.64 * Math.PI / 180;
 //  private final double maxAngle = 49.18 * Math.PI / 180;
 
