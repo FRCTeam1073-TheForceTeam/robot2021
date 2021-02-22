@@ -47,13 +47,13 @@ public class Shooter extends SubsystemBase {
 
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
-  private final double minHoodPosition = 0;
-  private final double maxHoodPosition = 16.306 * 2.0 * Math.PI;
+  public final double minHoodPosition = 0;
+  public final double maxHoodPosition = 16.306 * 2.0 * Math.PI;
 //  private final double minAngle = 19.64 * Math.PI / 180;
 //  private final double maxAngle = 49.18 * Math.PI / 180;
 
-  private static final double hoodAngleLow = 19.64 * Math.PI / 180.0;
-  private static final double hoodAngleHigh = 49.18 * Math.PI / 180.0;
+  public static final double hoodAngleHigh = 49.18 * Math.PI / 180.0;
+  public static final double hoodAngleLow = 19.64 * Math.PI / 180.0;
 
   public final double kRawMotorRange = 2.523808240890503;
 //  public final double kMotorRadiansPerHoodRadian = kRawMotorRange * 2 * Math.PI / (maxAngle - minAngle);
@@ -155,20 +155,34 @@ public class Shooter extends SubsystemBase {
         * ((getHoodPosition() - minHoodPosition) / (maxHoodPosition - minHoodPosition));
   }
 
+  /**
+   * Sets the hood motor's position (as opposed to setHoodAngle, which sets the actual angle of the hood).
+   * Values are clamped between the minimum and maximum positions to prevent the mechanism from damaging
+   * itself. This requires that the hood is manually reset at the start of each match (auto-indexing is
+   * possible, but the only simple way to do it puts the mechanism under too much stress).
+   * @param position The target position of the hood motor in radians
+   */
   public void setHoodPosition(double position) {
-    hoodController.setReference(position, ControlType.kPosition);
+    hoodController.setReference(position/(2.0*Math.PI), ControlType.kPosition);
   }
 
-  // public void setHoodAngle(double angle) {
-  //   double position = minHoodPosition
-  //       + (maxHoodPosition - minHoodPosition) * ((angle - hoodAngleHigh) / (hoodAngleLow - hoodAngleHigh));
-  //   hoodController.setReference(position, ControlType.kPosition);
-  // }
+  /**
+   * Sets the hood angle, with values clamped between the lowest possible angle (fully extended)
+   * and the steepest possible angle (fully retracted).
+   * @param angle The angle of the hood in radians
+   */
+  public void setHoodAngle(double angle) {
+    double position = 
+        minHoodPosition + (maxHoodPosition - minHoodPosition) * ((angle - hoodAngleHigh) / (hoodAngleLow - hoodAngleHigh));
+    setHoodPosition(position);
+  }
 
   @Override
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
+    SmartDashboard.putString("Flywheel temperature (degs C)",
+        "[" + flywheelTemperatures[0] + "," + flywheelTemperatures[1] + "]");
     SmartDashboard.putNumber("Raw hood position (motor radians) [S-HD]", getHoodPosition() * 2.0 * Math.PI);
     SmartDashboard.putNumber("Hood angle (degs) [S-HD]", getHoodAngle() * 180.0 / Math.PI);
     // SmartDashboard.putNumber("Hood velocity (motor radians/sec) [S-HD]",
