@@ -81,12 +81,13 @@ public class RobotContainer {
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1.5, 0.5, 2.25);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
-  private final ParallelCommandGroup teleopCommand3 = teleDrive.alongWith(teleCollect).alongWith(teleShooter);
   private final ChaseCommand chase = new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true);
   private final CollectCommand collect = new CollectCommand(drivetrain, collector, magazine, bling);
   private final MagazineCommand runMag = new MagazineCommand(magazine, bling);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
+
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleShooter);
+
   private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
 
   /**
@@ -111,7 +112,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kY.value);
+    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kA.value);
     magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
   }
 
@@ -128,7 +129,7 @@ public class RobotContainer {
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
-    return teleopCommand3;
+    return teleopCommand;
   }
 
   public Command getTestCommand() {

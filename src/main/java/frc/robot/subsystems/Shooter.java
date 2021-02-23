@@ -31,10 +31,10 @@ public class Shooter extends SubsystemBase {
   private double flywheelP = 1.9e-1;
   private double flywheelI = 0;
   private double flywheelD = 0;
-  private double flywheelF = 0;
+  private double flywheelF = 0.057;
   
   private double hoodP_HSensor = 1.8e-1;
-  private double hoodI_HSensor = 4e-5;
+  private double hoodI_HSensor = 1.2e-5;
   private double hoodD_HSensor = 0;
   private double hoodF_HSensor = 0;
 
@@ -66,7 +66,7 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.configFactoryDefault();
     shooterFlywheel2.configFactoryDefault();
 
-    shooterFlywheel2.follow(shooterFlywheel2);
+    shooterFlywheel2.follow(shooterFlywheel1);
 
     //If the second flywheel motor *isn't* inverted, that would be pretty bad.
     //Like, 'the flywheel tears itself apart' kind of bad.
@@ -92,7 +92,8 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kI(0, flywheelI);
     shooterFlywheel1.config_kD(0, flywheelD);
     shooterFlywheel1.config_kF(0, flywheelF);
-
+    flywheelTemperatures = new double[] { -273.15, 15e6 };
+    
     hood = new CANSparkMax(25, MotorType.kBrushless);
     hood.clearFaults();
     hood.restoreFactoryDefaults();
@@ -106,23 +107,22 @@ public class Shooter extends SubsystemBase {
     hoodEncoder.setPosition(0);
     hoodEncoder.setInverted(true);
 
-    flywheelTemperatures = new double[] { -273.15, 15e6 };
 
     hoodController = hood.getPIDController();
     if (usingExternalHoodEncoder) {
       hoodController.setFeedbackDevice(hoodEncoder);
-      hoodController.setP(hoodP_HSensor);
-      hoodController.setI(hoodI_HSensor);
-      hoodController.setD(hoodD_HSensor);
-      hoodController.setFF(hoodF_HSensor);
-    } else {
-      hoodController.setFeedbackDevice(hoodHallSensor);
       hoodController.setP(hoodP_External);
       hoodController.setI(hoodI_External);
       hoodController.setD(hoodD_External);
       hoodController.setFF(hoodF_External);
+    } else {
+      hoodController.setFeedbackDevice(hoodHallSensor);
+      hoodController.setP(hoodP_HSensor);
+      hoodController.setI(hoodI_HSensor);
+      hoodController.setD(hoodD_HSensor);
+      hoodController.setFF(hoodF_HSensor);
     }
-    hood.setClosedLoopRampRate(0.25);
+    hood.setClosedLoopRampRate(0.15);
   }
 
   /**
@@ -136,7 +136,7 @@ public class Shooter extends SubsystemBase {
    * Directly sets the power to the hood motor.
    */
   public void setHoodPower(double power) {
-    if ((getHoodPosition() > maxHoodPosition && power > 0) || (getHoodPosition() < maxHoodPosition && power < 0)) {
+    if ((getHoodPosition() < minHoodPosition && power < 0) || (getHoodPosition() > maxHoodPosition && power > 0)) {
       power = 0;
     }
     hood.set(power);
@@ -163,7 +163,14 @@ public class Shooter extends SubsystemBase {
    * @param position The target position of the hood motor in radians
    */
   public void setHoodPosition(double position) {
-    hoodController.setReference(position/(2.0*Math.PI), ControlType.kPosition);
+    if (position > maxHoodPosition) {
+      SmartDashboard.putString("Message", "Max:  Hood pos: " + position + ", Max hood pos: " + maxHoodPosition);
+    }
+    if (position < minHoodPosition) {
+      SmartDashboard.putString("Message", "Min:  Hood pos: " + position + ", Min hood pos: " + minHoodPosition);
+    }
+    hoodController.setReference(MathUtil.clamp(position, minHoodPosition, maxHoodPosition) / (2.0 * Math.PI),
+        ControlType.kPosition);
   }
 
   /**
@@ -181,9 +188,15 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
+    SmartDashboard.putNumber("Flywheel current (A)",
+    shooterFlywheel1.getSupplyCurrent()
+    );
+    SmartDashboard.putNumber("Flywheel velocity",
+    shooterFlywheel1.getSelectedSensorVelocity()
+    );
     SmartDashboard.putString("Flywheel temperature (degs C)",
         "[" + flywheelTemperatures[0] + "," + flywheelTemperatures[1] + "]");
-    SmartDashboard.putNumber("Raw hood position (motor radians) [S-HD]", getHoodPosition() * 2.0 * Math.PI);
+    SmartDashboard.putNumber("Raw hood position (motor radians) [S-HD]", getHoodPosition());
     SmartDashboard.putNumber("Hood angle (degs) [S-HD]", getHoodAngle() * 180.0 / Math.PI);
     // SmartDashboard.putNumber("Hood velocity (motor radians/sec) [S-HD]",
     //     hoodEncoder.getVelocity() * Math.PI / 30.0);

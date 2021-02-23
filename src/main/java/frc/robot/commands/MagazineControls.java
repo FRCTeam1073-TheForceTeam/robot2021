@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
@@ -31,6 +32,9 @@ public class MagazineControls extends CommandBase {
   @Override
   public void execute() {
     magazineVelocity = OI.operatorController.getRawAxis(2);
+    // if (OI.operatorController.getBumper(Hand.kLeft)) {
+    //   magazineVelocity *= 2;
+    // }
     //SmartDashboard.putNumber("Magazine Power", magazineVelocity);
     magazine.setVelocity(magazineVelocity);
     // magazine.setVelocity(magazineVelocity);
