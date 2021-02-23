@@ -83,6 +83,17 @@ public class Collector extends SubsystemBase {
     return isDeployed;
   }
 
+  /// Is the collector deployed?
+  public void raise() {
+    collectorDeployPneumatic.set(true);
+    collectorWithdrawPneumatic.set(false);
+  }
+
+  public void lower() {
+    collectorDeployPneumatic.set(false);
+    collectorWithdrawPneumatic.set(true);
+  }
+  
   /**
    * Are both pneumatics off?
    * 
