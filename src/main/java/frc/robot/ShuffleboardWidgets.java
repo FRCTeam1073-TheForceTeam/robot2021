@@ -21,6 +21,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
     @Override
     public void periodic() {
         Shuffleboard.update();
-        auto = (int) chooseAuto.getDouble(1.0);
+        auto = (int) chooseAuto.getDouble(0.0);
+        System.out.println("Shuffleboard auto: " + auto);
     }
 }
