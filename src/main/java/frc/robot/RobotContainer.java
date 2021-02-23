@@ -88,7 +88,8 @@ public class RobotContainer {
 
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleShooter);
 
-  private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
+  // private final SequentialCommandGroup chaseCollectAndRunMag =
+  // chase.andThen(collect, runMag);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -123,7 +124,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
-    return chaseCollectAndRunMag;
+    switch (ShuffleboardWidgets.auto) {
+      case 0:
+        return forward;
+      case 1:
+        return collect;
+      default:
+        return turn;
+
+    }
   }
 
   // Command that we run in teleoperation mode.

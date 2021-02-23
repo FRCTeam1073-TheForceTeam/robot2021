@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ShuffleboardWidgets extends SubsystemBase {
     private ShuffleboardTab tab;
     private NetworkTableEntry chooseAuto;
-    int auto = 0;
+    static int auto = 0;
 
     public ShuffleboardWidgets() {
         tab = Shuffleboard.getTab("Robot2021");
