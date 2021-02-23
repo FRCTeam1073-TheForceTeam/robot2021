@@ -32,9 +32,9 @@ public class MagazineControls extends CommandBase {
   @Override
   public void execute() {
     magazineVelocity = OI.operatorController.getRawAxis(2);
-    // if (OI.operatorController.getBumper(Hand.kLeft)) {
-    //   magazineVelocity *= 2;
-    // }
+    if (OI.operatorController.getBumper(Hand.kLeft)) {
+      magazineVelocity *= 4;
+    }
     //SmartDashboard.putNumber("Magazine Power", magazineVelocity);
     magazine.setVelocity(magazineVelocity);
     // magazine.setVelocity(magazineVelocity);

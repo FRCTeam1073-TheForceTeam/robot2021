@@ -112,7 +112,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kA.value);
+    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kB.value);
     magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
   }
 
