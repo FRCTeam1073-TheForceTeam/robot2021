@@ -62,6 +62,30 @@ public class ErrorToOutputFunction {
         }
     }
 
+    private boolean domainIsFilled() {
+        if (this.minimum != functions.get(0)[1]) {
+            return false;
+        }
+        if (this.maximum != functions.get(functions.size() - 1)[2]) {
+            return false;
+        }
+        for (byte i = 0; i < functions.size() - 1; i++) {
+            if (functions.get(i)[2] != functions.get(i + 1)[1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasNoRangeSpikes() {
+        for (byte i = 0; i < functions.size() - 1; i++) {
+            if (Math.abs(functions.get(i)[7] - functions.get(i + 1)[6]) > 0.05) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean addCubeRoot(double minimum, double maximum, double vertex, double OutputAtMin,
             double OutputAtVertex) {
         double a = (OutputAtMin - OutputAtVertex) / Math.sqrt(minimum - vertex);
@@ -148,30 +172,6 @@ public class ErrorToOutputFunction {
 
     public int getNumFunctions() {
         return functions.size();
-    }
-
-    private boolean domainIsFilled() {
-        if (this.minimum != functions.get(0)[1]) {
-            return false;
-        }
-        if (this.maximum != functions.get(functions.size() - 1)[2]) {
-            return false;
-        }
-        for (byte i = 0; i < functions.size() - 1; i++) {
-            if (functions.get(i)[2] != functions.get(i + 1)[1]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean hasNoRangeSpikes() {
-        for (byte i = 0; i < functions.size() - 1; i++) {
-            if (Math.abs(functions.get(i)[7] - functions.get(i + 1)[6]) > 0.05) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public boolean canOutput() {
