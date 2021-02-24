@@ -82,7 +82,7 @@ public class CollectCommand extends CommandBase {
         }
         time = System.currentTimeMillis();
         if (shouldUnstall) {
-            if (time - initialTime >= 1500) {
+            if (time - initialTime >= 1800) {
                 powerMultiplier = 0.0;
                 velocity = 0.0;
                 drivetrain.setVelocity(0.0, 0.0);
