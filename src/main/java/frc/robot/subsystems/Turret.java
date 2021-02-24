@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Turret extends SubsystemBase {
 
     private WPI_TalonSRX turretRotator;
-    private double P = 0;
+    private double P = 0.37;
     private double I = 0;
     private double D = 0;
-    private double F = 0.591;
+    private double F = 0.51;//91;
       //0.25 375
       //0.50 904
       //0.75 1458
@@ -76,7 +76,7 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-      SmartDashboard.putNumber("Turret Velocity [TURRET]",
+      SmartDashboard.putNumber("Raw Turret Velocity [TURRET]",
       turretRotator.getSelectedSensorVelocity());
       SmartDashboard.putNumber("Turret Target Velocity [TURRET]", turretVelocity);
       SmartDashboard.putNumber("Turret Position (raw) [TURRET]", turretRotator.getSelectedSensorPosition());

@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.*;
@@ -28,10 +29,10 @@ public class Shooter extends SubsystemBase {
   private CANEncoder hoodEncoder;
   private CANPIDController hoodController;
 
-  private double flywheelP = 1.9e-1;
-  private double flywheelI = 0;
+  private double flywheelP = 0.15;
+  private double flywheelI = 0.001;
   private double flywheelD = 0;
-  private double flywheelF = 0.057;
+  private double flywheelF = 0.045;
   
   private double hoodP_HSensor = 1.8e-1;
   private double hoodI_HSensor = 1.2e-5;
@@ -58,6 +59,8 @@ public class Shooter extends SubsystemBase {
   public final double kRawMotorRange = 2.523808240890503;
 //  public final double kMotorRadiansPerHoodRadian = kRawMotorRange * 2 * Math.PI / (maxAngle - minAngle);
   private boolean usingExternalHoodEncoder = false;
+  SlewRateLimiter rateLimiter;
+
 
   public Shooter() {
     shooterFlywheel1 = new WPI_TalonFX(22);
@@ -93,6 +96,8 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kD(0, flywheelD);
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
+
+    rateLimiter = new SlewRateLimiter(5000);
     
     hood = new CANSparkMax(25, MotorType.kBrushless);
     hood.clearFaults();
@@ -129,9 +134,20 @@ public class Shooter extends SubsystemBase {
    * Directly sets the power to the flywheel motors.
    */
   public void setFlywheelPower(double power) {
-    shooterFlywheel1.set(ControlMode.PercentOutput, power);   
+    shooterFlywheel1.set(ControlMode.PercentOutput, power);
   }
 
+  double flywheelTargetVelocity = 0;
+
+  /**
+   * Sets the flywheel velocity in radians/second.
+   */
+  public void setFlywheelVelocity(double velocity) {
+    //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
+    flywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
+    shooterFlywheel1.set(ControlMode.Velocity, flywheelTargetVelocity);
+  }
+  
   /**
    * Directly sets the power to the hood motor.
    */
@@ -193,6 +209,12 @@ public class Shooter extends SubsystemBase {
     );
     SmartDashboard.putNumber("Flywheel velocity",
     shooterFlywheel1.getSelectedSensorVelocity()
+    );
+    SmartDashboard.putNumber("Flywheel target velocity",
+    flywheelTargetVelocity
+    );
+    SmartDashboard.putNumber("Flywheel error",
+    shooterFlywheel1.getClosedLoopError()
     );
     SmartDashboard.putString("Flywheel temperature (degs C)",
         "[" + flywheelTemperatures[0] + "," + flywheelTemperatures[1] + "]");

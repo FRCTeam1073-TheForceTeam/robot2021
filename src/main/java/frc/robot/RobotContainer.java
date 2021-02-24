@@ -42,6 +42,7 @@ import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.TestCommand;
 import frc.robot.commands.TurnCommand;
 import frc.robot.commands.TurretControls;
+import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurnVectorCommand;
 
 /**
@@ -86,7 +87,7 @@ public class RobotContainer {
   private final MagazineCommand runMag = new MagazineCommand(magazine, bling);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
 
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleShooter);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleTurret);
 
   private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
 
@@ -123,7 +124,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
-    return chaseCollectAndRunMag;
+    return new TurretPortAlignCommand(turret, portTracker);
+//    return chaseCollectAndRunMag;
   }
 
   // Command that we run in teleoperation mode.

@@ -13,7 +13,7 @@ import frc.robot.subsystems.OI;
 public class TurretControls extends CommandBase {
 
   private Turret turret;
-  private double turretPower;
+  private double turretVelocity;
 
   /** Creates a new MagazineControls. */
   public TurretControls(Turret turret) {
@@ -31,13 +31,13 @@ public class TurretControls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turretPower = 0.5 * OI.operatorController.getRawAxis(4);
-      // turretPower = 0;
+    turretVelocity = 2 * OI.operatorController.getRawAxis(4);
+      // turretVelocity = 0;
       // if (Math.abs(OI.operatorController.getRawAxis(4)) > 0.2) {
-      //   turretPower = 0.75 * Math.signum(OI.operatorController.getRawAxis(4));
+      //   turretVelocity = 0.75 * Math.signum(OI.operatorController.getRawAxis(4));
       // }
     //SmartDashboard.putNumber("Magazine Power", magazineVelocity);
-    turret.setPower(turretPower);
+    turret.setVelocity(turretVelocity);
     // magazine.setVelocity(magazineVelocity);
   }
 
