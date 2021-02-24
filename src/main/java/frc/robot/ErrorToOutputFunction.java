@@ -226,4 +226,44 @@ public class ErrorToOutputFunction {
         System.out.println("!!!Error inputted was out of the domain!!!");
         return output;
     }
+
+    public String toString() {
+        String returnString = "This ErrorToOutputFunction is a piecewise function out of " + this.getNumFunctions()
+                + " functions\n";
+        for (byte i = 0; i < functions.size(); i++) {
+            returnString += "function #" + (i + 1) + " is a " + type(functions.get(i));
+        }
+        return returnString;
+    }
+
+    private String type(double[] function) {
+        int type = (int) Math.round(function[0] * 10);
+        String domain = "from " + function[1] + " to " + function[2];
+        String equa = " with the equation: " + function[3];
+        String tion = "(x - " + function[4] + ")^" + function[0] + " + " + function[5] + "\n";
+        String tion2 = "(-(x - " + function[4] + "))^" + function[0] + " + " + function[5] + "\n";
+
+        switch (type) {
+            case 3:
+                return "Cubic Root Function " + domain + equa + tion;
+
+            case 5:
+                return "Square Root Function " + domain + equa + tion;
+
+            case -5:
+                return "Flipped Square Root Function " + domain + equa + tion2;
+
+            case 0:
+                return "Horizontal " + domain + " at " + function[7] + "\n";
+
+            case 10:
+                return "Linear Function " + domain + equa + "x + " + function[5] + "\n";
+
+            case 20:
+                return "Square Function " + domain + equa + tion;
+
+            default:
+                return "No type";
+        }
+    }
 }
