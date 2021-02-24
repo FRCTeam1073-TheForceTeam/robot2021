@@ -67,7 +67,7 @@ public class RobotContainer {
   private final PowerCellTracker cellTracker = new PowerCellTracker();
 
   // Commands: Add commands here.
-  private final AdvanceMagazineCommand magExtra = new AdvanceMagazineCommand(magazine, 0.4);
+  private final AdvanceMagazineCommand magExtra = new AdvanceMagazineCommand(magazine, 0.4, 0.5);
   private final DrivetrainPowerTestCommand drivetrainTestCommand = new DrivetrainPowerTestCommand(drivetrain, 0.75);
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
@@ -130,6 +130,8 @@ public class RobotContainer {
         return forward;
       case 1:
         return collect;
+      case 2:
+        return chase.andThen(collect, runMag, magExtra);
       default:
         return turn;
 
