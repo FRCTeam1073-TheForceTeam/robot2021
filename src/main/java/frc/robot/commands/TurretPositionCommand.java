@@ -6,27 +6,36 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 
-public class TurretPortAlignCommand extends CommandBase {
+public class TurretPositionCommand extends CommandBase {
 
   Turret turret;
   PowerPortTracker portTracker;
-  PowerPortData portData;
+  double currentPosition;
+  double targetPosition;
 
-  public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_) {
+  /**
+   * Sets the turret's angle in radians.
+   * @param turret_ The turret object
+   * @param targetPosition_ The target angle in radians
+   */
+  public TurretPositionCommand(Turret turret_, double targetPosition_) {
     turret = turret_;
-    portTracker = portTracker_;
-    addRequirements(turret, portTracker);
+    currentPosition = 0;
+    targetPosition = targetPosition_;
+    addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    currentPosition = 0;
     turret.setVelocity(0);
   }
 
@@ -45,17 +54,13 @@ public class TurretPortAlignCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    boolean hasData = portTracker.getPortData(portData);
-    if (!hasData) {
-      double input = 2 * (portData.cx / portTracker.getImageWidth()) - 1;
-      double output = -1.5 * curve(input);
-      double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
-      turret.setVelocity(actualOutput);
-      SmartDashboard.putNumber("[T-AGN] Actual velocity", actualOutput);
-      SmartDashboard.putString("[T-AGN] Output log", "[D]: INPUT (" + input + "), OUTPUT (" + output + ")");
-    } else {
-      turret.setVelocity(0);
-    }
+    double currentPosition = turret.getPosition();
+    double input = MathUtil.clamp((currentPosition - targetPosition), -1, 1);
+    double output = -1.5 * curve(input);
+    double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
+    turret.setVelocity(actualOutput);
+    SmartDashboard.putNumber("[T-POS] Actual velocity", actualOutput);
+    SmartDashboard.putString("[T-POS] Output log", "[D]: INPUT (" + input + "), OUTPUT (" + output + ")");
   }
 
   // Called once the command ends or is interrupted.
@@ -65,6 +70,6 @@ public class TurretPortAlignCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (Math.abs(targetPosition - currentPosition) <= 0);
   }
 }
