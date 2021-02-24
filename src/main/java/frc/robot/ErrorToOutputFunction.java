@@ -194,16 +194,16 @@ public class ErrorToOutputFunction {
     /**
      * Adds a linear function to the created ErrorToOutputFunction Object
      * 
-     * @param minimum    the beginning of the domain of this function within the
-     *                   domain of the piecewise function from the Object
-     * @param maximum    the end of the domain of this function within the domain of
-     *                   the piecewise function from the Object
-     * @param slope      the slope this linear function should have
-     * @param yIntercept the y-intercept this linear function should have
+     * @param minimum     the beginning of the domain of this function within the
+     *                    domain of the piecewise function from the Object
+     * @param maximum     the end of the domain of this function within the domain
+     *                    of the piecewise function from the Object
+     * @param OutputAtMin the output you will get at the previously set minimum
+     * @param OutputAtMax the output you will get at the previously set maximum
      */
-    public boolean addLinear(double minimum, double maximum, double slope, double yIntercept) {
-        double OutputAtMin = slope * minimum + yIntercept;
-        double OutputAtMax = slope * maximum + yIntercept;
+    public boolean addLinear(double minimum, double maximum, double OutputAtMin, double OutputAtMax) {
+        double slope = (OutputAtMax - OutputAtMin) / (maximum - minimum);
+        double yIntercept = -slope * minimum + OutputAtMin;
         double[] function = { 1.0, minimum, maximum, slope, 0.0, yIntercept, OutputAtMin, OutputAtMax };
         this.function = function;
         if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
