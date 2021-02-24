@@ -6,8 +6,8 @@ public class ErrorToOutputFunction {
 
     private final double minimum;
     private final double maximum;
-    private ArrayList<ArrayList<Double>> functions = new ArrayList<ArrayList<Double>>();
-    private ArrayList<Double> function = new ArrayList<Double>();
+    private ArrayList<double[]> functions = new ArrayList<double[]>();
+    private double[] function = new double[8];
     private double compareMin;
     private double compareMax;
 
@@ -21,8 +21,8 @@ public class ErrorToOutputFunction {
             return false;
         }
         for (byte i = 0; i < functions.size(); i++) {
-            compareMin = functions.get(i).get(1);
-            compareMax = functions.get(i).get(2);
+            compareMin = functions.get(i)[1];
+            compareMax = functions.get(i)[2];
             if ((compareMin >= minimum && compareMin <= maximum) || (compareMax >= minimum && compareMax <= maximum)) {
                 return false;
             }
@@ -34,9 +34,9 @@ public class ErrorToOutputFunction {
         return minimum <= value && maximum >= value;
     }
 
-    private boolean checkRange(ArrayList<Double> placeholder, int start) {
-        for (byte i = (byte) start; i < placeholder.size(); i++) {
-            if (placeholder.get(i) < -1 || placeholder.get(i) > 1) {
+    private boolean checkRange(double[] placeholder, int start) {
+        for (byte i = (byte) start; i < placeholder.length; i++) {
+            if (placeholder[i] < -1 || placeholder[i] > 1) {
                 return false;
             }
         }
@@ -54,7 +54,7 @@ public class ErrorToOutputFunction {
         for (byte i = 0; i < functions.size() - 1; i++) {
             function = functions.get(i);
             for (byte j = (byte) (i + 1); j < functions.size(); j++) {
-                if (function.get(1) > functions.get(j).get(1)) {
+                if (function[1] > functions.get(j)[1]) {
                     functions.set(i, functions.get(j));
                     functions.set(j, function);
                 }
@@ -64,17 +64,10 @@ public class ErrorToOutputFunction {
 
     public boolean addCubeRoot(double minimum, double maximum, double vertex, double OutputAtMin,
             double OutputAtVertex) {
-        function.clear();
-        function.add(1.0 / 3.0);
-        function.add(minimum);
-        function.add(maximum);
         double a = (OutputAtMin - OutputAtVertex) / Math.sqrt(minimum - vertex);
-        function.add(a);
-        function.add(vertex);
-        function.add(OutputAtVertex);
         double OutputAtMax = a * Math.cbrt(maximum - vertex) + OutputAtVertex;
-        function.add(OutputAtMin);
-        function.add(OutputAtMax);
+        double[] function = { 1.0 / 3.0, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
+        this.function = function;
         if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
@@ -85,17 +78,10 @@ public class ErrorToOutputFunction {
 
     public boolean addSquareRoot(double minimum, double maximum, double vertex, double OutputAtMin,
             double OutputAtVertex) {
-        function.clear();
-        function.add(0.5);
-        function.add(minimum);
-        function.add(maximum);
         double a = (OutputAtMin - OutputAtVertex) / Math.sqrt(minimum - vertex);
-        function.add(a);
-        function.add(vertex);
-        function.add(OutputAtVertex);
         double OutputAtMax = a * Math.sqrt(maximum - vertex) + OutputAtVertex;
-        function.add(OutputAtMin);
-        function.add(OutputAtMax);
+        double[] function = { 0.5, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
+        this.function = function;
         if (vertex <= minimum && checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
@@ -106,17 +92,10 @@ public class ErrorToOutputFunction {
 
     public boolean addFlippedSquareRoot(double minimum, double maximum, double vertex, double OutputAtMin,
             double OutputAtVertex) {
-        function.clear();
-        function.add(-0.5);
-        function.add(minimum);
-        function.add(maximum);
         double a = (OutputAtMin - OutputAtVertex) / Math.sqrt(-(minimum - vertex));
-        function.add(a);
-        function.add(vertex);
-        function.add(OutputAtVertex);
         double OutputAtMax = a * Math.sqrt(-(maximum - vertex)) + OutputAtVertex;
-        function.add(OutputAtMin);
-        function.add(OutputAtMax);
+        double[] function = { -0.5, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
+        this.function = function;
         if (vertex >= maximum && checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
@@ -126,13 +105,8 @@ public class ErrorToOutputFunction {
     }
 
     public boolean addHorizontal(double minimum, double maximum, double heigth) {
-        function.clear();
-        function.add(0.0);
-        function.add(minimum);
-        function.add(maximum);
-        function.add(heigth);
-        function.add(heigth);
-        function.add(heigth);
+        double[] function = { 0.0, minimum, maximum, 0.0, 0.0, heigth, heigth, heigth };
+        this.function = function;
         if (checkDomain(minimum, maximum) && checkRange(heigth)) {
             functions.add(function);
             sortFunctions();
@@ -142,17 +116,11 @@ public class ErrorToOutputFunction {
     }
 
     public boolean addLinear(double minimum, double maximum, double slope, double yIntercept) {
-        function.clear();
-        function.add(1.0);
-        function.add(minimum);
-        function.add(maximum);
-        function.add(slope);
-        function.add(yIntercept);
         double OutputAtMin = slope * minimum + yIntercept;
         double OutputAtMax = slope * maximum + yIntercept;
-        function.add(OutputAtMin);
-        function.add(OutputAtMax);
-        if (checkDomain(minimum, maximum) && checkRange(function, 5)) {
+        double[] function = { 1.0, minimum, maximum, slope, 0.0, yIntercept, OutputAtMin, OutputAtMax };
+        this.function = function;
+        if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -161,17 +129,10 @@ public class ErrorToOutputFunction {
     }
 
     public boolean addSquare(double minimum, double maximum, double vertex, double OutputAtMin, double OutputAtVertex) {
-        function.clear();
-        function.add(2.0);
-        function.add(minimum);
-        function.add(maximum);
         double a = (OutputAtMin - OutputAtVertex) / ((minimum - vertex) * (minimum - vertex));
-        function.add(a);
-        function.add(vertex);
-        function.add(OutputAtVertex);
         double OutputAtMax = a * (maximum - vertex) * (maximum - vertex) + OutputAtVertex;
-        function.add(OutputAtMin);
-        function.add(OutputAtMax);
+        double[] function = { 2.0, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
+        this.function = function;
         if (checkDomain(minimum, maximum, vertex) && checkDomain(minimum, maximum) && checkRange(OutputAtVertex)
                 && checkRange(function, 6)) {
             functions.add(function);
@@ -190,18 +151,49 @@ public class ErrorToOutputFunction {
     }
 
     private boolean domainIsFilled() {
-        if (this.minimum != functions.get(0).get(1)) {
+        if (this.minimum != functions.get(0)[1]) {
             return false;
         }
-        if (this.maximum != functions.get(functions.size() - 1).get(2)) {
+        if (this.maximum != functions.get(functions.size() - 1)[2]) {
             return false;
         }
         for (byte i = 0; i < functions.size() - 1; i++) {
-            if (functions.get(i).get(2) != functions.get(i + 1).get(1)) {
+            if (functions.get(i)[2] != functions.get(i + 1)[1]) {
                 return false;
             }
         }
         return true;
     }
 
+    private boolean hasNoRangeSpikes() {
+        for (byte i = 0; i < functions.size() - 1; i++) {
+            if (Math.abs(functions.get(i)[7] - functions.get(i + 1)[6]) > 0.05) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean canOutPut() {
+        if (!domainIsFilled()) {
+            System.out.println("The domain for this ErrorToOutputFunction is not fully described");
+            return false;
+        } else if (!hasNoRangeSpikes()) {
+            System.out.println("The Range for this ErrorToOutputFunction has too high spikes");
+            return false;
+        }
+        return true;
+    }
+
+    public double getOutPut(double input) {
+        for (byte i = 0; i < functions.size(); i++) {
+            if (checkDomain(functions.get(i)[1], functions.get(i)[2], input)) {
+                function = functions.get(i);
+                return function[3] * Math.pow(Math.signum(function[0]) * (input - function[4]), Math.abs(function[0]))
+                        + function[5];
+            }
+        }
+        System.out.println("!!!Error inputted was out of the domain!!!");
+        return 0.0;
+    }
 }
