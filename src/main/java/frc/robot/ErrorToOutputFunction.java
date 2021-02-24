@@ -86,10 +86,9 @@ public class ErrorToOutputFunction {
         return true;
     }
 
-    public boolean addCubeRoot(double minimum, double maximum, double vertex, double OutputAtMin,
-            double OutputAtVertex) {
-        double a = (OutputAtMin - OutputAtVertex) / Math.sqrt(minimum - vertex);
-        double OutputAtMax = a * Math.cbrt(maximum - vertex) + OutputAtVertex;
+    public boolean addCubeRoot(double minimum, double maximum, double vertex, double OutputAtMin, double OutputAtMax) {
+        double a = (OutputAtMax - OutputAtMin) / (Math.cbrt(maximum - vertex) - Math.cbrt(minimum - vertex));
+        double OutputAtVertex = -a * Math.cbrt(minimum - vertex) + OutputAtMin;
         double[] function = { 1.0 / 3.0, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
         this.function = function;
         if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
@@ -101,12 +100,12 @@ public class ErrorToOutputFunction {
     }
 
     public boolean addSquareRoot(double minimum, double maximum, double vertex, double OutputAtMin,
-            double OutputAtVertex) {
-        double a = (OutputAtMin - OutputAtVertex) / Math.sqrt(minimum - vertex);
-        double OutputAtMax = a * Math.sqrt(maximum - vertex) + OutputAtVertex;
+            double OutputAtMax) {
+        double a = (OutputAtMax - OutputAtMin) / (Math.sqrt(maximum - vertex) - Math.sqrt(minimum - vertex));
+        double OutputAtVertex = -a * Math.sqrt(minimum - vertex) + OutputAtMin;
         double[] function = { 0.5, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
         this.function = function;
-        if (vertex <= minimum && checkDomain(minimum, maximum) && checkRange(function, 6)) {
+        if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -115,12 +114,12 @@ public class ErrorToOutputFunction {
     }
 
     public boolean addFlippedSquareRoot(double minimum, double maximum, double vertex, double OutputAtMin,
-            double OutputAtVertex) {
-        double a = (OutputAtMin - OutputAtVertex) / Math.sqrt(-(minimum - vertex));
-        double OutputAtMax = a * Math.sqrt(-(maximum - vertex)) + OutputAtVertex;
-        double[] function = { -0.5, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
+            double OutputAtMax) {
+        double a = (OutputAtMax - OutputAtMin) / (Math.sqrt(-(maximum - vertex)) - Math.sqrt(-(minimum - vertex)));
+        double OutputAtVertex = -a * Math.sqrt(-(minimum - vertex)) + OutputAtMin;
+        double[] function = { 0.5, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
         this.function = function;
-        if (vertex >= maximum && checkDomain(minimum, maximum) && checkRange(function, 6)) {
+        if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -152,9 +151,10 @@ public class ErrorToOutputFunction {
         return false;
     }
 
-    public boolean addSquare(double minimum, double maximum, double vertex, double OutputAtMin, double OutputAtVertex) {
-        double a = (OutputAtMin - OutputAtVertex) / ((minimum - vertex) * (minimum - vertex));
-        double OutputAtMax = a * (maximum - vertex) * (maximum - vertex) + OutputAtVertex;
+    public boolean addSquare(double minimum, double maximum, double vertex, double OutputAtMin, double OutputAtMax) {
+        double a = (OutputAtMax - OutputAtMin)
+                / ((maximum - vertex) * (maximum - vertex) - (minimum - vertex) * (minimum - vertex));
+        double OutputAtVertex = -a * (minimum - vertex) * (minimum - vertex) + OutputAtMin;
         double[] function = { 2.0, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
         this.function = function;
         if (checkDomain(minimum, maximum, vertex) && checkDomain(minimum, maximum) && checkRange(OutputAtVertex)
