@@ -14,7 +14,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
     public ShuffleboardWidgets() {
         tab = Shuffleboard.getTab("Robot2021");
-        chooseAuto = tab.add("P", 1).withWidget(BuiltInWidgets.kNumberSlider).withSize(10, 1).withPosition(0, 1)
+        chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kNumberSlider).withSize(5, 1).withPosition(0, 0)
                 .withProperties(Map.of("min", 0, "max", 10)).getEntry();
     }
 
