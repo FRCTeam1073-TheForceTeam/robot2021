@@ -23,7 +23,7 @@ public class ErrorToOutputFunction {
         for (byte i = 0; i < functions.size(); i++) {
             compareMin = functions.get(i)[1];
             compareMax = functions.get(i)[2];
-            if ((compareMin >= minimum && compareMin <= maximum) || (compareMax >= minimum && compareMax <= maximum)) {
+            if ((compareMin >= minimum && compareMin < maximum) || (compareMax > minimum && compareMax <= maximum)) {
                 return false;
             }
         }
@@ -174,7 +174,7 @@ public class ErrorToOutputFunction {
         return true;
     }
 
-    public boolean canOutPut() {
+    public boolean canOutput() {
         if (!domainIsFilled()) {
             System.out.println("The domain for this ErrorToOutputFunction is not fully described");
             return false;
@@ -185,7 +185,7 @@ public class ErrorToOutputFunction {
         return true;
     }
 
-    public double getOutPut(double input) {
+    public double getRawOutput(double input) {
         for (byte i = 0; i < functions.size(); i++) {
             if (checkDomain(functions.get(i)[1], functions.get(i)[2], input)) {
                 function = functions.get(i);
@@ -195,5 +195,35 @@ public class ErrorToOutputFunction {
         }
         System.out.println("!!!Error inputted was out of the domain!!!");
         return 0.0;
+    }
+
+    public double getRoundedOutput(double input, int toDecimalPoint) {
+        double output = 0.0;
+        for (byte i = 0; i < functions.size(); i++) {
+            if (checkDomain(functions.get(i)[1], functions.get(i)[2], input)) {
+                function = functions.get(i);
+                output = function[3] * Math.pow(Math.signum(function[0]) * (input - function[4]), Math.abs(function[0]))
+                        + function[5];
+                output = Math.round(output * Math.pow(10.0, toDecimalPoint)) / Math.pow(10.0, toDecimalPoint);
+                return output;
+            }
+        }
+        System.out.println("!!!Error inputted was out of the domain!!!");
+        return output;
+    }
+
+    public double getRoundedOutput(double input) {
+        double output = 0.0;
+        for (byte i = 0; i < functions.size(); i++) {
+            if (checkDomain(functions.get(i)[1], functions.get(i)[2], input)) {
+                function = functions.get(i);
+                output = function[3] * Math.pow(Math.signum(function[0]) * (input - function[4]), Math.abs(function[0]))
+                        + function[5];
+                output = Math.round(output * 10000) / 10000.0;
+                return output;
+            }
+        }
+        System.out.println("!!!Error inputted was out of the domain!!!");
+        return output;
     }
 }
