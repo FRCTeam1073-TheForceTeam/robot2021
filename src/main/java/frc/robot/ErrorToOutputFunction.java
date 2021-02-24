@@ -11,6 +11,13 @@ public class ErrorToOutputFunction {
     private double compareMin;
     private double compareMax;
 
+    /**
+     * Creates a new ErrorToOutputFunction object whichs domain has to be filled up
+     * with functions using the public add commands
+     * 
+     * @param minimum the absolute minimum the error inputted could be
+     * @param maximum the absolute maximum the error inputted could be
+     */
     public ErrorToOutputFunction(double minimum, double maximum) {
         this.minimum = minimum;
         this.maximum = maximum;
@@ -86,6 +93,17 @@ public class ErrorToOutputFunction {
         return true;
     }
 
+    /**
+     * Adds a cube root function to the created ErrorToOutputFunction Object
+     * 
+     * @param minimum     the beginning of the domain of this function within the
+     *                    domain of the piecewise function from the Object
+     * @param maximum     the end of the domain of this function within the domain
+     *                    of the piecewise function from the Object
+     * @param vertex      the x coordinate of the vertex of the cube root function
+     * @param OutputAtMin the output you will get at the previously set minimum
+     * @param OutputAtMax the output you will get at the previously set maximum
+     */
     public boolean addCubeRoot(double minimum, double maximum, double vertex, double OutputAtMin, double OutputAtMax) {
         double a = (OutputAtMax - OutputAtMin) / (Math.cbrt(maximum - vertex) - Math.cbrt(minimum - vertex));
         double OutputAtVertex = -a * Math.cbrt(minimum - vertex) + OutputAtMin;
@@ -99,13 +117,26 @@ public class ErrorToOutputFunction {
         return false;
     }
 
+    /**
+     * Adds a square root function opening to the right to the created
+     * ErrorToOutputFunction Object
+     * 
+     * @param minimum     the beginning of the domain of this function within the
+     *                    domain of the piecewise function from the Object
+     * @param maximum     the end of the domain of this function within the domain
+     *                    of the piecewise function from the Object
+     * @param vertex      the x coordinate of the vertex of the square root function
+     *                    (has to be at the minimum or further left than it)
+     * @param OutputAtMin the output you will get at the previously set minimum
+     * @param OutputAtMax the output you will get at the previously set maximum
+     */
     public boolean addSquareRoot(double minimum, double maximum, double vertex, double OutputAtMin,
             double OutputAtMax) {
         double a = (OutputAtMax - OutputAtMin) / (Math.sqrt(maximum - vertex) - Math.sqrt(minimum - vertex));
         double OutputAtVertex = -a * Math.sqrt(minimum - vertex) + OutputAtMin;
         double[] function = { 0.5, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
         this.function = function;
-        if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
+        if (vertex <= minimum && checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -113,13 +144,26 @@ public class ErrorToOutputFunction {
         return false;
     }
 
+    /**
+     * Adds a square root function opening to the left to the created
+     * ErrorToOutputFunction Object
+     * 
+     * @param minimum     the beginning of the domain of this function within the
+     *                    domain of the piecewise function from the Object
+     * @param maximum     the end of the domain of this function within the domain
+     *                    of the piecewise function from the Object
+     * @param vertex      the x coordinate of the vertex of the square root function
+     *                    (has to be at the mmaximum or further right than it)
+     * @param OutputAtMin the output you will get at the previously set minimum
+     * @param OutputAtMax the output you will get at the previously set maximum
+     */
     public boolean addFlippedSquareRoot(double minimum, double maximum, double vertex, double OutputAtMin,
             double OutputAtMax) {
         double a = (OutputAtMax - OutputAtMin) / (Math.sqrt(-(maximum - vertex)) - Math.sqrt(-(minimum - vertex)));
         double OutputAtVertex = -a * Math.sqrt(-(minimum - vertex)) + OutputAtMin;
         double[] function = { 0.5, minimum, maximum, a, vertex, OutputAtVertex, OutputAtMin, OutputAtMax };
         this.function = function;
-        if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
+        if (vertex >= maximum && checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -127,6 +171,15 @@ public class ErrorToOutputFunction {
         return false;
     }
 
+    /**
+     * Adds a horizontal to the created ErrorToOutputFunction Object
+     * 
+     * @param minimum the beginning of the domain of this function within the domain
+     *                of the piecewise function from the Object
+     * @param maximum the end of the domain of this function within the domain of
+     *                the piecewise function from the Object
+     * @param heigth  the heigth at which the horizontal should be
+     */
     public boolean addHorizontal(double minimum, double maximum, double heigth) {
         double[] function = { 0.0, minimum, maximum, 0.0, 0.0, heigth, heigth, heigth };
         this.function = function;
@@ -138,6 +191,16 @@ public class ErrorToOutputFunction {
         return false;
     }
 
+    /**
+     * Adds a linear function to the created ErrorToOutputFunction Object
+     * 
+     * @param minimum    the beginning of the domain of this function within the
+     *                   domain of the piecewise function from the Object
+     * @param maximum    the end of the domain of this function within the domain of
+     *                   the piecewise function from the Object
+     * @param slope      the slope this linear function should have
+     * @param yIntercept the y-intercept this linear function should have
+     */
     public boolean addLinear(double minimum, double maximum, double slope, double yIntercept) {
         double OutputAtMin = slope * minimum + yIntercept;
         double OutputAtMax = slope * maximum + yIntercept;
@@ -151,6 +214,19 @@ public class ErrorToOutputFunction {
         return false;
     }
 
+    /**
+     * Adds a square function opening to the right to the created
+     * ErrorToOutputFunction Object
+     * 
+     * @param minimum     the beginning of the domain of this function within the
+     *                    domain of the piecewise function from the Object
+     * @param maximum     the end of the domain of this function within the domain
+     *                    of the piecewise function from the Object
+     * @param vertex      the x coordinate of the vertex of the square root function
+     *                    (has to be at the minimum or further left than it)
+     * @param OutputAtMin the output you will get at the previously set minimum
+     * @param OutputAtMax the output you will get at the previously set maximum
+     */
     public boolean addSquare(double minimum, double maximum, double vertex, double OutputAtMin, double OutputAtMax) {
         double a = (OutputAtMax - OutputAtMin)
                 / ((maximum - vertex) * (maximum - vertex) - (minimum - vertex) * (minimum - vertex));
@@ -170,10 +246,15 @@ public class ErrorToOutputFunction {
         return false;
     }
 
+    /** Returns the number of functions added to this object */
     public int getNumFunctions() {
         return functions.size();
     }
 
+    /**
+     * Returns true if the object's domain is filled up in a safe way and will print
+     * out why it returned false if it did
+     */
     public boolean canOutput() {
         if (!domainIsFilled()) {
             System.out.println("The domain for this ErrorToOutputFunction is not fully described");
@@ -185,6 +266,12 @@ public class ErrorToOutputFunction {
         return true;
     }
 
+    /**
+     * Returns the raw output value calculated using the functions in their domain
+     * that were added to this object (might be unsatisfying weirdly rounded values)
+     * 
+     * @param input the error inputed to calculate the output
+     */
     public double getRawOutput(double input) {
         for (byte i = 0; i < functions.size(); i++) {
             if (checkDomain(functions.get(i)[1], functions.get(i)[2], input)) {
@@ -197,6 +284,14 @@ public class ErrorToOutputFunction {
         return 0.0;
     }
 
+    /**
+     * Returns a rounded output value calculated using the functions in their domain
+     * that were added to this object
+     * 
+     * @param input          the error inputed to calculate the output
+     * @param toDecimalPoint the number of decimal points the output will to be
+     *                       rounded to
+     */
     public double getRoundedOutput(double input, int toDecimalPoint) {
         double output = 0.0;
         for (byte i = 0; i < functions.size(); i++) {
@@ -212,6 +307,12 @@ public class ErrorToOutputFunction {
         return output;
     }
 
+    /**
+     * Returns the output value calculated using the functions in their domain that
+     * were added to this object rounded to the ten thousandths
+     * 
+     * @param input the error inputed to calculate the output
+     */
     public double getRoundedOutput(double input) {
         double output = 0.0;
         for (byte i = 0; i < functions.size(); i++) {
