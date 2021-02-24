@@ -34,6 +34,15 @@ public class ErrorToOutputFunction {
         return minimum <= value && maximum >= value;
     }
 
+    private boolean checkRange(ArrayList<Double> placeholder, int start) {
+        for (byte i = (byte) start; i < placeholder.size(); i++) {
+            if (placeholder.get(i) < -1 || placeholder.get(i) > 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean checkRange(double test) {
         if (test < -1 || test > 1) {
             return false;
@@ -66,7 +75,7 @@ public class ErrorToOutputFunction {
         double OutputAtMax = a * Math.cbrt(maximum - vertex) + OutputAtVertex;
         function.add(OutputAtMin);
         function.add(OutputAtMax);
-        if (checkDomain(minimum, maximum) && checkRange(OutputAtMin) && checkRange(OutputAtMax)) {
+        if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -87,7 +96,7 @@ public class ErrorToOutputFunction {
         double OutputAtMax = a * Math.sqrt(maximum - vertex) + OutputAtVertex;
         function.add(OutputAtMin);
         function.add(OutputAtMax);
-        if (vertex <= minimum && checkDomain(minimum, maximum) && checkRange(OutputAtMin) && checkRange(OutputAtMax)) {
+        if (vertex <= minimum && checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -108,7 +117,7 @@ public class ErrorToOutputFunction {
         double OutputAtMax = a * Math.sqrt(-(maximum - vertex)) + OutputAtVertex;
         function.add(OutputAtMin);
         function.add(OutputAtMax);
-        if (vertex >= maximum && checkDomain(minimum, maximum) && checkRange(OutputAtMin) && checkRange(OutputAtMax)) {
+        if (vertex >= maximum && checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -143,7 +152,7 @@ public class ErrorToOutputFunction {
         double OutputAtMax = slope * maximum + yIntercept;
         function.add(OutputAtMin);
         function.add(OutputAtMax);
-        if (checkDomain(minimum, maximum) && checkRange(OutputAtMin) && checkRange(OutputAtMax)) {
+        if (checkDomain(minimum, maximum) && checkRange(function, 5)) {
             functions.add(function);
             sortFunctions();
             return true;
@@ -163,12 +172,12 @@ public class ErrorToOutputFunction {
         double OutputAtMax = a * (maximum - vertex) * (maximum - vertex) + OutputAtVertex;
         function.add(OutputAtMin);
         function.add(OutputAtMax);
-        if (checkDomain(minimum, maximum, vertex) && checkDomain(minimum, maximum) && checkRange(OutputAtMin)
-                && checkRange(OutputAtVertex) && checkRange(OutputAtMax)) {
+        if (checkDomain(minimum, maximum, vertex) && checkDomain(minimum, maximum) && checkRange(OutputAtVertex)
+                && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
-        } else if (checkDomain(minimum, maximum) && checkRange(OutputAtMin) && checkRange(OutputAtMax)) {
+        } else if (checkDomain(minimum, maximum) && checkRange(function, 6)) {
             functions.add(function);
             sortFunctions();
             return true;
