@@ -5,12 +5,14 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Bling;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Magazine;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class MagazineCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+    private final Collector collector;
     private final Magazine magazine;
     private final Bling bling;
     private final double velocity;
@@ -26,7 +28,8 @@ public class MagazineCommand extends CommandBase {
      * @param bling    The bling used by this command.
      * @param power    The power the magazine isset to by this command.
      */
-    public MagazineCommand(Magazine magazine, Bling bling, double velocity) {
+    public MagazineCommand(Collector collector, Magazine magazine, Bling bling, double velocity) {
+        this.collector = collector;
         this.magazine = magazine;
         this.bling = bling;
         this.velocity = velocity;
@@ -40,8 +43,8 @@ public class MagazineCommand extends CommandBase {
      * @param magazine The magazine used by this command.
      * @param bling    The bling used by this command.
      */
-    public MagazineCommand(Magazine magazine, Bling bling) {
-        this(magazine, bling, 0.35);
+    public MagazineCommand(Collector collector, Magazine magazine, Bling bling) {
+        this(collector, magazine, bling, 0.35);
     }
 
     // Called when the command is initially scheduled.
@@ -68,16 +71,18 @@ public class MagazineCommand extends CommandBase {
     public void execute() {
         sensor = magazine.getSensor();
         if (sensor) {
+            collector.setCollect(0.35);
             magazine.setVelocity(velocity);
             bling.setArray("blue");
             loopsFalse = 0;
         } else {
+            collector.setCollect(0.0);
             magazine.setVelocity(0.0);
             bling.setArray("purple");
             loopsFalse++;
         }
         bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-        if (loopsFalse > 2) {
+        if (loopsFalse > 7) {
             isFinished = true;
         }
     }
@@ -86,6 +91,7 @@ public class MagazineCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         magazine.setPower(0.0);
+        collector.setCollect(0.0);
     }
 
     // Returns true when the command should end.

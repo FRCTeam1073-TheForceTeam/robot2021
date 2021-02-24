@@ -67,6 +67,7 @@ public class RobotContainer {
   private final PowerCellTracker cellTracker = new PowerCellTracker();
 
   // Commands: Add commands here.
+  private final AdvanceMagazineCommand magExtra = new AdvanceMagazineCommand(magazine, 0.4);
   private final DrivetrainPowerTestCommand drivetrainTestCommand = new DrivetrainPowerTestCommand(drivetrain, 0.75);
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
@@ -81,14 +82,14 @@ public class RobotContainer {
   private final SquareTestCommand squareTest = new SquareTestCommand(drivetrain, bling, 3, 1.5, 0.5, 2.25);
   private final ChaseAndCollectCellsCommand chaseAndCollect = new ChaseAndCollectCellsCommand(drivetrain, collector,
       magazine, cellTracker, bling, 5, true, 0, 1.5, 1.0);
-  private final ChaseCommand chase = new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true);
+  private final ChaseCommand chase = new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true);
   private final CollectCommand collect = new CollectCommand(drivetrain, collector, magazine, bling);
-  private final MagazineCommand runMag = new MagazineCommand(magazine, bling);
+  private final MagazineCommand runMag = new MagazineCommand(collector, magazine, bling);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
 
   private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleShooter);
 
-  private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
+  private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag, magExtra);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
