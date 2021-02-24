@@ -43,6 +43,12 @@ public class CollectorControls extends CommandBase {
         }
         SmartDashboard.putNumber("Collector Power", power);
         collector.setCollect(power);
+        if (OI.operatorController.getBumperPressed(Hand.kLeft)) {
+            collector.lower();
+        }
+        if (OI.operatorController.getBumperPressed(Hand.kRight)) {
+            collector.raise();
+        }
     }
 
     // Called once the command ends or is interrupted.

@@ -36,10 +36,12 @@ import frc.robot.commands.DriveControls;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.MagazineControls;
+import frc.robot.commands.ShooterControls;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.TestCommand;
 import frc.robot.commands.TurnCommand;
+import frc.robot.commands.TurretControls;
 import frc.robot.commands.TurnVectorCommand;
 
 /**
@@ -70,7 +72,9 @@ public class RobotContainer {
   private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
   private final DriveControls teleDrive = new DriveControls(drivetrain);
   private final MagazineControls teleMagazine = new MagazineControls(magazine);
+  private final ShooterControls teleShooter = new ShooterControls(shooter);
   private final CollectorControls teleCollect = new CollectorControls(collector);
+  private final TurretControls teleTurret = new TurretControls(turret);
   private final DriveForwardCommand forward = new DriveForwardCommand(drivetrain, bling, 0.25, 0.35);
   private final TurnCommand turn = new TurnCommand(drivetrain, bling, Math.PI / 2, 1.5);
   private final TurnVectorCommand turn90 = new TurnVectorCommand(drivetrain, bling, Math.PI / 2, 1.2);
@@ -81,7 +85,9 @@ public class RobotContainer {
   private final CollectCommand collect = new CollectCommand(drivetrain, collector, magazine, bling);
   private final MagazineCommand runMag = new MagazineCommand(magazine, bling);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
+
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleShooter);
+
   private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
 
   /**
@@ -106,7 +112,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kY.value);
+    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kA.value);
     magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
   }
 
@@ -128,7 +134,6 @@ public class RobotContainer {
 
   public Command getTestCommand() {
     return teleDrive;
-
   }
 
   public static Bling getBling() {
