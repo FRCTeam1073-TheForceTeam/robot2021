@@ -132,9 +132,6 @@ public class RobotContainer {
         return collect;
       case 2:
         return chase.andThen(collect, runMag, magExtra);
-
-      case 3:
-        return chase.andThen(collect, runMag);
       default:
         return turn;
 
