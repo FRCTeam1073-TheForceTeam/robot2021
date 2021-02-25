@@ -43,7 +43,9 @@ public class Shooter extends SubsystemBase {
   private double hoodI_External = 0;
   private double hoodD_External = 0;
   private double hoodF_External = 0;
-  
+
+  double flywheelTargetVelocity = 0;
+
   double[] flywheelTemperatures;
 
   private final double flywheelTicksPerRevolution = 2048;
@@ -137,7 +139,6 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.set(ControlMode.PercentOutput, power);
   }
 
-  double flywheelTargetVelocity = 0;
 
   /**
    * Sets the flywheel velocity in radians/second.
@@ -146,6 +147,15 @@ public class Shooter extends SubsystemBase {
     //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
     flywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
     shooterFlywheel1.set(ControlMode.Velocity, flywheelTargetVelocity);
+  }
+
+  public double getFlywheelVelocity() {
+    return shooterFlywheel1.getSelectedSensorVelocity() * 10.0 * (2.0 * Math.PI) / flywheelTicksPerRevolution;
+  }
+
+  public void stop() {
+    rateLimiter.reset(0);
+    shooterFlywheel1.set(ControlMode.Velocity, 0);
   }
   
   /**
@@ -207,8 +217,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Flywheel current (A)",
     shooterFlywheel1.getSupplyCurrent()
     );
-    SmartDashboard.putNumber("Flywheel velocity",
-    shooterFlywheel1.getSelectedSensorVelocity()
+    SmartDashboard.putNumber("Flywheel velocity (radians/sec)",
+      getFlywheelVelocity()
     );
     SmartDashboard.putNumber("Flywheel target velocity",
     flywheelTargetVelocity
