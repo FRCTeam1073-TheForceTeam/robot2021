@@ -4,8 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Turret;
@@ -16,12 +18,21 @@ public class TurretPortAlignCommand extends CommandBase {
   Turret turret;
   PowerPortTracker portTracker;
   PowerPortData portData;
+  double coordinateSeparation;
+  boolean endWhenAligned;
 
-  public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_) {
+  public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_, boolean endWhenAligned_) {
     turret = turret_;
     portTracker = portTracker_;
+    endWhenAligned = endWhenAligned_;
     addRequirements(turret, portTracker);
+    coordinateSeparation = 0;
+    portData = new PowerPortData();
     // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_) {
+    this(turret_, portTracker_, false);
   }
 
   // Called when the command is initially scheduled.
@@ -31,8 +42,8 @@ public class TurretPortAlignCommand extends CommandBase {
   }
 
   public double curve(double input, double maxSpeed) {
-    if (Math.abs(input) > 0.0375) {
-      return Math.signum(input) * (0.1 + Math.pow(Math.abs(input / maxSpeed), 0.8) * maxSpeed);
+    if (Math.abs(input) > 0.025) {
+      return Math.signum(input) * (0.3 + Math.pow(Math.abs(input / maxSpeed), 0.65) * maxSpeed);
     } else {
       return 0;
     }
@@ -46,25 +57,33 @@ public class TurretPortAlignCommand extends CommandBase {
   @Override
   public void execute() {
     boolean hasData = portTracker.getPortData(portData);
-    if (!hasData) {
-      double input = 2 * (portData.cx / portTracker.getImageWidth()) - 1;
-      double output = -1.5 * curve(input);
-      double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
-      turret.setVelocity(actualOutput);
-      SmartDashboard.putNumber("[T-AGN] Actual velocity", actualOutput);
-      SmartDashboard.putString("[T-AGN] Output log", "[D]: INPUT (" + input + "), OUTPUT (" + output + ")");
+    double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
+    if (hasData) {
+      SmartDashboard.putString("[T-AGN] Camera signal", "[CONNECTED]");
+      //Inverted (left is 1, right is -1) so it moves in the right direction.
+      coordinateSeparation = 1 - 2 * (((double) portData.cx) / ((double) portTracker.getImageWidth()));
+      //I know that it shouldn't need clamping, but I want to make sure
+      double input = MathUtil.clamp(coordinateSeparation, -1, 1);
+      double output = 1.25 * curve(input);
+      turret.setVelocity(output);
+      SmartDashboard.putNumber("[T-AGN] Intended velocity", output);
+      SmartDashboard.putNumber("[T-AGN] Camera coordinate separation", coordinateSeparation);
     } else {
-      turret.setVelocity(0);
+      SmartDashboard.putString("[T-AGN] Camera signal", "[NO DATA]");
+      turret.setVelocity(actualOutput);
     }
+    SmartDashboard.putNumber("[T-AGN] Actual velocity", actualOutput);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    turret.stop();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return endWhenAligned && (Math.abs(coordinateSeparation) <= 0.01);
   }
 }

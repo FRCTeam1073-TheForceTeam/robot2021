@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,6 +27,8 @@ public class Turret extends SubsystemBase {
     public double turretMinimumAngle = -2.039;
     public double turretMaximumAngle = 3.795;
 
+    public SlewRateLimiter turretRateLimiter;
+
     public Turret() {
       turretRotator = new WPI_TalonSRX(24);
       turretRotator.configFactoryDefault();
@@ -43,6 +46,7 @@ public class Turret extends SubsystemBase {
       turretRotator.setSelectedSensorPosition(0); //Note: turret does not have limit switches and needs to be indexed manually.
       turretRotator.setIntegralAccumulator(0);
       setPIDF();
+      turretRateLimiter = new SlewRateLimiter(8);
     }
 
     /// Returns the accumulated position of the turret in radians.
@@ -61,7 +65,7 @@ public class Turret extends SubsystemBase {
         turretRotator.set(ControlMode.Velocity, 0);
         return;
       }
-      turretVelocity = angularVelocity * turretTicksPerRadian * 0.1;
+      turretVelocity = turretRateLimiter.calculate(angularVelocity) * turretTicksPerRadian * 0.1;
       turretRotator.set(ControlMode.Velocity, turretVelocity);
     }
 
@@ -72,6 +76,11 @@ public class Turret extends SubsystemBase {
         return;
       }
       turretRotator.set(ControlMode.PercentOutput, power);
+    }
+
+    public void stop() {
+      turretRateLimiter.reset(0);
+      turretRotator.set(ControlMode.Velocity, 0);
     }
 
     @Override

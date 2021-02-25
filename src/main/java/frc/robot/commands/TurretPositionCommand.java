@@ -18,6 +18,7 @@ public class TurretPositionCommand extends CommandBase {
   PowerPortTracker portTracker;
   double currentPosition;
   double targetPosition;
+  double angSeparation = 0;
 
   /**
    * Sets the turret's angle in radians.
@@ -40,8 +41,8 @@ public class TurretPositionCommand extends CommandBase {
   }
 
   public double curve(double input, double maxSpeed) {
-    if (Math.abs(input) > 0.0375) {
-      return Math.signum(input) * (0.1 + Math.pow(Math.abs(input / maxSpeed), 0.8) * maxSpeed);
+    if (Math.abs(input) > 0.025) {
+      return Math.signum(input) * (0.3 + Math.pow(Math.abs(input / maxSpeed), 0.65) * maxSpeed);
     } else {
       return 0;
     }
@@ -54,22 +55,26 @@ public class TurretPositionCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double currentPosition = turret.getPosition();
-    double input = MathUtil.clamp((currentPosition - targetPosition), -1, 1);
-    double output = -1.5 * curve(input);
+    currentPosition = turret.getPosition();
+    angSeparation = targetPosition - currentPosition;
+    double input = MathUtil.clamp(angSeparation, -1, 1);
+    double output = 2 * curve(input);
     double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
-    turret.setVelocity(actualOutput);
+    turret.setVelocity(output);
     SmartDashboard.putNumber("[T-POS] Actual velocity", actualOutput);
-    SmartDashboard.putString("[T-POS] Output log", "[D]: INPUT (" + input + "), OUTPUT (" + output + ")");
+    SmartDashboard.putNumber("[T-POS] Intended velocity", output);
+    SmartDashboard.putNumber("[T-POS] Angular separation", angSeparation);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    turret.stop();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(targetPosition - currentPosition) <= 0);
+    return (Math.abs(angSeparation) <= 0.025);
   }
 }

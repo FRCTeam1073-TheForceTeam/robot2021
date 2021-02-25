@@ -43,6 +43,7 @@ import frc.robot.commands.TestCommand;
 import frc.robot.commands.TurnCommand;
 import frc.robot.commands.TurretControls;
 import frc.robot.commands.TurretPortAlignCommand;
+import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.TurnVectorCommand;
 
 /**
@@ -86,8 +87,13 @@ public class RobotContainer {
   private final CollectCommand collect = new CollectCommand(drivetrain, collector, magazine, bling);
   private final MagazineCommand runMag = new MagazineCommand(magazine, bling);
   private final DriveToPointCommand toPoint = new DriveToPointCommand(drivetrain, bling, 1.0, 1.0, 0.75);
+  private final SequentialCommandGroup turretPositionTestCommand=(new TurretPositionCommand(turret, -1.5)).andThen(new TurretPositionCommand(turret, 2))
+      .andThen(new TurretPositionCommand(turret, 0));
 
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleTurret);
+
+  private final TurretPositionCommand turretPositionCommand = new TurretPositionCommand(turret, 2);
+
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(new TurretPortAlignCommand(turret, portTracker));
 
   private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
 
@@ -125,13 +131,16 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
     return new TurretPortAlignCommand(turret, portTracker);
-//    return chaseCollectAndRunMag;
+    //    return chaseCollectAndRunMag;
   }
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
+    // return turretPositionTestCommand;
     return teleopCommand;
+
+    //    return teleopCommand;
   }
 
   public Command getTestCommand() {
