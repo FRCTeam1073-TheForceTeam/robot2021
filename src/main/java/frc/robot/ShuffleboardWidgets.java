@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
@@ -72,7 +71,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private PowerPortData portData = new PowerPortData();
         private int portX = 0;
         private int portY = 0;
-        //
+
         private NetworkTableEntry robotXE;
         private NetworkTableEntry robotYE;
         private NetworkTableEntry robotRotationE;
@@ -133,7 +132,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         public void periodic() {
                 updateWidgets();
                 Shuffleboard.update();
-                auto = (int) chooseAuto.getDouble(0.0);
+                auto = (int) chooseAuto.getDouble(100.0);
         }
 
         private void createWidgets() {
@@ -168,6 +167,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 portXE = portTracking.add("X", portX).getEntry();
                 portYE = portTracking.add("Y", portY).getEntry();
+
+                hoodMinE.setDouble(hoodMin);
+                hoodMaxE.setDouble(hoodMax);
         }
 
         private void updateWidgets() {
@@ -200,5 +202,30 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 portTracker.getPortData(portData);
                 portX = portData.cx;
                 portY = portData.cy;
+
+                robotXE.setDouble(robotX);
+                robotYE.setDouble(robotY);
+                robotRotationE.setDouble(robotRotation);
+                drivetrainSpeedE.setDouble(drivetrainSpeed);
+                rotationalSpeedE.setDouble(rotationalSpeed);
+
+                collectorCurrentE.setDouble(collectorCurrent);
+
+                magazinePositionE.setDouble(magazinePosition);
+                magazineCountE.setNumber(magazineCount);
+                magazineSensorE.setBoolean(magazineSensor);
+
+                turretAngleE.setDouble(turretAngle);
+                turretVelocityE.setDouble(turretVelocity);
+
+                hoodAngleE.setDouble(hoodAngle);
+                hoodPositionE.setDouble(hoodPosition);
+
+                cellAreaE.setNumber(cellArea);
+                cellXE.setNumber(cellX);
+                cellYE.setNumber(cellY);
+
+                portXE.setNumber(portX);
+                portYE.setNumber(portY);
         }
 }
