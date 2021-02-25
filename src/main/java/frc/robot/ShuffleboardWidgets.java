@@ -3,6 +3,7 @@ package frc.robot;
 import java.util.Map;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -14,138 +15,156 @@ import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.PowerCellTracker.PowerCellData;
+import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 
 public class ShuffleboardWidgets extends SubsystemBase {
-    private ShuffleboardTab tab;
-    private NetworkTableEntry chooseAuto;
-    public static int auto = 0;
+        private static ShuffleboardTab tab;
+        private static NetworkTableEntry chooseAuto;
+        public static int auto = 0;
 
-    private Drivetrain drivetrain;
-    private Collector collector;
-    private Magazine magazine;
-    private Turret turret;
-    private Shooter shooter;
-    private PowerCellTracker cellTracker;
-    private PowerPortTracker portTracker;
+        private Drivetrain drivetrain;
+        private Collector collector;
+        private Magazine magazine;
+        private Turret turret;
+        private Shooter shooter;
+        private PowerCellTracker cellTracker;
+        private PowerPortTracker portTracker;
 
-    double leftEncoderValue = 0.0;
-    double rightEncoderValue = 0.0;
-    double drivetrainSpeed = 0.0;
-    double gyroAngleDegrees = 0.0;
-    double robotX = 0.0;
-    double robotY = 0.0;
-    double robotRotation = 0.0;
-    double turretAngle = 0.0;
-    double turretVelocity = 0.0;
-    double flywheelVelocity = 0.0;
-    double[] flywheelTemperature = new double[2];
-    double hoodAngle = 0.0;
-    double hoodVelocity = 0.0;
-    int cellCount = 0;
-    boolean isBrakeset = false;
-    boolean isLiftFullyExtended = false;
-    boolean isLiftFullyRetracted = false;
-    double liftExtension = 0.0;
-    boolean isPinned = false;
-    boolean isWinchEngaged = false;
-    double batteryVoltage = 0.0;
+        private ChassisSpeeds chassis = new ChassisSpeeds();
+        private Pose2d pose = new Pose2d();
+        private double robotX = 0.0;
+        private double robotY = 0.0;
+        private double robotRotation = 0.0;
+        private double drivetrainSpeed = 0.0;
+        private double rotationalSpeed = 0.0;
 
-    public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
-            Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) {
-        this.drivetrain = drivetrain;
-        this.collector = collector;
-        this.magazine = magazine;
-        this.turret = turret;
-        this.shooter = shooter;
-        this.cellTracker = cellTracker;
-        this.portTracker = portTracker;
+        private double collectorCurrent = 0.0;
 
-        tab = Shuffleboard.getTab("Robot2021");
-        chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kNumberSlider).withSize(5, 1).withPosition(0, 0)
-                .withProperties(Map.of("min", 0, "max", 10)).getEntry();
+        private double magazinePosition = 0.0;
+        private int magazineCount = 0;
+        private boolean magazineSensor = false;
 
-        createWidgets();
-    }
+        private double turretAngle = 0.0;
+        private double turretVelocity = 0.0;
 
-    @Override
-    public void periodic() {
-        updateWidgets();
-        Shuffleboard.update();
-        auto = (int) chooseAuto.getDouble(0.0);
-    }
+        private double hoodAngle = 0.0;
+        private double hoodPosition = 0.0;
+        private double hoodMin = 0.0;
+        private double hoodMax = 0.0;
 
-    private void createWidgets() {
-        NetworkTableEntry leftEncoderEntry = tab.add("leftEncoder", leftEncoderValue).withPosition(0, 0).withSize(2, 1)
-                .getEntry();
-        NetworkTableEntry rightEncoderEntry = tab.add("rightEncoder", rightEncoderValue).withPosition(2, 0)
-                .withSize(2, 1).getEntry();
-        NetworkTableEntry drivetrainSpeedEntry = tab.add("drivetrainVelocity", drivetrainSpeed).withPosition(0, 6)
-                .withSize(2, 1).getEntry();
+        private PowerCellData cellData = new PowerCellData();
+        private int cellArea = 0;
+        private int cellX = 0;
+        private int cellY = 0;
 
-        NetworkTableEntry gyroAngleEntry = tab.add("gyroAngle", gyroAngleDegrees).withPosition(2, 3).withSize(2, 1)
-                .getEntry();
-        NetworkTableEntry xcoordinateEntry = tab.add("x-coordinate", robotX).withPosition(4, 0).withSize(2, 1)
-                .getEntry();
-        NetworkTableEntry ycoordinateEntry = tab.add("y-coordinate", robotY).withPosition(6, 0).withSize(2, 1)
-                .getEntry();
-        NetworkTableEntry rotationEntry = tab.add("rotation", robotRotation).withWidget(BuiltInWidgets.kDial)
-                .withProperties(Map.of("min", -180, "max", 180)).withPosition(4, 3).withSize(2, 2).getEntry();
+        private PowerPortData portData = new PowerPortData();
+        private int portX = 0;
+        private int portY = 0;
+        //
+        private NetworkTableEntry robotXE;
+        private NetworkTableEntry robotYE;
+        private NetworkTableEntry robotRotationE;
+        private NetworkTableEntry drivetrainSpeedE;
+        private NetworkTableEntry rotationalSpeedE;
 
-        NetworkTableEntry turretAngleEntry = tab.add("turretDegrees", turretAngle).withWidget(BuiltInWidgets.kDial)
-                .withProperties(Map.of("min", 0, "max", 360)).withPosition(6, 3).withSize(2, 2).getEntry();
-        NetworkTableEntry turretVelocityEntry = tab.add("turretVelocity", turretVelocity).withPosition(8, 0)
-                .withSize(2, 1).getEntry();
+        private NetworkTableEntry collectorCurrentE;
 
-        NetworkTableEntry flywheelVelocityEntry = tab.add("flywheelVelocity", flywheelVelocity).withPosition(0, 1)
-                .withSize(2, 1).getEntry();
-        NetworkTableEntry flywheelTemperature1Entry = tab
-                .add("flywheelTemperature1", flywheelTemperature[0] * (9 / 5) + 32).withPosition(2, 1).withSize(2, 1)
-                .getEntry();
-        NetworkTableEntry flywheelTemperature2Entry = tab
-                .add("flywheelTemperature2", flywheelTemperature[1] * (9 / 5) + 32).withPosition(4, 1).withSize(2, 1)
-                .getEntry();
-        NetworkTableEntry hoodAngleEntry = tab.add("hoodDegrees", hoodAngle).withWidget(BuiltInWidgets.kDial)
-                .withProperties(Map.of("min", 0, "max", 180)).withPosition(8, 3).withSize(2, 2).getEntry();
-        NetworkTableEntry hoodVelocityEntry = tab.add("hoodVelocity", hoodVelocity).withPosition(6, 1).withSize(2, 1)
-                .getEntry();
+        private NetworkTableEntry magazinePositionE;
+        private NetworkTableEntry magazineCountE;
+        private NetworkTableEntry magazineSensorE;
 
-        NetworkTableEntry cellCountEntry = tab.add("cellCount", cellCount).withPosition(8, 1).withSize(2, 1).getEntry();
+        private NetworkTableEntry turretAngleE;
+        private NetworkTableEntry turretVelocityE;
 
-        NetworkTableEntry isBrakesetEntry = tab.add("isBrakeset", isBrakeset).withWidget(BuiltInWidgets.kBooleanBox)
-                .withPosition(0, 2).withSize(2, 1).getEntry();
-        NetworkTableEntry isLiftFullyExtendedEntry = tab.add("isLiftFullyExtended", isLiftFullyExtended)
-                .withWidget(BuiltInWidgets.kBooleanBox).withPosition(2, 2).withSize(2, 1).getEntry();
-        NetworkTableEntry isLiftFullyRetractedEntry = tab.add("isLiftFullyRetracted", isLiftFullyRetracted)
-                .withWidget(BuiltInWidgets.kBooleanBox).withPosition(4, 2).withSize(2, 1).getEntry();
-        NetworkTableEntry liftExtensionEntry = tab.add("liftExtension", liftExtension).withPosition(6, 2).withSize(2, 1)
-                .getEntry();
-        NetworkTableEntry isPinnedEntry = tab.add("isPinned", isPinned).withWidget(BuiltInWidgets.kBooleanBox)
-                .withPosition(8, 2).withSize(2, 1).getEntry();
+        private NetworkTableEntry hoodAngleE;
+        private NetworkTableEntry hoodPositionE;
+        private NetworkTableEntry hoodMinE;
+        private NetworkTableEntry hoodMaxE;
 
-        NetworkTableEntry isWinchEngagedEntry = tab.add("isWinchEngaged", isWinchEngaged)
-                .withWidget(BuiltInWidgets.kBooleanBox).withPosition(0, 3).withSize(2, 1).getEntry();
+        private NetworkTableEntry cellAreaE;
+        private NetworkTableEntry cellXE;
+        private NetworkTableEntry cellYE;
 
-        NetworkTableEntry batteryVoltageEntry = tab.add("batteryVoltage", batteryVoltage)
-                .withWidget(BuiltInWidgets.kDial).withProperties(Map.of("min", 0, "max", 14)).withPosition(0, 4)
-                .withSize(2, 2).getEntry();
-    }
+        private NetworkTableEntry portXE;
+        private NetworkTableEntry portYE;
 
-    private void updateWidgets() {
-        drivetrainSpeed = Math.sqrt(Math.pow(drivetrain.getDrivetrainVelocity().vxMetersPerSecond, 2)
-                + Math.pow(drivetrain.getDrivetrainVelocity().vyMetersPerSecond, 2));
-        Pose2d pose = drivetrain.getRobotPose();
-        robotX = pose.getX();
-        robotY = pose.getY();
-        robotRotation = pose.getRotation().getRadians();
-        turretAngle = turret.getPosition();
-        turretVelocity = turret.getVelocity();
-        // flywheelVelocity = shooter.get;
-        // flywheelTemperature = shooter.getInternalTemperature();
-        hoodAngle = shooter.getHoodAngle();
-        // hoodVelocity = shooter.getHoodVelocity();
-        // cellCount = magazine.getCellCount();
-        // liftExtension = lift.liftExtension();
-        // isWinchEngaged = winch.isWinchEngaged();
-        // batteryVoltage = RobotController.getBatteryVoltage();
-    }
+        public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
+                        Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) {
+                this.drivetrain = drivetrain;
+                this.collector = collector;
+                this.magazine = magazine;
+                this.turret = turret;
+                this.shooter = shooter;
+                this.cellTracker = cellTracker;
+                this.portTracker = portTracker;
+
+                tab = Shuffleboard.getTab("Robot2021");
+                chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kNumberSlider).withSize(5, 1)
+                                .withPosition(0, 0).withProperties(Map.of("min", 0, "max", 10)).getEntry();
+                createWidgets();
+
+                hoodMax = shooter.maxHoodPosition;
+                hoodMin = shooter.minHoodPosition;
+        }
+
+        @Override
+        public void periodic() {
+                updateWidgets();
+                Shuffleboard.update();
+                auto = (int) chooseAuto.getDouble(0.0);
+        }
+
+        private void createWidgets() {
+                drivetrainSpeedE = tab.add("drivetrainVelocity", drivetrainSpeed).withPosition(0, 6).withSize(2, 1)
+                                .getEntry();
+                robotXE = tab.add("x-coordinate", robotX).withPosition(4, 0).withSize(2, 1).getEntry();
+                robotYE = tab.add("y-coordinate", robotY).withPosition(6, 0).withSize(2, 1).getEntry();
+                robotRotationE = tab.add("rotation", robotRotation).withWidget(BuiltInWidgets.kDial)
+                                .withProperties(Map.of("min", -180, "max", 180)).withPosition(4, 3).withSize(2, 2)
+                                .getEntry();
+
+                turretAngleE = tab.add("turretDegrees", turretAngle).withWidget(BuiltInWidgets.kDial)
+                                .withProperties(Map.of("min", 0, "max", 360)).withPosition(6, 3).withSize(2, 2)
+                                .getEntry();
+                turretVelocityE = tab.add("turretVelocity", turretVelocity).withPosition(8, 0).withSize(2, 1)
+                                .getEntry();
+
+                hoodAngleE = tab.add("hoodDegrees", hoodAngle).withWidget(BuiltInWidgets.kDial)
+                                .withProperties(Map.of("min", 0, "max", 180)).withPosition(8, 3).withSize(2, 2)
+                                .getEntry();
+
+        }
+
+        private void updateWidgets() {
+                chassis = drivetrain.getDrivetrainVelocity();
+                pose = drivetrain.getRobotPose();
+                robotX = pose.getX();
+                robotY = pose.getY();
+                robotRotation = pose.getRotation().getRadians();
+                drivetrainSpeed = Math
+                                .sqrt(Math.pow(chassis.vxMetersPerSecond, 2) + Math.pow(chassis.vyMetersPerSecond, 2));
+                rotationalSpeed = chassis.omegaRadiansPerSecond;
+
+                collectorCurrent = collector.getfilteredCurrent();
+
+                magazinePosition = magazine.getPosition();
+                magazineCount = magazine.getPowerCellCount();
+                magazineSensor = magazine.getSensor();
+
+                turretAngle = turret.getPosition();
+                turretVelocity = turret.getVelocity();
+
+                hoodAngle = shooter.getHoodAngle();
+                hoodPosition = shooter.getHoodPosition();
+
+                cellTracker.getCellData(cellData);
+                cellArea = cellData.area;
+                cellX = cellData.cx;
+                cellY = cellData.cy;
+
+                portTracker.getPortData(portData);
+                portX = portData.cx;
+                portY = portData.cy;
+        }
 }
