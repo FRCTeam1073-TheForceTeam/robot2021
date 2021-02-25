@@ -109,6 +109,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 this.cellTracker = cellTracker;
                 this.portTracker = portTracker;
 
+        }
+
+        public void initialize() {
                 tab = Shuffleboard.getTab("Robot2021");
 
                 chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 1)
