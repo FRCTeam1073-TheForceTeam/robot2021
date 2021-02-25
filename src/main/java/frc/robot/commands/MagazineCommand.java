@@ -71,7 +71,7 @@ public class MagazineCommand extends CommandBase {
     public void execute() {
         sensor = magazine.getSensor();
         if (sensor) {
-            collector.setCollect(0.35);
+            collector.setCollect(0.45);
             magazine.setVelocity(velocity);
             bling.setArray("blue");
             loopsFalse = 0;
@@ -82,7 +82,7 @@ public class MagazineCommand extends CommandBase {
             loopsFalse++;
         }
         bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-        if (loopsFalse > 7) {
+        if (loopsFalse > 9) {
             isFinished = true;
         }
     }
