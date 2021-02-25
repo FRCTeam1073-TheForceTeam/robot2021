@@ -20,15 +20,23 @@ public class TurretPortAlignCommand extends CommandBase {
   PowerPortData portData;
   double coordinateSeparation;
   boolean endWhenAligned;
+  int framesWithoutSignal;
+  int maxFramesWithoutSignal;
 
-  public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_, boolean endWhenAligned_) {
+  public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_, boolean endWhenAligned_, int maxFramesWithoutSignal_) {
     turret = turret_;
     portTracker = portTracker_;
     endWhenAligned = endWhenAligned_;
     addRequirements(turret, portTracker);
     coordinateSeparation = 0;
     portData = new PowerPortData();
+    framesWithoutSignal = 0;
+    maxFramesWithoutSignal = maxFramesWithoutSignal_;
     // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_, boolean endWhenAligned_) {
+    this(turret_, portTracker_, endWhenAligned_, 10);
   }
 
   public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_) {
@@ -59,9 +67,27 @@ public class TurretPortAlignCommand extends CommandBase {
     boolean hasData = portTracker.getPortData(portData);
     double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
     if (hasData) {
-      SmartDashboard.putString("[T-AGN] Camera signal", "[CONNECTED]");
+      framesWithoutSignal = 0;
       //Inverted (left is 1, right is -1) so it moves in the right direction.
       coordinateSeparation = 1 - 2 * (((double) portData.cx) / ((double) portTracker.getImageWidth()));
+    } else if (framesWithoutSignal != 0) {
+      framesWithoutSignal = 0;
+    } else {
+      framesWithoutSignal++;
+    }
+
+    if (hasData) {
+      SmartDashboard.putString("[T-AGN] Camera signal", "[CONNECTED]");
+    } else {
+      SmartDashboard.putString("[T-AGN] Camera signal", "[NO DATA]");
+    }
+
+    if (hasData || (framesWithoutSignal < maxFramesWithoutSignal)) {
+      if (hasData) {
+        SmartDashboard.putString("[T-AGN] Scan status", "[CONNECTED]");
+      } else {
+        SmartDashboard.putString("[T-AGN] Scan status", "[DISCONNECTED; USING LAST DATA]");
+      }
       //I know that it shouldn't need clamping, but I want to make sure
       double input = MathUtil.clamp(coordinateSeparation, -1, 1);
       double output = 1.25 * curve(input);
@@ -69,9 +95,10 @@ public class TurretPortAlignCommand extends CommandBase {
       SmartDashboard.putNumber("[T-AGN] Intended velocity", output);
       SmartDashboard.putNumber("[T-AGN] Camera coordinate separation", coordinateSeparation);
     } else {
-      SmartDashboard.putString("[T-AGN] Camera signal", "[NO DATA]");
+      SmartDashboard.putString("[T-AGN] Scan status", "[TOO LONG WITHOUT DATA, STOPPING]");
       turret.setVelocity(actualOutput);
     }
+    SmartDashboard.putNumber("[T-AGN] Frames without signal", framesWithoutSignal);
     SmartDashboard.putNumber("[T-AGN] Actual velocity", actualOutput);
   }
 
