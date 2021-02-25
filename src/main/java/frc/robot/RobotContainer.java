@@ -128,8 +128,6 @@ public class RobotContainer {
         return forward;
       case 1:
         return collect;
-      case 2:
-        return chase.andThen(collect, runMag, magExtra);
       default:
         return turn;
 
