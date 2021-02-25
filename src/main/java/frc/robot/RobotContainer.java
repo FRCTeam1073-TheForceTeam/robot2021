@@ -33,7 +33,6 @@ import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.DrivetrainPowerTestCommand;
 import frc.robot.commands.DriveControls;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.MagazineControls;
 import frc.robot.commands.ShooterControls;
@@ -70,7 +69,6 @@ public class RobotContainer {
   private final AdvanceMagazineCommand magExtra = new AdvanceMagazineCommand(magazine, 0.4, 0.5);
   private final DrivetrainPowerTestCommand drivetrainTestCommand = new DrivetrainPowerTestCommand(drivetrain, 0.75);
   private final TestCommand testCommand = new TestCommand(drivetrain, collector, magazine);
-  private final ExampleCommand autoCommand = new ExampleCommand(drivetrain, bling);
   private final DriveControls teleDrive = new DriveControls(drivetrain);
   private final MagazineControls teleMagazine = new MagazineControls(magazine);
   private final ShooterControls teleShooter = new ShooterControls(shooter);
