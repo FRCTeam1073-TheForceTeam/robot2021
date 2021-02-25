@@ -4,9 +4,12 @@ import java.util.Map;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
@@ -22,6 +25,14 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardTab tab;
         private static NetworkTableEntry chooseAuto;
         public static int auto = 0;
+
+        private static ShuffleboardLayout driving;
+        private static ShuffleboardLayout collecting;
+        private static ShuffleboardLayout magazining;
+        private static ShuffleboardLayout turreting;
+        private static ShuffleboardLayout shooting;
+        private static ShuffleboardLayout cellTracking;
+        private static ShuffleboardLayout portTracking;
 
         private Drivetrain drivetrain;
         private Collector collector;
@@ -100,8 +111,18 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 this.portTracker = portTracker;
 
                 tab = Shuffleboard.getTab("Robot2021");
-                chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kNumberSlider).withSize(5, 1)
-                                .withPosition(0, 0).withProperties(Map.of("min", 0, "max", 10)).getEntry();
+
+                chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 1)
+                                .withPosition(0, 0).getEntry();
+
+                driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 1);
+                collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(1, 1).withPosition(1, 0);
+                magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(1, 3).withPosition(2, 0);
+                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(1, 2).withPosition(2, 3);
+                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 4).withPosition(3, 0);
+                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 4);
+                portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
+
                 createWidgets();
 
                 hoodMax = shooter.maxHoodPosition;
@@ -116,24 +137,37 @@ public class ShuffleboardWidgets extends SubsystemBase {
         }
 
         private void createWidgets() {
-                drivetrainSpeedE = tab.add("drivetrainVelocity", drivetrainSpeed).withPosition(0, 6).withSize(2, 1)
-                                .getEntry();
-                robotXE = tab.add("x-coordinate", robotX).withPosition(4, 0).withSize(2, 1).getEntry();
-                robotYE = tab.add("y-coordinate", robotY).withPosition(6, 0).withSize(2, 1).getEntry();
-                robotRotationE = tab.add("rotation", robotRotation).withWidget(BuiltInWidgets.kDial)
-                                .withProperties(Map.of("min", -180, "max", 180)).withPosition(4, 3).withSize(2, 2)
+                robotXE = driving.add("X", robotX).getEntry();
+                robotYE = driving.add("Y", robotY).getEntry();
+                robotRotationE = driving.add("Angle", robotRotation).withWidget(BuiltInWidgets.kDial)
+                                .withProperties(Map.of("min", -Math.PI, "max", Math.PI)).getEntry();
+                drivetrainSpeedE = driving.add("Speed", drivetrainSpeed).getEntry();
+                rotationalSpeedE = driving.add("Rotational Speed", rotationalSpeed).getEntry();
+
+                collectorCurrentE = collecting.add("Current", collectorCurrent).withWidget(BuiltInWidgets.kNumberBar)
+                                .withProperties(Map.of("min", 0.0, "max", 13.0)).getEntry();
+
+                magazinePositionE = magazining.add("Position", magazinePosition).getEntry();
+                magazineCountE = magazining.add("Count", magazineCount).getEntry();
+                magazineSensorE = magazining.add("Position", magazineSensor).withWidget(BuiltInWidgets.kBooleanBox)
                                 .getEntry();
 
-                turretAngleE = tab.add("turretDegrees", turretAngle).withWidget(BuiltInWidgets.kDial)
-                                .withProperties(Map.of("min", 0, "max", 360)).withPosition(6, 3).withSize(2, 2)
-                                .getEntry();
-                turretVelocityE = tab.add("turretVelocity", turretVelocity).withPosition(8, 0).withSize(2, 1)
-                                .getEntry();
+                turretAngleE = turreting.add("Angle", turretAngle).withWidget(BuiltInWidgets.kDial)
+                                .withProperties(Map.of("min", -Math.PI, "max", Math.PI)).getEntry();
+                turretVelocityE = turreting.add("Velocity", turretVelocity).getEntry();
 
-                hoodAngleE = tab.add("hoodDegrees", hoodAngle).withWidget(BuiltInWidgets.kDial)
-                                .withProperties(Map.of("min", 0, "max", 180)).withPosition(8, 3).withSize(2, 2)
-                                .getEntry();
+                hoodAngleE = shooting.add("Angle", hoodAngle).withWidget(BuiltInWidgets.kDial)
+                                .withProperties(Map.of("min", 0, "max", Math.PI)).getEntry();
+                hoodPositionE = shooting.add("Position", hoodPosition).getEntry();
+                hoodMinE = shooting.add("Min P", hoodMin).getEntry();
+                hoodMaxE = shooting.add("Max P", hoodMax).getEntry();
 
+                cellAreaE = cellTracking.add("Area", cellArea).getEntry();
+                cellXE = cellTracking.add("X", cellX).getEntry();
+                cellYE = cellTracking.add("Y", cellY).getEntry();
+
+                portXE = portTracking.add("X", portX).getEntry();
+                portYE = portTracking.add("Y", portY).getEntry();
         }
 
         private void updateWidgets() {
