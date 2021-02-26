@@ -47,6 +47,7 @@ import frc.robot.commands.TurretControls;
 import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.TurnVectorCommand;
+// Import components: add software components (ex. InterpolatorTable, ErrorToOutput) here
 
 /**
  * This class is where the bulk of the robot should be declared. Since
