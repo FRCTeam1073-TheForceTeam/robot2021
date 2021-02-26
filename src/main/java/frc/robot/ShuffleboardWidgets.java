@@ -109,6 +109,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 this.cellTracker = cellTracker;
                 this.portTracker = portTracker;
 
+        }
+
+        public void initialize() {
                 tab = Shuffleboard.getTab("Robot2021");
 
                 chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 1)
@@ -144,7 +147,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 rotationalSpeedE = driving.add("Rotational Speed", rotationalSpeed).getEntry();
 
                 collectorCurrentE = collecting.add("Current", collectorCurrent).withWidget(BuiltInWidgets.kNumberBar)
-                                .withProperties(Map.of("min", 0.0, "max", 13.0)).getEntry();
+                                .withProperties(Map.of("min", 0.0, "max", 50.0)).getEntry();
 
                 magazinePositionE = magazining.add("Position", magazinePosition).getEntry();
                 magazineCountE = magazining.add("Count", magazineCount).getEntry();
