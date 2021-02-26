@@ -64,6 +64,8 @@ public class RobotContainer {
   private final Localizer localizer = new Localizer(drivetrain);
   private final PowerPortTracker portTracker = new PowerPortTracker();
   private final PowerCellTracker cellTracker = new PowerCellTracker();
+  private final ShuffleboardWidgets shuffle = new ShuffleboardWidgets(drivetrain, collector, magazine, turret, shooter,
+      cellTracker, portTracker);
 
   // Commands: Add commands here.
   private final AdvanceMagazineCommand magExtra = new AdvanceMagazineCommand(magazine, 0.4, 0.5);
