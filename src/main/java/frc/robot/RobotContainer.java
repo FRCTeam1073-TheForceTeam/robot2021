@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
@@ -37,6 +38,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.MagazineControls;
 import frc.robot.commands.ShooterControls;
+import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.TestCommand;
@@ -93,7 +95,7 @@ public class RobotContainer {
 
   private final TurretPositionCommand turretPositionCommand = new TurretPositionCommand(turret, 2);
 
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(new TurretPortAlignCommand(turret, portTracker));
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleTurret);
 
   private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
 
@@ -120,7 +122,15 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kB.value);
+    JoystickButton fireBinding = new JoystickButton(OI.driverController, XboxController.Button.kA.value);
     magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
+    fireBinding.whenPressed(
+        (new ShooterSetCommand(shooter, shooter.hoodAngleLow+0.2, 250)
+            .andThen(new AdvanceMagazineCommand(magazine, 2, 4))
+            .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
+            .alongWith(new TurretPortAlignCommand(turret, portTracker))
+    );
+    //return new TurretPortAlignCommand(turret, portTracker);
   }
 
   /**
@@ -130,7 +140,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
-    return new TurretPortAlignCommand(turret, portTracker);
+    return new TurretPositionCommand(turret, 0);
     //    return chaseCollectAndRunMag;
   }
 

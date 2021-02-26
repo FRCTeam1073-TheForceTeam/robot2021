@@ -25,18 +25,17 @@ public class ShooterSetCommand extends CommandBase {
   
   @Override
   public void initialize() {
-    shooter.setHoodAngle(hoodAngle);
   }
 
   public void execute() {
+    shooter.setHoodAngle(hoodAngle);
     shooter.setFlywheelVelocity(flywheelVelocity);
   }
 
-  public void end(boolean interrupted){
-    shooter.stop();
+  public void end(boolean interrupted) {
   }
   
   public boolean isFinished() {
-    return Math.abs(shooter.getFlywheelVelocity() - flywheelVelocity) <= 0.1;
+    return Math.abs(shooter.getFlywheelVelocity() - flywheelVelocity) <= 1;
   }
 }
