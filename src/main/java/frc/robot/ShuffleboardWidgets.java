@@ -148,7 +148,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 magazinePositionE = magazining.add("Position", magazinePosition).getEntry();
                 magazineCountE = magazining.add("Count", magazineCount).getEntry();
-                magazineSensorE = magazining.add("Position", magazineSensor).withWidget(BuiltInWidgets.kBooleanBox)
+                magazineSensorE = magazining.add("Sensor", magazineSensor).withWidget(BuiltInWidgets.kBooleanBox)
                                 .getEntry();
 
                 turretAngleE = turreting.add("Angle", turretAngle).withWidget(BuiltInWidgets.kDial)
