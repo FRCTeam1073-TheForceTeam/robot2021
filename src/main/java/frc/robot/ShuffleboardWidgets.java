@@ -147,7 +147,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 rotationalSpeedE = driving.add("Rotational Speed", rotationalSpeed).getEntry();
 
                 collectorCurrentE = collecting.add("Current", collectorCurrent).withWidget(BuiltInWidgets.kNumberBar)
-                                .withProperties(Map.of("min", 0.0, "max", 13.0)).getEntry();
+                                .withProperties(Map.of("min", 0.0, "max", 50.0)).getEntry();
 
                 magazinePositionE = magazining.add("Position", magazinePosition).getEntry();
                 magazineCountE = magazining.add("Count", magazineCount).getEntry();

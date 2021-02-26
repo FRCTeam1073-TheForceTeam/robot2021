@@ -116,11 +116,10 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            if (lastData.area > 0) {
-                scanRotationalSpeedMultiplier = Math.signum(-(lastData.cx - 160) / 160.0)
-                        * Math.max(Math.abs(-(lastData.cx - 160) / 160.0), 0.25);
+            if (lastData.cx < 139) {
+                scanRotationalSpeedMultiplier = Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
             } else {
-                scanRotationalSpeedMultiplier = 0.25;
+                scanRotationalSpeedMultiplier = -Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
             }
             timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity));
             initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
@@ -150,10 +149,10 @@ public class ChaseCommand extends CommandBase {
         if (!hasData) {
             alignState = AlignState.NOT_VISIBLE;
 
-        } else if (powerCellData.cx >= 136 && powerCellData.cx <= 183) {
+        } else if (powerCellData.cx >= 139 && powerCellData.cx <= 180) {
             alignState = AlignState.ALIGNED;
 
-        } else if (powerCellData.cx < 136) {
+        } else if (powerCellData.cx < 139) {
             alignState = AlignState.LEFT;
 
         } else {
@@ -173,11 +172,11 @@ public class ChaseCommand extends CommandBase {
             rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
             velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.3, 1.0);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.25) {
-                rotationalSpeedMultiplier = 0.25;
+            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
+                rotationalSpeedMultiplier = 0.35;
 
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.25) {
-                rotationalSpeedMultiplier = -0.25;
+            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
+                rotationalSpeedMultiplier = -0.35;
 
             }
 
@@ -185,11 +184,11 @@ public class ChaseCommand extends CommandBase {
             rotationalSpeedMultiplier = -(powerCellData.cx - 159) / 160.0;
             velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.3, 1.0);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.25) {
-                rotationalSpeedMultiplier = 0.25;
+            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
+                rotationalSpeedMultiplier = 0.35;
 
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.25) {
-                rotationalSpeedMultiplier = -0.25;
+            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
+                rotationalSpeedMultiplier = -0.35;
 
             }
 
