@@ -297,6 +297,11 @@ public class Drivetrain extends SubsystemBase  {
     public ChassisSpeeds getDrivetrainVelocity() {
         return kinematics.toChassisSpeeds(getWheelSpeeds());
     }
+
+    public void engagePneumatics() {
+        drivetrain.set(true);
+        winch.set(false);
+    }
     
     public void engageDrivetrain() {
 

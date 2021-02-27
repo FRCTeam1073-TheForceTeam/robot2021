@@ -62,6 +62,7 @@ public class DriveControls extends CommandBase {
         arcadeCompute();
         // System.out.println("Output power: [" + leftOutput + "," + rightOutput + "]");
         
+
         // System.out.println("Odometry coords: [" + drivetrain.getRobotPose().getX() + ", "
         //         + drivetrain.getRobotPose().getY() + "] @ " + drivetrain.getRobotPose().getRotation().getDegrees());
         

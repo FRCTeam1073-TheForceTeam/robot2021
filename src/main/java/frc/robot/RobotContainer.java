@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
@@ -16,10 +15,9 @@ import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Map;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerCellTracker;
+import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.PowerPortTracker;
-import frc.robot.subsystems.PowerCellTracker;
 // Import controls: Add controls here.
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveControls;
@@ -35,6 +33,7 @@ import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TurnCommand;
+// Import components: add software components (ex. InterpolatorTable, ErrorToOutput) here
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -66,7 +65,7 @@ public class RobotContainer {
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
 
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleShooter);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine, teleTurret, teleShooter, teleCollect);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -93,8 +92,17 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kA.value);
-    magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
+    // JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kB.value);
+    // JoystickButton fireBinding = new JoystickButton(OI.driverController, XboxController.Button.kA.value);
+    // magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
+    // fireBinding.whenPressed(
+    //     (new ShooterSetCommand(shooter, shooter.hoodAngleLow+0.2, 250)
+    //         .andThen(new AdvanceMagazineCommand(magazine, 2, 4))
+    //         .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
+    //         .alongWith(new TurretPortAlignCommand(turret, portTracker))
+    // );
+
+    //return new TurretPortAlignCommand(turret, portTracker);
   }
 
   /**
@@ -131,7 +139,10 @@ public class RobotContainer {
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
+    // return turretPositionTestCommand;
     return teleopCommand;
+
+    //    return teleopCommand;
   }
 
   public Command getTestCommand() {

@@ -4,22 +4,17 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterControls extends CommandBase {
   Shooter shooter;
-  double flywheelPower;
-  double hoodPower;
+  double flywheelVelocity;
 
   public ShooterControls(Shooter shooter) {
     this.shooter = shooter;
-    flywheelPower = 0;
-    hoodPower = 0;
+    flywheelVelocity = 0;
   }
 
   // Called when the command is initially scheduled.
@@ -66,9 +61,10 @@ public class ShooterControls extends CommandBase {
 
     // shooter.setFlywheelPower(flywheelPower);
 
-    flywheelPower = 0.75 * OI.operatorController.getRawAxis(3);
-    shooter.setFlywheelPower(flywheelPower);
-    // shooter.setHoodAngle(30.0 * Math.PI / 180.0);
+    flywheelVelocity = 307.0 * OI.operatorController.getRawAxis(3);
+    shooter.setFlywheelVelocity(flywheelVelocity);
+    shooter.setHoodPosition(0);
+//    shooter.setHoodAngle(30.0 * Math.PI / 180.0);
 
     // shooter.setHoodAngle((shooter.hoodAngleLow + shooter.hoodAngleHigh) * 0.5
     // + (shooter.hoodAngleLow - shooter.hoodAngleHigh) * 0.4 *
@@ -83,6 +79,7 @@ public class ShooterControls extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    shooter.setHoodPosition(0);
   }
 
   // Returns true when the command should end.
