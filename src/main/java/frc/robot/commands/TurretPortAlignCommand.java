@@ -111,6 +111,6 @@ public class TurretPortAlignCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return endWhenAligned && (Math.abs(coordinateSeparation) <= 0.01);
+    return endWhenAligned && (Math.abs(coordinateSeparation) <= 0.02);
   }
 }

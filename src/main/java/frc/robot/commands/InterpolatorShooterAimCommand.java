@@ -7,6 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
 import frc.robot.subsystems.Magazine;
@@ -15,34 +18,21 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 
-public class InterpolatorShooterAimCommand extends CommandGroupBase {
-
-  InterpolatorTable flywheelTable;
-  InterpolatorTable hoodTable;
+public class InterpolatorShooterAimCommand extends SequentialCommandGroup {
   Shooter shooter;
   PowerPortTracker portTracker;
   Magazine magazine;
   Turret turret;
   PowerPortData portData;
 
-  public InterpolatorShooterAimCommand(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_) {
-    shooter = shooter_;
-    portTracker = portTracker_;
-    portData = new PowerPortData();
-    flywheelTable = new InterpolatorTable(
-      new InterpolatorTableEntry(0, 250)
-    );
-    hoodTable = new InterpolatorTable(
-      new InterpolatorTableEntry(0, 250)
-    );
-    double range = portTracker.getRange();
-    if (range != -1) {
-      addCommands((new ShooterSetCommand(shooter, hoodTable.getValue(range), hoodTable.getValue(range))
-          .andThen(new AdvanceMagazineCommand(magazine, 2, 4))
-          .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
-              .alongWith(new TurretPortAlignCommand(turret, portTracker)));
-    }
-  }
+  public InterpolatorShooterAimCommand(Shooter shooter, Magazine magazine, PowerPortTracker portTracker,
+      Turret turret) {
+    addCommands(
+        // new TurretPortAlignCommand(turret, portTracker),
+        new TurretPortAlignCommand(turret, portTracker, true),
+        new ShooterSetCommand(shooter, portTracker),
+        new AdvanceMagazineCommand(magazine, 2, 4));
+ }
   
   // Called when the command is initially scheduled.
   @Override
@@ -54,10 +44,5 @@ public class InterpolatorShooterAimCommand extends CommandGroupBase {
   public boolean isFinished() {
     return false;
   }
-
-  @Override
-  public void addCommands(Command... commands) {
-    // TODO Auto-generated method stub
-
-  }
 }
+

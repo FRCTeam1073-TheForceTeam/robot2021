@@ -23,13 +23,16 @@ import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.MagazineControls;
 import frc.robot.commands.ShooterControls;
+import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.TurretControls;
+import frc.robot.commands.TurretPortAlignCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.DriveToPointCommand;
+import frc.robot.commands.InterpolatorShooterAimCommand;
 import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TurnCommand;
@@ -111,29 +114,35 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    drivetrain.resetRobotOdometry();
-    switch (ShuffleboardWidgets.auto) {
-      case 0:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 1.0));
-      case 1:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 1.0),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
-            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 1.0));
-      case 2:
-        return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
-      case 3:
-        return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
-      case 4:
-        return new DriveForwardCommand(drivetrain, bling, 1.5, 1.25);
-      default:
-        return new TurnCommand(drivetrain, bling, 0.0);
+    return (new TurretPortAlignCommand(turret, portTracker, true))
+        .andThen(new ShooterSetCommand(shooter, portTracker))
+    .andThen(new AdvanceMagazineCommand(magazine, 2, 4));
+    // new InterpolatorShooterAimCommand(shooter, magazine, portTracker, turret);
+    // drivetrain.resetRobotOdometry();
+    // switch (ShuffleboardWidgets.auto) {
+    //   case 0:
+    //     return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+    //         new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 1.0));
+    //   case 1:
+    //     return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+    //         new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 1.0),
+    //         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+    //         new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 1.0));
+    //   case 2:
+    //     return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
+    //   case 3:
+    //     return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
+    //   case 4:
+    //     return new DriveForwardCommand(drivetrain, bling, 1.5, 1.25);
+    //   case 5:
+    //     return new InterpolatorShooterAimCommand(shooter, magazine, portTracker, turret);
+    //   default:
+    //     return new TurnCommand(drivetrain, bling, 0.0);
 
-    }
+    // }
   }
 
   // Command that we run in teleoperation mode.
