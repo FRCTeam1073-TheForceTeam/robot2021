@@ -116,14 +116,10 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            if (lastData.vx != 0) {
-                scanRotationalSpeedMultiplier = Math.signum(lastData.vx)
-                        * Math.max(Math.abs(-(lastData.cx - 160) / 160.0), 0.15);
-            } else if (lastData.cx > 0) {
-                scanRotationalSpeedMultiplier = Math.signum(-(lastData.cx - 160) / 160.0)
-                        * Math.max(Math.abs(-(lastData.cx - 160) / 160.0), 0.15);
+            if (lastData.cx < 139) {
+                scanRotationalSpeedMultiplier = Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
             } else {
-                scanRotationalSpeedMultiplier = 0.25;
+                scanRotationalSpeedMultiplier = -Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
             }
             timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity));
             initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
@@ -174,38 +170,29 @@ public class ChaseCommand extends CommandBase {
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
             rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
-            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.35, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.3, 1.0);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.15) {
-                rotationalSpeedMultiplier = 0.15;
+            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
+                rotationalSpeedMultiplier = 0.35;
 
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.15) {
-                rotationalSpeedMultiplier = -0.15;
-
-            }
-
-            if (powerCellData.vy < -30) {
-                velocityMultiplier = 1.0;
+            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
+                rotationalSpeedMultiplier = -0.35;
 
             }
 
         } else if (alignState == AlignState.ALIGNED) {
             rotationalSpeedMultiplier = -(powerCellData.cx - 159) / 160.0;
-            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.35, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.3, 1.0);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.15) {
-                rotationalSpeedMultiplier = 0.15;
+            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
+                rotationalSpeedMultiplier = 0.35;
 
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.15) {
-                rotationalSpeedMultiplier = -0.15;
+            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
+                rotationalSpeedMultiplier = -0.35;
 
             }
 
-            if (powerCellData.vy < -30) {
-                velocityMultiplier = 1.0;
-            }
-
-            if (powerCellData.cy >= 200) {
+            if (powerCellData.cy >= 180) {
                 System.out.println("DONEDONEDONE");
                 rotationalSpeedMultiplier = 0.0;
                 velocityMultiplier = 0.0;

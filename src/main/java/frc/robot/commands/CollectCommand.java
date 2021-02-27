@@ -25,6 +25,7 @@ public class CollectCommand extends CommandBase {
     private long time;
     private boolean shouldUnstall;
     private boolean isFinished;
+    private int trueLoops;
 
     /**
      * Creates a new CollectCommand.
@@ -67,6 +68,7 @@ public class CollectCommand extends CommandBase {
         velocity = 0.35;
         shouldUnstall = false;
         isFinished = false;
+        trueLoops = 0;
     }
 
     public boolean didStall() {
@@ -82,7 +84,7 @@ public class CollectCommand extends CommandBase {
         }
         time = System.currentTimeMillis();
         if (shouldUnstall) {
-            if (time - initialTime >= 1500) {
+            if (time - initialTime >= 1800) {
                 powerMultiplier = 0.0;
                 velocity = 0.0;
                 drivetrain.setVelocity(0.0, 0.0);
@@ -96,7 +98,7 @@ public class CollectCommand extends CommandBase {
                 shouldUnstall = true;
                 velocity = 0.0;
                 powerMultiplier *= -1;
-            } else if (time - initialTime >= 1500) {
+            } else if (time - initialTime >= 1550) {
                 velocity = 0.0;
                 bling.setArray("purple");
             } else {
@@ -107,7 +109,14 @@ public class CollectCommand extends CommandBase {
         collector.setCollect(powerMultiplier * maxPower);
         drivetrain.setVelocity(velocity, 0.0);
         bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-        isFinished = magazine.getSensor();
+        if (magazine.getSensor()) {
+            trueLoops++;
+        } else {
+            trueLoops = 0;
+        }
+        if (trueLoops > 9) {
+            isFinished = magazine.getSensor();
+        }
     }
 
     // Called once the command ends or is interrupted.
