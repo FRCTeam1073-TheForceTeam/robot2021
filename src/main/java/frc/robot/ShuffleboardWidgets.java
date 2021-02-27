@@ -185,7 +185,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                                 .sqrt(Math.pow(chassis.vxMetersPerSecond, 2) + Math.pow(chassis.vyMetersPerSecond, 2));
                 rotationalSpeed = chassis.omegaRadiansPerSecond;
 
-                collectorCurrent = collector.getfilteredCurrent();
+                collectorCurrent = Math.abs(collector.getfilteredCurrent());
 
                 magazinePosition = magazine.getPosition();
                 magazineCount = magazine.getPowerCellCount();
