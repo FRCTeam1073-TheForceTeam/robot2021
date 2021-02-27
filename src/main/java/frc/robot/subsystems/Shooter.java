@@ -149,6 +149,10 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.set(ControlMode.Velocity, flywheelTargetVelocity);
   }
 
+  /**
+   * Gets the flywheel velocity in radians/second
+   * @return The flywheel velocity in radians/second
+   */
   public double getFlywheelVelocity() {
     return shooterFlywheel1.getSelectedSensorVelocity() * 10.0 * (2.0 * Math.PI) / flywheelTicksPerRevolution;
   }

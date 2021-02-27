@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
+import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 
 public class InterpolatorShooterAimCommand extends CommandGroupBase {
@@ -23,7 +25,7 @@ public class InterpolatorShooterAimCommand extends CommandGroupBase {
   Turret turret;
   PowerPortData portData;
 
-  public InterpolatorShooterAimCommand(Shooter shooter_, Magazine magazine_ PowerPortTracker portTracker_) {
+  public InterpolatorShooterAimCommand(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_) {
     shooter = shooter_;
     portTracker = portTracker_;
     portData = new PowerPortData();

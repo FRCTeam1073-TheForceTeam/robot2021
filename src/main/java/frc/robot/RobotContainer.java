@@ -26,6 +26,7 @@ import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.PowerCellTracker;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
+import frc.robot.commands.AimingCalibrationControls;
 import frc.robot.commands.ChaseAndCollectCellsCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
@@ -96,7 +97,7 @@ public class RobotContainer {
 
   private final TurretPositionCommand turretPositionCommand = new TurretPositionCommand(turret, 2);
 
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleTurret);
+  private final ParallelCommandGroup teleopCommand = (new TurretPositionCommand(turret,0)).alongWith(new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, 0));//teleDrive.alongWith(teleTurret);
 
   private final SequentialCommandGroup chaseCollectAndRunMag = chase.andThen(collect, runMag);
 
