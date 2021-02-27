@@ -30,33 +30,20 @@ public class InterpolatorShooterAimCommand extends CommandGroupBase {
     portTracker = portTracker_;
     portData = new PowerPortData();
     flywheelTable = new InterpolatorTable(
-      new InterpolatorTableEntry(0,250)
+      new InterpolatorTableEntry(0, 250)
     );
     hoodTable = new InterpolatorTable(
-      new InterpolatorTableEntry(0,250)
+      new InterpolatorTableEntry(0, 250)
     );
-    double range = getRange();
+    double range = portTracker.getRange();
     if (range != -1) {
-      addCommands(
-        (new ShooterSetCommand(shooter, hoodTable.getValue(range), hoodTable.getValue(range))
-        .andThen(new AdvanceMagazineCommand(magazine,2,4))
-        .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
-        .alongWith(new TurretPortAlignCommand(turret, portTracker))
-      );
+      addCommands((new ShooterSetCommand(shooter, hoodTable.getValue(range), hoodTable.getValue(range))
+          .andThen(new AdvanceMagazineCommand(magazine, 2, 4))
+          .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
+              .alongWith(new TurretPortAlignCommand(turret, portTracker)));
     }
   }
   
-  public double getRange() {
-    return 10.0;
-    // for (int i = 0; i < 10; i++) {
-    //   boolean hasData = portTracker.getPortData(portData);
-    //   if (hasData) {
-    //     return portTracker.getRange();
-    //   }
-    // }
-    // return -1;
-  }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
