@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.Constants;
+import frc.robot.Utility;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerPortTracker;
@@ -21,16 +24,20 @@ public class AimingCalibrationControls extends CommandBase {
   Magazine magazine;
   PowerPortTracker portTracker;
   PowerPortData portData;
+  Drivetrain drivetrain;
 
   double targetFlywheelVelocity;
   double targetHoodAngle;
+  double initRange;
 
-  public AimingCalibrationControls(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_) {
+  public AimingCalibrationControls(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_, Drivetrain drivetrain_) {
     shooter = shooter_;
     magazine = magazine_;
     portTracker = portTracker_;
     targetFlywheelVelocity = 0;
     targetHoodAngle = shooter.hoodAngleHigh;
+    drivetrain = drivetrain_;
+    initRange = 0;
     portData = new PowerPortData();
     addRequirements(shooter, magazine, portTracker);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -42,11 +49,21 @@ public class AimingCalibrationControls extends CommandBase {
     magazine.setVelocity(0);
     shooter.setFlywheelPower(0);
     shooter.lowerHood();
+    drivetrain.resetRobotOdometry();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
+    double multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * Utility.deadzone(OI.driverController.getRawAxis((3))));
+    double forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * 2.0 * multiplier;
+    double rotation = Utility.deadzone(OI.driverController.getRawAxis(4)) * 2.0 * multiplier;
+    drivetrain.setVelocity(forward, rotation);
+    if (OI.driverController.getStartButtonPressed() && OI.driverController.getBackButtonPressed()) {
+        drivetrain.resetRobotOdometry();
+    }
+    
     boolean hasData = portTracker.getPortData(portData);
 
     if (OI.operatorController.getAButtonPressed()) {
@@ -82,6 +99,7 @@ public class AimingCalibrationControls extends CommandBase {
         shooter.getHoodAngle());
     if (hasData) {
       SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker range", portTracker.getRange());
+      SmartDashboard.putNumber("[AimingCalibrationControls] Odometry range", drivetrain.getRobotPose().getX()+initRange);
     }
   }
 
