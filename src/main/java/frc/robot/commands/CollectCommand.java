@@ -84,7 +84,7 @@ public class CollectCommand extends CommandBase {
         }
         time = System.currentTimeMillis();
         if (shouldUnstall) {
-            if (time - initialTime >= 1800) {
+            if (time - initialTime >= 2000) {
                 powerMultiplier = 0.0;
                 velocity = 0.0;
                 drivetrain.setVelocity(0.0, 0.0);
@@ -98,7 +98,7 @@ public class CollectCommand extends CommandBase {
                 shouldUnstall = true;
                 velocity = 0.0;
                 powerMultiplier *= -1;
-            } else if (time - initialTime >= 1550) {
+            } else if (time - initialTime >= 1600) {
                 velocity = 0.0;
                 bling.setArray("purple");
             } else {
