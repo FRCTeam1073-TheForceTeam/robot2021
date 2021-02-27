@@ -120,9 +120,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 3).withPosition(0, 2);
                 collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(1, 2).withPosition(1, 0);
                 magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(1, 2).withPosition(2, 0);
-                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(1, 3).withPosition(2, 3);
+                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(1, 3).withPosition(2, 2);
                 shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 0);
-                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 3);
+                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 3);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
 
                 hoodMax = shooter.maxHoodPosition;
@@ -139,20 +139,20 @@ public class ShuffleboardWidgets extends SubsystemBase {
         }
 
         private void createWidgets() {
-                robotXE = driving.add("X", robotX).getEntry();
-                robotYE = driving.add("Y", robotY).getEntry();
                 robotRotationE = driving.add("Angle", robotRotation).withWidget(BuiltInWidgets.kDial)
                                 .withProperties(Map.of("min", -Math.PI, "max", Math.PI)).getEntry();
+                robotXE = driving.add("X", robotX).getEntry();
+                robotYE = driving.add("Y", robotY).getEntry();
                 drivetrainSpeedE = driving.add("Speed", drivetrainSpeed).getEntry();
                 rotationalSpeedE = driving.add("Rotational Speed", rotationalSpeed).getEntry();
 
                 collectorCurrentE = collecting.add("Current", collectorCurrent).withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", 0.0, "max", 50.0)).getEntry();
 
-                magazinePositionE = magazining.add("Position", magazinePosition).getEntry();
-                magazineCountE = magazining.add("Count", magazineCount).getEntry();
                 magazineSensorE = magazining.add("Sensor", magazineSensor).withWidget(BuiltInWidgets.kBooleanBox)
                                 .getEntry();
+                magazinePositionE = magazining.add("Position", magazinePosition).getEntry();
+                magazineCountE = magazining.add("Count", magazineCount).getEntry();
 
                 turretAngleE = turreting.add("Angle", turretAngle).withWidget(BuiltInWidgets.kDial)
                                 .withProperties(Map.of("min", -Math.PI, "max", Math.PI)).getEntry();
@@ -164,9 +164,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 hoodMinE = shooting.add("Min P", hoodMin).getEntry();
                 hoodMaxE = shooting.add("Max P", hoodMax).getEntry();
 
-                cellAreaE = cellTracking.add("Area", cellArea).getEntry();
                 cellXE = cellTracking.add("X", cellX).getEntry();
                 cellYE = cellTracking.add("Y", cellY).getEntry();
+                cellAreaE = cellTracking.add("Area", cellArea).getEntry();
 
                 portXE = portTracking.add("X", portX).getEntry();
                 portYE = portTracking.add("Y", portY).getEntry();
