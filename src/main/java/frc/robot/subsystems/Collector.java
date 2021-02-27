@@ -37,7 +37,7 @@ public class Collector extends SubsystemBase {
 
   // Is the collector motor stalled?
   public boolean isStalled() {
-    return 27.75 < Math.abs(getfilteredCurrent());
+    return 27.85 < Math.abs(getfilteredCurrent());
   }
 
   /**
