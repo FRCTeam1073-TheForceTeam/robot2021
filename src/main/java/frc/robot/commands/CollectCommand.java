@@ -84,7 +84,7 @@ public class CollectCommand extends CommandBase {
         }
         time = System.currentTimeMillis();
         if (shouldUnstall) {
-            if (time - initialTime >= 2000) {
+            if (time - initialTime >= 3000) {
                 powerMultiplier = 0.0;
                 velocity = 0.0;
                 drivetrain.setVelocity(0.0, 0.0);

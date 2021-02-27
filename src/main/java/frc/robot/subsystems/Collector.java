@@ -30,9 +30,9 @@ public class Collector extends SubsystemBase {
     this.collectorMotor.enableCurrentLimit(true);
     this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 30.0, 0.25), 500);
     this.collectorMotor.configPeakCurrentLimit(28, 500);
-    this.collectorMotor.configPeakCurrentDuration(250, 500);
+    this.collectorMotor.configPeakCurrentDuration(750, 500);
 
-    this.filter = LinearFilter.singlePoleIIR(0.25, 0.02);
+    this.filter = LinearFilter.singlePoleIIR(0.75, 0.02);
   }
 
   // Is the collector motor stalled?

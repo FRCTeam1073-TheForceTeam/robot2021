@@ -114,15 +114,15 @@ public class ShuffleboardWidgets extends SubsystemBase {
         public void initialize() {
                 tab = Shuffleboard.getTab("Robot2021");
 
-                chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 1)
+                chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 2)
                                 .withPosition(0, 0).getEntry();
 
-                driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 1);
-                collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(1, 1).withPosition(1, 0);
-                magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(1, 3).withPosition(2, 0);
-                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(1, 2).withPosition(2, 3);
-                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 4).withPosition(3, 0);
-                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 4);
+                driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 3).withPosition(0, 2);
+                collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(1, 2).withPosition(1, 0);
+                magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(1, 2).withPosition(2, 0);
+                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(1, 3).withPosition(2, 3);
+                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 0);
+                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 3);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
 
                 hoodMax = shooter.maxHoodPosition;
