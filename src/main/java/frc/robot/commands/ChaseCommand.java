@@ -116,7 +116,7 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            if (lastData.cx < 139) {
+            if (lastData.cx < 160) {
                 scanRotationalSpeedMultiplier = Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
             } else {
                 scanRotationalSpeedMultiplier = -Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
