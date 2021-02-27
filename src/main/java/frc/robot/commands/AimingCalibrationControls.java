@@ -111,9 +111,7 @@ public class AimingCalibrationControls extends CommandBase {
     
     boolean hasData = portTracker.getPortData(portData);
 
-    if (hasData) {
-      currentRange = portTracker.getRange();
-    }
+    currentRange = portTracker.getRange();
 
     if (OI.operatorController.getAButtonPressed()) {
       targetFlywheelVelocity += 31.25;
@@ -166,8 +164,10 @@ public class AimingCalibrationControls extends CommandBase {
         shooter.getFlywheelVelocity());
     SmartDashboard.putNumber("[AimingCalibrationControls] Hood angle (radians) @@",
         shooter.getHoodAngle());
+    SmartDashboard.putBoolean("[AimingCalibrationControls] PowerPortTracker HAS DATA @@", hasData);
+    SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker QUAL @@", portData.quality);
+    SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker range @@", currentRange);
     if (hasData) {
-      SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker range @@", currentRange);
       SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker CX @@", portData.cx);
       SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker CY @@", portData.cy);
 
