@@ -37,7 +37,7 @@ public class Collector extends SubsystemBase {
 
   // Is the collector motor stalled?
   public boolean isStalled() {
-    return 25.0 < Math.abs(getfilteredCurrent());
+    return 27.75 < Math.abs(getfilteredCurrent());
   }
 
   /**
@@ -81,6 +81,17 @@ public class Collector extends SubsystemBase {
   // Is the collector deployed?
   public boolean isDeployed() {
     return isDeployed;
+  }
+
+  /// Is the collector deployed?
+  public void raise() {
+    collectorDeployPneumatic.set(true);
+    collectorWithdrawPneumatic.set(false);
+  }
+
+  public void lower() {
+    collectorDeployPneumatic.set(false);
+    collectorWithdrawPneumatic.set(true);
   }
 
   /**
