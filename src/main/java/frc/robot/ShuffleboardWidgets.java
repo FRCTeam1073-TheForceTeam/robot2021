@@ -125,10 +125,10 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 4);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
 
-                createWidgets();
-
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
+
+                createWidgets();
         }
 
         @Override
