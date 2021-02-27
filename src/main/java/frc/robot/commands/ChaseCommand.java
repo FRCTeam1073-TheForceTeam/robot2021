@@ -170,7 +170,7 @@ public class ChaseCommand extends CommandBase {
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
             rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
-            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.3, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.35, 1.0);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
                 rotationalSpeedMultiplier = 0.35;
@@ -182,7 +182,7 @@ public class ChaseCommand extends CommandBase {
 
         } else if (alignState == AlignState.ALIGNED) {
             rotationalSpeedMultiplier = -(powerCellData.cx - 159) / 160.0;
-            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.3, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.35, 1.0);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
                 rotationalSpeedMultiplier = 0.35;
