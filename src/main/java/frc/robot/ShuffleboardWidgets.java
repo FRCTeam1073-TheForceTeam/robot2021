@@ -23,7 +23,7 @@ import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardTab tab;
         private static NetworkTableEntry chooseAuto;
-        public static int auto = 0;
+        public static int auto = 100;
 
         private static ShuffleboardLayout driving;
         private static ShuffleboardLayout collecting;
@@ -43,58 +43,60 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private ChassisSpeeds chassis = new ChassisSpeeds();
         private Pose2d pose = new Pose2d();
+        private double robotRotation = 0.0;
         private double robotX = 0.0;
         private double robotY = 0.0;
-        private double robotRotation = 0.0;
         private double drivetrainSpeed = 0.0;
         private double rotationalSpeed = 0.0;
 
         private double collectorCurrent = 0.0;
 
+        private boolean magazineSensor = false;
         private double magazinePosition = 0.0;
         private int magazineCount = 0;
-        private boolean magazineSensor = false;
 
         private double turretAngle = 0.0;
         private double turretVelocity = 0.0;
 
+        private double flywheelVelocity = 0.0;
         private double hoodAngle = 0.0;
         private double hoodPosition = 0.0;
         private double hoodMin = 0.0;
         private double hoodMax = 0.0;
 
         private PowerCellData cellData = new PowerCellData();
-        private int cellArea = 0;
         private int cellX = 0;
         private int cellY = 0;
+        private int cellArea = 0;
 
         private PowerPortData portData = new PowerPortData();
         private int portX = 0;
         private int portY = 0;
 
+        private NetworkTableEntry robotRotationE;
         private NetworkTableEntry robotXE;
         private NetworkTableEntry robotYE;
-        private NetworkTableEntry robotRotationE;
         private NetworkTableEntry drivetrainSpeedE;
         private NetworkTableEntry rotationalSpeedE;
 
         private NetworkTableEntry collectorCurrentE;
 
+        private NetworkTableEntry magazineSensorE;
         private NetworkTableEntry magazinePositionE;
         private NetworkTableEntry magazineCountE;
-        private NetworkTableEntry magazineSensorE;
 
         private NetworkTableEntry turretAngleE;
         private NetworkTableEntry turretVelocityE;
 
+        private NetworkTableEntry flywheelVelocityE;
         private NetworkTableEntry hoodAngleE;
         private NetworkTableEntry hoodPositionE;
         private NetworkTableEntry hoodMinE;
         private NetworkTableEntry hoodMaxE;
 
-        private NetworkTableEntry cellAreaE;
         private NetworkTableEntry cellXE;
         private NetworkTableEntry cellYE;
+        private NetworkTableEntry cellAreaE;
 
         private NetworkTableEntry portXE;
         private NetworkTableEntry portYE;
@@ -147,7 +149,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 rotationalSpeedE = driving.add("Rotational Speed", rotationalSpeed).getEntry();
 
                 collectorCurrentE = collecting.add("Current", collectorCurrent).withWidget(BuiltInWidgets.kNumberBar)
-                                .withProperties(Map.of("min", 0.0, "max", 50.0)).getEntry();
+                                .withProperties(Map.of("min", 0.0, "max", 40.0)).getEntry();
 
                 magazineSensorE = magazining.add("Sensor", magazineSensor).withWidget(BuiltInWidgets.kBooleanBox)
                                 .getEntry();
@@ -158,6 +160,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                                 .withProperties(Map.of("min", -Math.PI, "max", Math.PI)).getEntry();
                 turretVelocityE = turreting.add("Velocity", turretVelocity).getEntry();
 
+                flywheelVelocityE = shooting.add("Velocity", flywheelVelocity).getEntry();
                 hoodAngleE = shooting.add("Angle", hoodAngle).withWidget(BuiltInWidgets.kDial)
                                 .withProperties(Map.of("min", 0, "max", Math.PI)).getEntry();
                 hoodPositionE = shooting.add("Position", hoodPosition).getEntry();
@@ -178,55 +181,57 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private void updateWidgets() {
                 chassis = drivetrain.getDrivetrainVelocity();
                 pose = drivetrain.getRobotPose();
+                robotRotation = pose.getRotation().getRadians();
                 robotX = pose.getX();
                 robotY = pose.getY();
-                robotRotation = pose.getRotation().getRadians();
                 drivetrainSpeed = Math
                                 .sqrt(Math.pow(chassis.vxMetersPerSecond, 2) + Math.pow(chassis.vyMetersPerSecond, 2));
                 rotationalSpeed = chassis.omegaRadiansPerSecond;
 
                 collectorCurrent = Math.abs(collector.getfilteredCurrent());
 
+                magazineSensor = magazine.getSensor();
                 magazinePosition = magazine.getPosition();
                 magazineCount = magazine.getPowerCellCount();
-                magazineSensor = magazine.getSensor();
 
                 turretAngle = turret.getPosition();
                 turretVelocity = turret.getVelocity();
 
+                flywheelVelocity = shooter.getFlywheelVelocity();
                 hoodAngle = shooter.getHoodAngle();
                 hoodPosition = shooter.getHoodPosition();
 
                 cellTracker.getCellData(cellData);
-                cellArea = cellData.area;
                 cellX = cellData.cx;
                 cellY = cellData.cy;
+                cellArea = cellData.area;
 
                 portTracker.getPortData(portData);
                 portX = portData.cx;
                 portY = portData.cy;
 
+                robotRotationE.setDouble(robotRotation);
                 robotXE.setDouble(robotX);
                 robotYE.setDouble(robotY);
-                robotRotationE.setDouble(robotRotation);
                 drivetrainSpeedE.setDouble(drivetrainSpeed);
                 rotationalSpeedE.setDouble(rotationalSpeed);
 
                 collectorCurrentE.setDouble(collectorCurrent);
 
+                magazineSensorE.setBoolean(magazineSensor);
                 magazinePositionE.setDouble(magazinePosition);
                 magazineCountE.setNumber(magazineCount);
-                magazineSensorE.setBoolean(magazineSensor);
 
                 turretAngleE.setDouble(turretAngle);
                 turretVelocityE.setDouble(turretVelocity);
 
+                flywheelVelocityE.setDouble(flywheelVelocity);
                 hoodAngleE.setDouble(hoodAngle);
                 hoodPositionE.setDouble(hoodPosition);
 
-                cellAreaE.setNumber(cellArea);
                 cellXE.setNumber(cellX);
                 cellYE.setNumber(cellY);
+                cellAreaE.setNumber(cellArea);
 
                 portXE.setNumber(portX);
                 portYE.setNumber(portY);
