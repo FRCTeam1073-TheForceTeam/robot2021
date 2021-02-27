@@ -200,6 +200,13 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
+   * Set's the hood's position to its lower bound (the steepest angle). Equivalent to setHoodPosition(0).
+   */
+  public void lowerHood() {
+    setHoodPosition(0);
+  }
+
+  /**
    * Sets the hood angle, with values clamped between the lowest possible angle (fully extended)
    * and the steepest possible angle (fully retracted).
    * @param angle The angle of the hood in radians
