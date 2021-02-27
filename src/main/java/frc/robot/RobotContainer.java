@@ -108,7 +108,7 @@ public class RobotContainer {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 1.0));
+            new AdvanceMagazineCommand(magazine, 0.35, 0.5));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
@@ -117,10 +117,20 @@ public class RobotContainer {
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
             new AdvanceMagazineCommand(magazine, 0.35, 0.5));
       case 2:
-        return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
+        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.5),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.5),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.5));
       case 3:
-        return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
+        return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
       case 4:
+        return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
+      case 5:
         return new DriveForwardCommand(drivetrain, bling, 1.5, 1.25);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
