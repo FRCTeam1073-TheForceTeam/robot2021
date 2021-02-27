@@ -6,16 +6,17 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Turret extends SubsystemBase {
 
     private WPI_TalonSRX turretRotator;
-    private double P = 0;
+    private double P = 0.37;
     private double I = 0;
     private double D = 0;
-    private double F = 0.591;
+    private double F = 0.51;//91;
       //0.25 375
       //0.50 904
       //0.75 1458
@@ -25,6 +26,8 @@ public class Turret extends SubsystemBase {
 
     public double turretMinimumAngle = -2.039;
     public double turretMaximumAngle = 3.795;
+
+    public SlewRateLimiter turretRateLimiter;
 
     public Turret() {
       turretRotator = new WPI_TalonSRX(24);
@@ -43,6 +46,7 @@ public class Turret extends SubsystemBase {
       turretRotator.setSelectedSensorPosition(0); //Note: turret does not have limit switches and needs to be indexed manually.
       turretRotator.setIntegralAccumulator(0);
       setPIDF();
+      turretRateLimiter = new SlewRateLimiter(8);
     }
 
     /// Returns the accumulated position of the turret in radians.
@@ -61,7 +65,7 @@ public class Turret extends SubsystemBase {
         turretRotator.set(ControlMode.Velocity, 0);
         return;
       }
-      turretVelocity = angularVelocity * turretTicksPerRadian * 0.1;
+      turretVelocity = turretRateLimiter.calculate(angularVelocity) * turretTicksPerRadian * 0.1;
       turretRotator.set(ControlMode.Velocity, turretVelocity);
     }
 
@@ -74,9 +78,14 @@ public class Turret extends SubsystemBase {
       turretRotator.set(ControlMode.PercentOutput, power);
     }
 
+    public void stop() {
+      turretRateLimiter.reset(0);
+      turretRotator.set(ControlMode.Velocity, 0);
+    }
+
     @Override
     public void periodic() {
-      SmartDashboard.putNumber("Turret Velocity [TURRET]",
+      SmartDashboard.putNumber("Raw Turret Velocity [TURRET]",
       turretRotator.getSelectedSensorVelocity());
       SmartDashboard.putNumber("Turret Target Velocity [TURRET]", turretVelocity);
       SmartDashboard.putNumber("Turret Position (raw) [TURRET]", turretRotator.getSelectedSensorPosition());

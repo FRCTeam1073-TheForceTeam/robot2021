@@ -424,6 +424,7 @@ public class Bling extends SubsystemBase {
 
   // batteryBling() sets the LED color and number depending on the battery voltage
   public void batteryBling(int minLEDsVolts, int numberLEDsVolts, double min_volts, double max_volts) {
+    rangeRGB(minLEDsVolts, numberLEDsVolts, 0, 0, 0);
     double volts = RobotController.getBatteryVoltage();
 
     // First, it calculates the percentage of leds that will turn on.

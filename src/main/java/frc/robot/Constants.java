@@ -18,6 +18,11 @@ public final class Constants {
     public static final double CONTROLLER_DEADZONE = 0.06;
     public static final double THROTTLE_FALLOFF = 1.5;
 
-    //Power cell diameter in meters
+    /**Power cell diameter in meters**/
     public static final double POWER_CELL_DIAMETER = 0.18;
+
+    /**The highest flywheel velocity in radians/sec (equivalent to 5968 RPM) that can be
+    considered safe (based on our kF values and some reasonable estimates of what the word
+    'safety' means).**/
+    public static final double MAXIMUM_SAFE_FLYHWEEL_SPEED = 625;
 }

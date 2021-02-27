@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.*;
@@ -28,27 +29,31 @@ public class Shooter extends SubsystemBase {
   private CANEncoder hoodEncoder;
   private CANPIDController hoodController;
 
-  private double flywheelP = 1.9e-1;
-  private double flywheelI = 0;
+  private double flywheelP = 0.15;
+  private double flywheelI = 0.001;
   private double flywheelD = 0;
-  private double flywheelF = 0.057;
+  private double flywheelF = 0.045;
   
   private double hoodP_HSensor = 1.8e-1;
   private double hoodI_HSensor = 1.2e-5;
   private double hoodD_HSensor = 0;
   private double hoodF_HSensor = 0;
 
-  private double hoodP_External = 2e-2;
-  private double hoodI_External = 0;
+  private double hoodP_External = 1.8e-1;
+  private double hoodI_External = 1.2e-5;
   private double hoodD_External = 0;
   private double hoodF_External = 0;
-  
+
+  double flywheelTargetVelocity = 0;
+
   double[] flywheelTemperatures;
 
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
   public final double minHoodPosition = 0;
-  public final double maxHoodPosition = 16.306;// * 2.0 * Math.PI;
+  public final double maxHoodPosition = 16.306;
+  public final double maxHoodPosition2 = 16.306;
+  // * 2.0 * Math.PI;
 //  private final double minAngle = 19.64 * Math.PI / 180;
 //  private final double maxAngle = 49.18 * Math.PI / 180;
 
@@ -57,7 +62,9 @@ public class Shooter extends SubsystemBase {
 
   public final double kRawMotorRange = 2.523808240890503;
 //  public final double kMotorRadiansPerHoodRadian = kRawMotorRange * 2 * Math.PI / (maxAngle - minAngle);
-  private boolean usingExternalHoodEncoder = false;
+  private boolean usingExternalHoodEncoder = true;
+  SlewRateLimiter rateLimiter;
+
 
   public Shooter() {
     shooterFlywheel1 = new WPI_TalonFX(22);
@@ -93,6 +100,8 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kD(0, flywheelD);
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
+
+    rateLimiter = new SlewRateLimiter(5000);
     
     hood = new CANSparkMax(25, MotorType.kBrushless);
     hood.clearFaults();
@@ -129,9 +138,32 @@ public class Shooter extends SubsystemBase {
    * Directly sets the power to the flywheel motors.
    */
   public void setFlywheelPower(double power) {
-    shooterFlywheel1.set(ControlMode.PercentOutput, power);   
+    shooterFlywheel1.set(ControlMode.PercentOutput, power);
   }
 
+
+  /**
+   * Sets the flywheel velocity in radians/second.
+   */
+  public void setFlywheelVelocity(double velocity) {
+    //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
+    flywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
+    shooterFlywheel1.set(ControlMode.Velocity, flywheelTargetVelocity);
+  }
+
+  /**
+   * Gets the flywheel velocity in radians/second
+   * @return The flywheel velocity in radians/second
+   */
+  public double getFlywheelVelocity() {
+    return shooterFlywheel1.getSelectedSensorVelocity() * 10.0 * (2.0 * Math.PI) / flywheelTicksPerRevolution;
+  }
+
+  public void stop() {
+    rateLimiter.reset(0);
+    shooterFlywheel1.set(ControlMode.Velocity, 0);
+  }
+  
   /**
    * Directly sets the power to the hood motor.
    */
@@ -174,6 +206,13 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
+   * Set's the hood's position to its lower bound (the steepest angle). Equivalent to setHoodPosition(0).
+   */
+  public void lowerHood() {
+    setHoodPosition(0);
+  }
+
+  /**
    * Sets the hood angle, with values clamped between the lowest possible angle (fully extended)
    * and the steepest possible angle (fully retracted).
    * @param angle The angle of the hood in radians
@@ -188,11 +227,20 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
+    SmartDashboard.putNumber("Please don't break @#@#@#@#@#@#@#",
+    hoodEncoder.getPosition()
+    );
     SmartDashboard.putNumber("Flywheel current (A)",
     shooterFlywheel1.getSupplyCurrent()
     );
-    SmartDashboard.putNumber("Flywheel velocity",
-    shooterFlywheel1.getSelectedSensorVelocity()
+    SmartDashboard.putNumber("Flywheel velocity (radians/sec)",
+      getFlywheelVelocity()
+    );
+    SmartDashboard.putNumber("Flywheel target velocity",
+    flywheelTargetVelocity
+    );
+    SmartDashboard.putNumber("Flywheel error",
+    shooterFlywheel1.getClosedLoopError()
     );
     SmartDashboard.putString("Flywheel temperature (degs C)",
         "[" + flywheelTemperatures[0] + "," + flywheelTemperatures[1] + "]");
