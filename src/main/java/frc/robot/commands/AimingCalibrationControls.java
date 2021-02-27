@@ -39,7 +39,7 @@ public class AimingCalibrationControls extends CommandBase {
     drivetrain = drivetrain_;
     initRange = 0;
     portData = new PowerPortData();
-    addRequirements(shooter, magazine, portTracker);
+    addRequirements(shooter, magazine, portTracker, drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
