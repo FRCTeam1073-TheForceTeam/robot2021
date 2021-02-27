@@ -66,7 +66,7 @@ public class RobotContainer {
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
 
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine).alongWith(teleShooter);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect, teleMagazine);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -93,8 +93,6 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kA.value);
-    magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
   }
 
   /**
