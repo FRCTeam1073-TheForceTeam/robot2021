@@ -30,14 +30,14 @@ public class AimingCalibrationControls extends CommandBase {
   double targetHoodAngle;
   double initRange;
 
-  public AimingCalibrationControls(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_, Drivetrain drivetrain_) {
+  public AimingCalibrationControls(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_, Drivetrain drivetrain_, double initRange_) {
     shooter = shooter_;
     magazine = magazine_;
     portTracker = portTracker_;
     targetFlywheelVelocity = 0;
     targetHoodAngle = shooter.hoodAngleHigh;
     drivetrain = drivetrain_;
-    initRange = 0;
+    initRange = initRange_;
     portData = new PowerPortData();
     addRequirements(shooter, magazine, portTracker, drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -99,7 +99,8 @@ public class AimingCalibrationControls extends CommandBase {
         shooter.getHoodAngle());
     if (hasData) {
       SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker range", portTracker.getRange());
-      SmartDashboard.putNumber("[AimingCalibrationControls] Odometry range", drivetrain.getRobotPose().getX()+initRange);
+      SmartDashboard.putNumber("[AimingCalibrationControls] Odometry range",
+          drivetrain.getRobotPose().getX() + initRange);
     }
   }
 
