@@ -123,15 +123,16 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kB.value);
-    JoystickButton fireBinding = new JoystickButton(OI.driverController, XboxController.Button.kA.value);
-    magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
-    fireBinding.whenPressed(
-        (new ShooterSetCommand(shooter, shooter.hoodAngleLow+0.2, 250)
-            .andThen(new AdvanceMagazineCommand(magazine, 2, 4))
-            .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
-            .alongWith(new TurretPortAlignCommand(turret, portTracker))
-    );
+    // JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kB.value);
+    // JoystickButton fireBinding = new JoystickButton(OI.driverController, XboxController.Button.kA.value);
+    // magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
+    // fireBinding.whenPressed(
+    //     (new ShooterSetCommand(shooter, shooter.hoodAngleLow+0.2, 250)
+    //         .andThen(new AdvanceMagazineCommand(magazine, 2, 4))
+    //         .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
+    //         .alongWith(new TurretPortAlignCommand(turret, portTracker))
+    // );
+
     //return new TurretPortAlignCommand(turret, portTracker);
   }
 

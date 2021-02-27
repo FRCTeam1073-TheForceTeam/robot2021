@@ -39,8 +39,8 @@ public class Shooter extends SubsystemBase {
   private double hoodD_HSensor = 0;
   private double hoodF_HSensor = 0;
 
-  private double hoodP_External = 2e-2;
-  private double hoodI_External = 0;
+  private double hoodP_External = 1.8e-1;
+  private double hoodI_External = 1.2e-5;
   private double hoodD_External = 0;
   private double hoodF_External = 0;
 
@@ -51,7 +51,9 @@ public class Shooter extends SubsystemBase {
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
   public final double minHoodPosition = 0;
-  public final double maxHoodPosition = 16.306;// * 2.0 * Math.PI;
+  public final double maxHoodPosition = 16.306;
+  public final double maxHoodPosition2 = 16.306;
+  // * 2.0 * Math.PI;
 //  private final double minAngle = 19.64 * Math.PI / 180;
 //  private final double maxAngle = 49.18 * Math.PI / 180;
 
@@ -60,7 +62,7 @@ public class Shooter extends SubsystemBase {
 
   public final double kRawMotorRange = 2.523808240890503;
 //  public final double kMotorRadiansPerHoodRadian = kRawMotorRange * 2 * Math.PI / (maxAngle - minAngle);
-  private boolean usingExternalHoodEncoder = false;
+  private boolean usingExternalHoodEncoder = true;
   SlewRateLimiter rateLimiter;
 
 
@@ -225,6 +227,9 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
+    SmartDashboard.putNumber("Please don't break @#@#@#@#@#@#@#",
+    hoodEncoder.getPosition()
+    );
     SmartDashboard.putNumber("Flywheel current (A)",
     shooterFlywheel1.getSupplyCurrent()
     );

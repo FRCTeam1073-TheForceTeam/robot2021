@@ -39,11 +39,11 @@ public class AimingCalibrationControls extends CommandBase {
   /**
    * The controlliest teleop controls I could come up with.
    * It's for testing the aiming, and it uses four different subsystems (five if you count the hood and flywheel separately).
-   * @param shooter_ The shooter subsystem
-   * @param magazine_ The magazine subsystem
-   * @param portTracker_ The power port tracker subsystem
-   * @param drivetrain_ The drivetrain subsystem
-   * @param initRange_ The starting range (in meters)
+   * @@param shooter_ The shooter subsystem
+   * @@param magazine_ The magazine subsystem
+   * @@param portTracker_ The power port tracker subsystem
+   * @@param drivetrain_ The drivetrain subsystem
+   * @@param initRange_ The starting range (in meters)
    */
 
   public AimingCalibrationControls(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_, Drivetrain drivetrain_, double initRange_) {
@@ -68,6 +68,7 @@ public class AimingCalibrationControls extends CommandBase {
     magazine.setVelocity(0);
     shooter.setFlywheelPower(0);
     shooter.lowerHood();
+    drivetrain.engageDrivetrain();
     drivetrain.resetRobotOdometry();
   }
 
@@ -78,6 +79,7 @@ public class AimingCalibrationControls extends CommandBase {
     // Controls:
     //  Driver controls:
     //    Drive controls are standard (left Y to go forward/backward, right X to turn, start and back at same time to reset odometry)
+    //    A button resets
     //  Operator controls (*inhales*):
     //    Flywheel controls:
     //      A button (on press) to increment flywheel speed by 20 radians/sec
@@ -98,8 +100,13 @@ public class AimingCalibrationControls extends CommandBase {
     double forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * 2.0 * multiplier;
     double rotation = Utility.deadzone(OI.driverController.getRawAxis(4)) * 2.0 * multiplier;
     drivetrain.setVelocity(forward, rotation);
-    if ((OI.driverController.getStartButtonPressed() && OI.driverController.getBackButton()) || (OI.driverController.getStartButton() && OI.driverController.getBackButtonPressed())) {
-        drivetrain.resetRobotOdometry();
+    if ((OI.driverController.getStartButtonPressed() && OI.driverController.getBackButton())
+        || (OI.driverController.getStartButton() && OI.driverController.getBackButtonPressed())) {
+      drivetrain.resetRobotOdometry();
+    }
+    
+    if (OI.driverController.getAButtonPressed()) {
+      drivetrain.engagePneumatics();
     }
     
     boolean hasData = portTracker.getPortData(portData);
@@ -109,13 +116,14 @@ public class AimingCalibrationControls extends CommandBase {
     }
 
     if (OI.operatorController.getAButtonPressed()) {
-      targetFlywheelVelocity += 20.0;
+      targetFlywheelVelocity += 31.25;
     } else if (OI.operatorController.getBButtonPressed()) {
-      targetFlywheelVelocity -= 20.0;
-    } else {
-      targetFlywheelVelocity += 10.0 * (Utility.deadzone(OI.operatorController.getRawAxis(5)) / 50.0);
-      //Changes velcoity by 10 radians/sec^2
-    }
+      targetFlywheelVelocity -= 31.25;
+    } 
+    //  else {
+    //   targetFlywheelVelocity += 10.0 * (Utility.deadzone(OI.operatorController.getRawAxis(5)) / 20.0);
+    //   //Changes velcoity by 10 radians/sec^2
+    // }
 
     if (OI.operatorController.getXButtonPressed()) {
       targetFlywheelVelocity = 0;
@@ -127,7 +135,7 @@ public class AimingCalibrationControls extends CommandBase {
     }
 
     if (OI.operatorController.getYButton()) {
-      magazine.setVelocity(2);
+      magazine.setPower(1);
     } else {
       magazine.setVelocity(0);
     }
@@ -135,13 +143,14 @@ public class AimingCalibrationControls extends CommandBase {
     targetFlywheelVelocity = MathUtil.clamp(targetFlywheelVelocity, 0, Constants.MAXIMUM_SAFE_FLYHWEEL_SPEED * 0.9);
 
     if (OI.operatorController.getBumperPressed(Hand.kRight)) {
-      targetHoodAngle -= 0.1;
+      targetHoodAngle -= 0.025;
     } else if (OI.operatorController.getBumperPressed(Hand.kLeft)) {
-      targetHoodAngle += 0.1;
-    } else {
-      //Changes angle by 0.1 radians/sec
-      targetHoodAngle += 0.05 * (Utility.deadzone(OI.operatorController.getRawAxis(1)) / 50.0);
-    }
+      targetHoodAngle += 0.025;
+    } 
+    //  else {
+    //   //Changes angle by 0.1 radians/sec
+    //   targetHoodAngle += 0.01 * (Utility.deadzone(OI.operatorController.getRawAxis(1)) / 20.0);
+    // }
     targetHoodAngle = MathUtil.clamp(targetHoodAngle, shooter.hoodAngleLow, shooter.hoodAngleHigh);
 
     if (OI.operatorController.getBackButtonPressed()) {
@@ -153,20 +162,24 @@ public class AimingCalibrationControls extends CommandBase {
     shooter.setFlywheelVelocity(targetFlywheelVelocity);
     shooter.setHoodAngle(targetHoodAngle);
 
-    SmartDashboard.putNumber("[AimingCalibrationControls] Flywheel velocity (radians/second)",
+    SmartDashboard.putNumber("[AimingCalibrationControls] Flywheel velocity (radians/second) @@",
         shooter.getFlywheelVelocity());
-    SmartDashboard.putNumber("[AimingCalibrationControls] Hood angle (radians)",
+    SmartDashboard.putNumber("[AimingCalibrationControls] Hood angle (radians) @@",
         shooter.getHoodAngle());
     if (hasData) {
-      SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker range", currentRange);
-      SmartDashboard.putNumber("[AimingCalibrationControls] Odometry range (meters)",
+      SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker range @@", currentRange);
+      SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker CX @@", portData.cx);
+      SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker CY @@", portData.cy);
+
+      SmartDashboard.putNumber("[AimingCalibrationControls] PowerPortTracker QUAL @@", portData.quality);
+      SmartDashboard.putNumber("[AimingCalibrationControls] Odometry range (meters) @@",
           drivetrain.getRobotPose().getX() + initRange);
     }
-    SmartDashboard.putNumber("[AimCalibControls-Record] Recorded flywheel velocity (radians/sec)",
+    SmartDashboard.putNumber("[AimCalibControls-Record] Recorded flywheel velocity (radians/sec) @@",
         recordedFlywheelVelocity);
-    SmartDashboard.putNumber("[AimCalibControls-Record] Recorded hood angle (radians)",
+    SmartDashboard.putNumber("[AimCalibControls-Record] Recorded hood angle (radians) @@",
         recordedHoodAngle);
-    SmartDashboard.putNumber("[AimCalibControls-Record] Recorded range (meters)",
+    SmartDashboard.putNumber("[AimCalibControls-Record] Recorded range (meters) @@",
         recordedRange);
   }
 
