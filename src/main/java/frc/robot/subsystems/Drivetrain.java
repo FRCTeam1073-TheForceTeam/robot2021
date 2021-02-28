@@ -118,6 +118,14 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         rawGyroAngle = getRawOrientation()[0];
 
+        if (getTrueRotationalSpeed() == 0.0) {
+            hasRobotStoppedTurning = true;
+            lastGyroValue = rawGyroAngle;
+        } else if (hasRobotStoppedTurning) {
+            hasRobotStoppedTurning = false;
+            totalGyroDrift += rawGyroAngle - lastGyroValue;
+        }
+
         gyroAngle = MathUtil.angleModulus(Units.degreesToRadians(rawGyroAngle - totalGyroDrift));
 
         robotPose = odometry.update(getRotation(), leftMotorLeader.getSelectedSensorPosition() / ticksPerMeter,
@@ -195,14 +203,6 @@ public class Drivetrain extends SubsystemBase {
     public void setRotationalVelocity(double left, double right) {
         leftMotorLeader.set(ControlMode.Velocity, left * 2048.0 * 0.1 / (2.0 * Math.PI));
         rightMotorLeader.set(ControlMode.Velocity, right * 2048.0 * 0.1 / (2.0 * Math.PI));
-
-        if (left != right) {
-            hasRobotStoppedTurning = true;
-            lastGyroValue = rawGyroAngle;
-        } else if (hasRobotStoppedTurning) {
-            hasRobotStoppedTurning = false;
-            totalGyroDrift += rawGyroAngle - lastGyroValue;
-        }
     }
 
     /**
@@ -226,14 +226,6 @@ public class Drivetrain extends SubsystemBase {
 
         leftMotorLeader.set(ControlMode.Velocity, leftVelocity);
         rightMotorLeader.set(ControlMode.Velocity, rightVelocity);
-
-        if (leftVelocity != rightVelocity) {
-            hasRobotStoppedTurning = true;
-            lastGyroValue = rawGyroAngle;
-        } else if (hasRobotStoppedTurning) {
-            hasRobotStoppedTurning = false;
-            totalGyroDrift += rawGyroAngle - lastGyroValue;
-        }
     }
 
     public void setPower(double left, double right) {
@@ -278,6 +270,11 @@ public class Drivetrain extends SubsystemBase {
     public double getDrivetrainVelocity() {
         chassis = kinematics.toChassisSpeeds(getWheelSpeeds());
         return Math.sqrt(Math.pow(chassis.vxMetersPerSecond, 2) + Math.pow(chassis.vyMetersPerSecond, 2));
+    }
+
+    private double getTrueRotationalSpeed() {
+        chassis = kinematics.toChassisSpeeds(getWheelSpeeds());
+        return chassis.omegaRadiansPerSecond;
     }
 
     public void engagePneumatics() {
