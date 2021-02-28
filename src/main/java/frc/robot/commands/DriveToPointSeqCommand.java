@@ -8,12 +8,10 @@ import frc.robot.subsystems.Drivetrain;
 public class DriveToPointSeqCommand extends SequentialCommandGroup {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final Drivetrain drivetrain;
-    private final Bling bling;
     private final double x;
     private final double y;
     private double diffX;
     private double diffY;
-    private final double velocity;
 
     /**
      * Creates a new DriveToPointCommand that makes the robot turn to face the point
@@ -27,10 +25,8 @@ public class DriveToPointSeqCommand extends SequentialCommandGroup {
      */
     public DriveToPointSeqCommand(Drivetrain drivetrain, Bling bling, double x, double y, double velocity) {
         this.drivetrain = drivetrain;
-        this.bling = bling;
         this.x = x;
         this.y = y;
-        this.velocity = velocity;
         addRequirements(drivetrain);
         addRequirements(bling);
         diffX = diffX();
@@ -40,7 +36,7 @@ public class DriveToPointSeqCommand extends SequentialCommandGroup {
     }
 
     private double angle(double diffX, double diffY) {
-        return (new Rotation2d(Math.atan2(diffX, diffY)).minus(drivetrain.getAngleRadians())).getRadians();
+        return (new Rotation2d(Math.atan2(diffX, diffY)).minus(drivetrain.getRotation())).getRadians();
     }
 
     private double diffX() {
