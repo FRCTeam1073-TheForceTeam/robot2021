@@ -116,7 +116,7 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            if (lastData.cx < 139) {
+            if (lastData.cx < 160) {
                 scanRotationalSpeedMultiplier = Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
             } else {
                 scanRotationalSpeedMultiplier = -Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
@@ -149,10 +149,10 @@ public class ChaseCommand extends CommandBase {
         if (!hasData) {
             alignState = AlignState.NOT_VISIBLE;
 
-        } else if (powerCellData.cx >= 139 && powerCellData.cx <= 180) {
+        } else if (powerCellData.cx >= 144 && powerCellData.cx <= 175) {
             alignState = AlignState.ALIGNED;
 
-        } else if (powerCellData.cx < 139) {
+        } else if (powerCellData.cx < 144) {
             alignState = AlignState.LEFT;
 
         } else {
@@ -170,7 +170,7 @@ public class ChaseCommand extends CommandBase {
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
             rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
-            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.3, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.2, 1.0);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
                 rotationalSpeedMultiplier = 0.35;
@@ -182,7 +182,7 @@ public class ChaseCommand extends CommandBase {
 
         } else if (alignState == AlignState.ALIGNED) {
             rotationalSpeedMultiplier = -(powerCellData.cx - 159) / 160.0;
-            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.3, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.2, 1.0);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
                 rotationalSpeedMultiplier = 0.35;
