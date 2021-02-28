@@ -118,7 +118,7 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         rawGyroAngle = getRawOrientation()[0];
 
-        if (getTrueRotationalSpeed() == 0.0) {
+        if (!hasRobotStoppedTurning && getTrueRotationalSpeed() == 0.0) {
             hasRobotStoppedTurning = true;
             lastGyroValue = rawGyroAngle;
         } else if (hasRobotStoppedTurning) {
