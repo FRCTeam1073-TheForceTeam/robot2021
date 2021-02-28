@@ -229,6 +229,7 @@ public class Drivetrain extends SubsystemBase {
 
         if (leftVelocity != rightVelocity) {
             hasRobotStoppedTurning = true;
+            lastGyroValue = rawGyroAngle;
         } else if (hasRobotStoppedTurning) {
             hasRobotStoppedTurning = false;
             totalGyroDrift += rawGyroAngle - lastGyroValue;
