@@ -139,10 +139,7 @@ public class RobotContainer {
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
-    // return turretPositionTestCommand;
     return teleopCommand;
-
-    // return teleopCommand;
   }
 
   public Command getTestCommand() {
