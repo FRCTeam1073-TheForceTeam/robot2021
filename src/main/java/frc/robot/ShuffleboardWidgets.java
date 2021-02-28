@@ -206,7 +206,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 turretVelocity = turret.getVelocity();
 
                 flywheelVelocity = shooter.getFlywheelVelocity();
-                hoodAngle = shooter.getHoodAngle();
+                hoodAngle = Math.toDegrees(shooter.getHoodAngle());
                 hoodPosition = shooter.getHoodPosition();
 
                 cellTracker.getCellData(cellData);
