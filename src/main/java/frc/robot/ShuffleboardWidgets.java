@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
@@ -201,12 +202,12 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 magazinePosition = magazine.getPosition();
                 magazineCount = magazine.getPowerCellCount();
 
-                turretAngle = Math.toDegrees(turret.getPosition());
+                turretAngle = Units.radiansToDegrees(turret.getPosition());
                 turretAng = mirrorAngle(turretAngle);
                 turretVelocity = turret.getVelocity();
 
                 flywheelVelocity = shooter.getFlywheelVelocity();
-                hoodAngle = Math.toDegrees(shooter.getHoodAngle());
+                hoodAngle = Units.radiansToDegrees(shooter.getHoodAngle());
                 hoodPosition = shooter.getHoodPosition();
 
                 cellTracker.getCellData(cellData);
