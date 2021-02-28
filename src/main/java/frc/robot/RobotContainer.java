@@ -106,24 +106,24 @@ public class RobotContainer {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.5));
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.5),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25),
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.5));
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25));
       case 2:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.5),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25),
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.5),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25),
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
             new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.5));
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25));
       case 3:
         return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
       case 4:
