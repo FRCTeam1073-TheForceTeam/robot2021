@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -61,6 +62,7 @@ public class Drivetrain extends SubsystemBase {
 
     private double leftVelocity = 0;
     private double rightVelocity = 0;
+    private ChassisSpeeds chassis = new ChassisSpeeds();
 
     public boolean isDebugOutputActive() {
         return isDebugOutputActive;
@@ -94,6 +96,13 @@ public class Drivetrain extends SubsystemBase {
      * Returns the gyro feedback in degrees.
      */
     public double getAngleDegrees() {
+        return Units.radiansToDegrees(gyroAngle);
+    }
+
+    /**
+     * Returns the gyro feedback in Radians.
+     */
+    public double getAngle() {
         return gyroAngle;
     }
 
@@ -101,15 +110,15 @@ public class Drivetrain extends SubsystemBase {
      * Returns the Rotation2d of the robot.
      */
     public Rotation2d getRotation() {
-        return Rotation2d.fromDegrees(gyroAngle);
+        return new Rotation2d(gyroAngle);
     }
 
     // This method will be called once per sceduler run
     @Override
     public void periodic() {
-        rawGyroAngle = getOrientation()[0];
+        rawGyroAngle = getRawOrientation()[0];
 
-        gyroAngle = rawGyroAngle - totalGyroDrift;
+        gyroAngle = MathUtil.angleModulus(Units.degreesToRadians(rawGyroAngle - totalGyroDrift));
 
         robotPose = odometry.update(getRotation(), leftMotorLeader.getSelectedSensorPosition() / ticksPerMeter,
                 rightMotorLeader.getSelectedSensorPosition() / ticksPerMeter);
@@ -265,8 +274,9 @@ public class Drivetrain extends SubsystemBase {
         leftMotorLeader.config_kF(0, kF);
     }
 
-    public ChassisSpeeds getDrivetrainVelocity() {
-        return kinematics.toChassisSpeeds(getWheelSpeeds());
+    public double getDrivetrainVelocity() {
+        chassis = kinematics.toChassisSpeeds(getWheelSpeeds());
+        return Math.sqrt(Math.pow(chassis.vxMetersPerSecond, 2) + Math.pow(chassis.vyMetersPerSecond, 2));
     }
 
     public void engagePneumatics() {
@@ -339,7 +349,7 @@ public class Drivetrain extends SubsystemBase {
         rightMotorLeader.setIntegralAccumulator(0);
     }
 
-    public double[] getOrientation() {
+    public double[] getRawOrientation() {
         orientation[0] = 0;
         orientation[1] = 0;
         orientation[2] = 0;

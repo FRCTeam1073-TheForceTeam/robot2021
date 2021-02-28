@@ -3,7 +3,6 @@ package frc.robot;
 import java.util.Map;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -41,7 +40,6 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private PowerCellTracker cellTracker;
         private PowerPortTracker portTracker;
 
-        private ChassisSpeeds chassis = new ChassisSpeeds();
         private Pose2d pose = new Pose2d();
         private double robotX = 0.0;
         private double robotY = 0.0;
@@ -176,14 +174,11 @@ public class ShuffleboardWidgets extends SubsystemBase {
         }
 
         private void updateWidgets() {
-                chassis = drivetrain.getDrivetrainVelocity();
                 pose = drivetrain.getRobotPose();
                 robotX = pose.getX();
                 robotY = pose.getY();
                 robotRotation = pose.getRotation().getRadians();
-                drivetrainSpeed = Math
-                                .sqrt(Math.pow(chassis.vxMetersPerSecond, 2) + Math.pow(chassis.vyMetersPerSecond, 2));
-                rotationalSpeed = chassis.omegaRadiansPerSecond;
+                drivetrainSpeed = drivetrain.getDrivetrainVelocity();
 
                 collectorCurrent = collector.getfilteredCurrent();
 
