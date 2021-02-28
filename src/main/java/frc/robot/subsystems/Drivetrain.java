@@ -167,6 +167,9 @@ public class Drivetrain extends SubsystemBase {
                     "(" + Math.round((getRobotPose().getTranslation().getX()) * 1000.0) * 0.001 + ","
                             + Math.round(getRobotPose().getTranslation().getY() * 1000.0) * 0.001 + ") @ "
                             + Math.round(getRobotPose().getRotation().getRadians() * 1000.0) * 0.001 + " radians");
+
+            SmartDashboard.putBoolean("[Drivetrain] Stopped Turning: ", hasRobotStoppedTurning);
+            SmartDashboard.putNumber("[Drivetrain] Gyro drift: ", totalGyroDrift);
         }
     }
 
@@ -272,7 +275,7 @@ public class Drivetrain extends SubsystemBase {
         return Math.sqrt(Math.pow(chassis.vxMetersPerSecond, 2) + Math.pow(chassis.vyMetersPerSecond, 2));
     }
 
-    private double getTrueRotationalSpeed() {
+    public double getTrueRotationalSpeed() {
         chassis = kinematics.toChassisSpeeds(getWheelSpeeds());
         return chassis.omegaRadiansPerSecond;
     }
