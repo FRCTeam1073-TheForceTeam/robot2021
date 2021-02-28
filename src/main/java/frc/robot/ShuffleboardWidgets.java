@@ -43,7 +43,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private ChassisSpeeds chassis = new ChassisSpeeds();
         private Pose2d pose = new Pose2d();
-        private double robotRotation = 0.0;
+        private double robotAngle = 0.0;
+        private double robotAng = 0.0;
         private double robotX = 0.0;
         private double robotY = 0.0;
         private double drivetrainSpeed = 0.0;
@@ -56,6 +57,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private int magazineCount = 0;
 
         private double turretAngle = 0.0;
+        private double turretAng = 0.0;
         private double turretVelocity = 0.0;
 
         private double flywheelVelocity = 0.0;
@@ -73,7 +75,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private int portX = 0;
         private int portY = 0;
 
-        private NetworkTableEntry robotRotationE;
+        private NetworkTableEntry robotAngE;
+        private NetworkTableEntry robotAngleE;
         private NetworkTableEntry robotXE;
         private NetworkTableEntry robotYE;
         private NetworkTableEntry drivetrainSpeedE;
@@ -85,6 +88,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private NetworkTableEntry magazinePositionE;
         private NetworkTableEntry magazineCountE;
 
+        private NetworkTableEntry turretAngE;
         private NetworkTableEntry turretAngleE;
         private NetworkTableEntry turretVelocityE;
 
@@ -114,17 +118,17 @@ public class ShuffleboardWidgets extends SubsystemBase {
         }
 
         public void initialize() {
-                tab = Shuffleboard.getTab("Robot2021");
+                tab = Shuffleboard.getTab("Robot 2021");
 
-                chooseAuto = tab.add("chooseAuto", 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 2)
+                chooseAuto = tab.add("Choose Auto", 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 2)
                                 .withPosition(0, 0).getEntry();
 
                 driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 3).withPosition(0, 2);
                 collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(1, 2).withPosition(1, 0);
                 magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(1, 2).withPosition(2, 0);
                 turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(1, 3).withPosition(2, 2);
-                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 0);
-                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 3);
+                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 2);
+                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
 
                 hoodMax = shooter.maxHoodPosition;
@@ -141,8 +145,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
         }
 
         private void createWidgets() {
-                robotRotationE = driving.add("Angle", robotRotation).withWidget(BuiltInWidgets.kDial)
-                                .withProperties(Map.of("min", -Math.PI, "max", Math.PI)).getEntry();
+                robotAngE = driving.add("Angle mirrored", robotAng).withWidget(BuiltInWidgets.kDial)
+                                .withProperties(Map.of("min", -90, "max", 90)).getEntry();
+                robotAngleE = driving.add("Angle", robotAngle).getEntry();
                 robotXE = driving.add("X", robotX).getEntry();
                 robotYE = driving.add("Y", robotY).getEntry();
                 drivetrainSpeedE = driving.add("Speed", drivetrainSpeed).getEntry();
@@ -156,13 +161,14 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 magazinePositionE = magazining.add("Position", magazinePosition).getEntry();
                 magazineCountE = magazining.add("Count", magazineCount).getEntry();
 
-                turretAngleE = turreting.add("Angle", turretAngle).withWidget(BuiltInWidgets.kDial)
-                                .withProperties(Map.of("min", -Math.PI, "max", Math.PI)).getEntry();
+                turretAngE = turreting.add("Angle mirrored", turretAng).withWidget(BuiltInWidgets.kDial)
+                                .withProperties(Map.of("min", -90, "max", 90)).getEntry();
+                turretAngleE = turreting.add("Angle", turretAngle).getEntry();
                 turretVelocityE = turreting.add("Velocity", turretVelocity).getEntry();
 
                 flywheelVelocityE = shooting.add("Velocity", flywheelVelocity).getEntry();
                 hoodAngleE = shooting.add("Angle", hoodAngle).withWidget(BuiltInWidgets.kDial)
-                                .withProperties(Map.of("min", 0, "max", Math.PI)).getEntry();
+                                .withProperties(Map.of("min", 0, "max", 180)).getEntry();
                 hoodPositionE = shooting.add("Position", hoodPosition).getEntry();
                 hoodMinE = shooting.add("Min P", hoodMin).getEntry();
                 hoodMaxE = shooting.add("Max P", hoodMax).getEntry();
@@ -181,7 +187,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private void updateWidgets() {
                 chassis = drivetrain.getDrivetrainVelocity();
                 pose = drivetrain.getRobotPose();
-                robotRotation = pose.getRotation().getRadians();
+                robotAngle = pose.getRotation().getDegrees();
+                robotAng = mirrorAngle(robotAngle);
                 robotX = pose.getX();
                 robotY = pose.getY();
                 drivetrainSpeed = Math
@@ -194,7 +201,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 magazinePosition = magazine.getPosition();
                 magazineCount = magazine.getPowerCellCount();
 
-                turretAngle = turret.getPosition();
+                turretAngle = Math.toDegrees(turret.getPosition());
+                turretAng = mirrorAngle(turretAngle);
                 turretVelocity = turret.getVelocity();
 
                 flywheelVelocity = shooter.getFlywheelVelocity();
@@ -210,7 +218,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 portX = portData.cx;
                 portY = portData.cy;
 
-                robotRotationE.setDouble(robotRotation);
+                robotAngE.setDouble(robotAng);
+                robotAngleE.setDouble(robotAngle);
                 robotXE.setDouble(robotX);
                 robotYE.setDouble(robotY);
                 drivetrainSpeedE.setDouble(drivetrainSpeed);
@@ -222,6 +231,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 magazinePositionE.setDouble(magazinePosition);
                 magazineCountE.setNumber(magazineCount);
 
+                turretAngE.setDouble(turretAng);
                 turretAngleE.setDouble(turretAngle);
                 turretVelocityE.setDouble(turretVelocity);
 
@@ -235,5 +245,16 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 portXE.setNumber(portX);
                 portYE.setNumber(portY);
+        }
+
+        private double mirrorAngle(double raw) {
+                raw *= -1;
+                if (raw < -90) {
+                        return -180 - raw;
+                } else if (robotAngle > 90) {
+                        return 180 - raw;
+                } else {
+                        return raw;
+                }
         }
 }
