@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
@@ -25,6 +26,8 @@ public class CollectCommand extends CommandBase {
     private long time;
     private boolean shouldUnstall;
     private boolean isFinished;
+    private boolean hasFinishedNormally;
+    private int checkNumPreviousMemoryEntries;
     private int trueLoops;
 
     /**
@@ -37,12 +40,14 @@ public class CollectCommand extends CommandBase {
      * @param time     The time the collector should run for for this command
      *                 (milliseconds).
      */
-    public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling, double maxPower) {
+    public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling, double maxPower,
+            int checkNumPreviousMemoryEntries) {
         this.drivetrain = drivetrain;
         this.collector = collector;
         this.magazine = magazine;
         this.bling = bling;
         this.maxPower = maxPower;
+        this.checkNumPreviousMemoryEntries = checkNumPreviousMemoryEntries;
         addRequirements(drivetrain);
         addRequirements(collector);
         addRequirements(magazine);
@@ -57,7 +62,7 @@ public class CollectCommand extends CommandBase {
      * @param bling    The bling used by this command.
      */
     public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling) {
-        this(drivetrain, collector, magazine, bling, 1.0);
+        this(drivetrain, collector, magazine, bling, 1.0, 0);
     }
 
     // Called when the command is initially scheduled.
@@ -69,6 +74,12 @@ public class CollectCommand extends CommandBase {
         shouldUnstall = false;
         isFinished = false;
         trueLoops = 0;
+        hasFinishedNormally = true;
+        if (checkNumPreviousMemoryEntries > 0
+                && !RobotContainer.memory.havePreviousFinished(checkNumPreviousMemoryEntries)) {
+            hasFinishedNormally = false;
+            isFinished = true;
+        }
     }
 
     public boolean didStall() {
@@ -98,6 +109,7 @@ public class CollectCommand extends CommandBase {
                 shouldUnstall = true;
                 velocity = 0.0;
                 powerMultiplier *= -1;
+                hasFinishedNormally = false;
             } else if (time - initialTime >= 1600) {
                 velocity = 0.0;
                 bling.setArray("purple");
@@ -125,6 +137,7 @@ public class CollectCommand extends CommandBase {
         drivetrain.setVelocity(0.0, 0.0);
         collector.setCollect(0.0);
         bling.setColorRGBAll(0, 0, 0);
+        RobotContainer.memory.addToMemory("CollectCommand", hasFinishedNormally);
     }
 
     // Returns true when the command should end.

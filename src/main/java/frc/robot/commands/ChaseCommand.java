@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PowerCellTracker;
@@ -20,6 +21,7 @@ public class ChaseCommand extends CommandBase {
     private final double maxVelocity;
     private final boolean shouldScan;
     private boolean isFinished;
+    private boolean hasFinishedNormally;
 
     /**
      * The enum for the states the tracked powercell can be in: NOT_VISIBLE, LEFT,
@@ -85,6 +87,7 @@ public class ChaseCommand extends CommandBase {
         skipScan = true;
         isScanning = false;
         isFinished = false;
+        hasFinishedNormally = true;
     }
 
     /**
@@ -230,6 +233,7 @@ public class ChaseCommand extends CommandBase {
             System.out.println("SCAN_DONE_SCAN_DONE");
             rotationalSpeedMultiplier = 0.0;
             velocityMultiplier = 0.0;
+            // hasFinishedNormally = false;
             // isFinished = true;
         }
     }
@@ -253,6 +257,7 @@ public class ChaseCommand extends CommandBase {
     public void end(boolean interrupted) {
         drivetrain.setVelocity(0.0, 0.0);
         bling.setColorRGBAll(0, 0, 0);
+        RobotContainer.memory.addToMemory("ChaseCommand", hasFinishedNormally);
     }
 
     // Returns true when the command should end.

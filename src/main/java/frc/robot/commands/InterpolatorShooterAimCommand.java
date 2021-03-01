@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
@@ -19,8 +18,8 @@ public class InterpolatorShooterAimCommand extends CommandGroupBase {
 
   InterpolatorTable flywheelTable;
   InterpolatorTable hoodTable;
-  Shooter shooter;
-  PowerPortTracker portTracker;
+  private final Shooter shooter;
+  private final PowerPortTracker portTracker;
   Magazine magazine;
   Turret turret;
   PowerPortData portData;
@@ -29,21 +28,17 @@ public class InterpolatorShooterAimCommand extends CommandGroupBase {
     shooter = shooter_;
     portTracker = portTracker_;
     portData = new PowerPortData();
-    flywheelTable = new InterpolatorTable(
-      new InterpolatorTableEntry(0, 250)
-    );
-    hoodTable = new InterpolatorTable(
-      new InterpolatorTableEntry(0, 250)
-    );
+    flywheelTable = new InterpolatorTable(new InterpolatorTableEntry(0, 250));
+    hoodTable = new InterpolatorTable(new InterpolatorTableEntry(0, 250));
     double range = portTracker.getRange();
     if (range != -1) {
       addCommands((new ShooterSetCommand(shooter, hoodTable.getValue(range), hoodTable.getValue(range))
-          .andThen(new AdvanceMagazineCommand(magazine, 2, 4))
+          .andThen(new AdvanceMagazineCommand(magazine, 2, 4, 0))
           .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
               .alongWith(new TurretPortAlignCommand(turret, portTracker)));
     }
   }
-  
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
