@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Magazine;
@@ -19,6 +20,8 @@ public class MagazineCommand extends CommandBase {
     private boolean sensor;
     private boolean hadNothing;
     private boolean isFinished;
+    private boolean hasFinishedNormally;
+    private int checkNumPreviousMemoryEntries;
     private int loopsFalse;
 
     /**
@@ -28,11 +31,13 @@ public class MagazineCommand extends CommandBase {
      * @param bling    The bling used by this command.
      * @param power    The power the magazine isset to by this command.
      */
-    public MagazineCommand(Collector collector, Magazine magazine, Bling bling, double velocity) {
+    public MagazineCommand(Collector collector, Magazine magazine, Bling bling, double velocity,
+            int checkNumPreviousMemoryEntries) {
         this.collector = collector;
         this.magazine = magazine;
         this.bling = bling;
         this.velocity = velocity;
+        this.checkNumPreviousMemoryEntries = checkNumPreviousMemoryEntries;
         addRequirements(magazine);
         addRequirements(bling);
     }
@@ -44,7 +49,7 @@ public class MagazineCommand extends CommandBase {
      * @param bling    The bling used by this command.
      */
     public MagazineCommand(Collector collector, Magazine magazine, Bling bling) {
-        this(collector, magazine, bling, 0.35);
+        this(collector, magazine, bling, 0.35, 0);
     }
 
     // Called when the command is initially scheduled.
@@ -53,13 +58,20 @@ public class MagazineCommand extends CommandBase {
         sensor = magazine.getSensor();
         hadNothing = false;
         isFinished = false;
+        hasFinishedNormally = true;
         if (!sensor) {
             bling.setArray("red");
             bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
             hadNothing = true;
+            hasFinishedNormally = false;
             isFinished = true;
         }
         loopsFalse = 0;
+        if (checkNumPreviousMemoryEntries > 0
+                && !RobotContainer.memory.havePreviousFinished(checkNumPreviousMemoryEntries)) {
+            hasFinishedNormally = false;
+            isFinished = true;
+        }
     }
 
     public boolean hadNothing() {
@@ -92,6 +104,7 @@ public class MagazineCommand extends CommandBase {
     public void end(boolean interrupted) {
         magazine.setPower(0.0);
         collector.setCollect(0.0);
+        RobotContainer.memory.addToMemory("MagazineCommand", hasFinishedNormally);
     }
 
     // Returns true when the command should end.
