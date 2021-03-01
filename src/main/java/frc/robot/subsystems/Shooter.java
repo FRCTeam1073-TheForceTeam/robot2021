@@ -44,7 +44,7 @@ public class Shooter extends SubsystemBase {
   private double hoodD_External = 0;
   private double hoodF_External = 0;
 
-  double flywheelTargetVelocity = 0;
+  private double flywheelTargetVelocity = 0;
 
   double[] flywheelTemperatures;
 
@@ -185,6 +185,10 @@ public class Shooter extends SubsystemBase {
   public double getHoodAngle() {
     return hoodAngleHigh + (hoodAngleLow - hoodAngleHigh)
         * ((getHoodPosition() - minHoodPosition) / (maxHoodPosition - minHoodPosition));
+  }
+
+  public double getFlywheelTargetVelocity() {
+    return flywheelTargetVelocity;
   }
 
   /**
