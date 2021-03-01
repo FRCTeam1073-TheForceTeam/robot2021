@@ -30,7 +30,7 @@ public class AutomaticFireCommand extends ParallelDeadlineGroup {
       new SequentialCommandGroup(
           new WaitToFire(shooter, portTracker),
           new TargetHoodCommand(shooter, portTracker),
-          new AdvanceMagazineCommand(magazine),
+          new AdvanceMagazineCommand(magazine,1,4),
           new InstantCommand(shooter::lowerHood, shooter)
       ),
 
