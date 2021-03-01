@@ -71,6 +71,7 @@ public class TargetHoodCommand extends CommandBase {
   
   @Override
   public void initialize() {
+    shooter.lowerHood();
   }
 
   public void execute() {
