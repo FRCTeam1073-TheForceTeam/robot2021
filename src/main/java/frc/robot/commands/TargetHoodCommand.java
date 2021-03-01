@@ -43,8 +43,6 @@ public class TargetHoodCommand extends CommandBase {
 
     requiredValidRangeCount = requiredValidRangeCount_;
 
-    addRequirements(shooter);
-
     hoodTable = new InterpolatorTable(
       new InterpolatorTableEntry(1.79, 0.658353),
       new InterpolatorTableEntry(2.35, 0.483353), new InterpolatorTableEntry(3.02, 0.508353),
