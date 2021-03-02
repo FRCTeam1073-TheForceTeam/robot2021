@@ -103,4 +103,7 @@ public class Memory {
         return specifics.get(names.size() - 1);
     }
 
+    public void addToFeedback(int index, String title, double value) {
+        specifics.get(index).addFeedback(title, value);
+    }
 }
