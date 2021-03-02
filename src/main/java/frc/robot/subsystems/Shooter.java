@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
   private double hoodD_External = 0;
   private double hoodF_External = 0;
 
-  double flywheelTargetVelocity = 0;
+  private double flywheelTargetVelocity = 0;
 
   double[] flywheelTemperatures;
 
@@ -92,8 +92,8 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(5000);
-
+    rateLimiter = new SlewRateLimiter(2000);
+    
     hood = new CANSparkMax(25, MotorType.kBrushless);
     hood.clearFaults();
     hood.restoreFactoryDefaults();
@@ -135,8 +135,10 @@ public class Shooter extends SubsystemBase {
    * Sets the flywheel velocity in radians/second.
    */
   public void setFlywheelVelocity(double velocity) {
-    flywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
-    shooterFlywheel1.set(ControlMode.Velocity, flywheelTargetVelocity);
+    //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
+    flywheelTargetVelocity = velocity;
+    double rawFlywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
+    shooterFlywheel1.set(ControlMode.Velocity, rawFlywheelTargetVelocity);
   }
 
   /**
@@ -148,9 +150,21 @@ public class Shooter extends SubsystemBase {
     return shooterFlywheel1.getSelectedSensorVelocity() * 10.0 * (2.0 * Math.PI) / flywheelTicksPerRevolution;
   }
 
+  /**
+   * Instantly stops the flywheel motor. Due to the PIDF loop
+   * being tuned for high velocities, this may cause some oscillation.
+   */
   public void stop() {
     rateLimiter.reset(0);
     shooterFlywheel1.set(ControlMode.Velocity, 0);
+  }
+
+  /**
+   * Causes the flywheel motor to ramp down to zero (as opposed to
+   * stop() which causes it to halt near-instantly).
+   */
+  public void setZero() {
+    setFlywheelVelocity(0);
   }
 
   /**
@@ -174,6 +188,10 @@ public class Shooter extends SubsystemBase {
   public double getHoodAngle() {
     return hoodAngleHigh + (hoodAngleLow - hoodAngleHigh)
         * ((getHoodPosition() - minHoodPosition) / (maxHoodPosition - minHoodPosition));
+  }
+
+  public double getFlywheelTargetVelocity() {
+    return flywheelTargetVelocity;
   }
 
   /**
@@ -221,11 +239,21 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
-    SmartDashboard.putNumber("Please don't break @#@#@#@#@#@#@#", hoodEncoder.getPosition());
-    SmartDashboard.putNumber("Flywheel current (A)", shooterFlywheel1.getSupplyCurrent());
-    SmartDashboard.putNumber("Flywheel velocity (radians/sec)", getFlywheelVelocity());
-    SmartDashboard.putNumber("Flywheel target velocity", flywheelTargetVelocity);
-    SmartDashboard.putNumber("Flywheel error", shooterFlywheel1.getClosedLoopError());
+    SmartDashboard.putNumber("[S-HD] Hood position @#@#@#@#@#@#@#",
+    hoodEncoder.getPosition()
+    );
+    SmartDashboard.putNumber("[Shooter] Flywheel current (A)",
+    shooterFlywheel1.getSupplyCurrent()
+    );
+    SmartDashboard.putNumber("[Shooter] Flywheel velocity (radians/sec)",
+      getFlywheelVelocity()
+    );
+    SmartDashboard.putNumber("[Shooter] Flywheel target velocity (radians/sec)",
+      flywheelTargetVelocity
+    );
+    SmartDashboard.putNumber("[Shooter] Flywheel error",
+    shooterFlywheel1.getClosedLoopError()
+    );
     SmartDashboard.putString("Flywheel temperature (degs C)",
         "[" + flywheelTemperatures[0] + "," + flywheelTemperatures[1] + "]");
     SmartDashboard.putNumber("Raw hood position (motor radians) [S-HD]", getHoodPosition());

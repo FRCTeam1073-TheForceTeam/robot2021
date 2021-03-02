@@ -67,6 +67,10 @@ public class Magazine extends SubsystemBase {
     magazineMotor.set(ControlMode.PercentOutput, MathUtil.clamp(power, -1, 1));
   }
 
+  public void stop() {
+    setVelocity(0);
+  }
+
   /// Return load on the magazine motor.
   public double getLoad() {
     return 0.0;

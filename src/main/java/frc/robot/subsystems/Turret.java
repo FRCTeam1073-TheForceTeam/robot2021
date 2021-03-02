@@ -46,7 +46,7 @@ public class Turret extends SubsystemBase {
       turretRotator.setSelectedSensorPosition(0); //Note: turret does not have limit switches and needs to be indexed manually.
       turretRotator.setIntegralAccumulator(0);
       setPIDF();
-      turretRateLimiter = new SlewRateLimiter(8);
+      turretRateLimiter = new SlewRateLimiter(6);
     }
 
     /// Returns the accumulated position of the turret in radians.
