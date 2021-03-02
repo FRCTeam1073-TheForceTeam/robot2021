@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
@@ -30,8 +31,9 @@ public class AutomaticFireCommand extends ParallelDeadlineGroup {
       new SequentialCommandGroup(
           new WaitToFire(shooter, portTracker),
           new TargetHoodCommand(shooter, portTracker),
-          new AdvanceMagazineCommand(magazine,1,4),
-          new InstantCommand(shooter::lowerHood, shooter)
+          new AdvanceMagazineCommand(magazine, 1, 7),
+          new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0),
+          new InstantCommand(shooter::stop,shooter)
       ),
 
       //Commands that run until deadline

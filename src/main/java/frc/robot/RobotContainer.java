@@ -28,6 +28,7 @@ import frc.robot.commands.TurretControls;
 import frc.robot.commands.TurretPortAlignCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
+import frc.robot.commands.AimingCalibrationControls;
 import frc.robot.commands.AutomaticFireCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
@@ -144,7 +145,7 @@ public class RobotContainer {
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
     // return turretPositionTestCommand;
-    return teleopCommand;
+    return new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, 0);
 
     //    return teleopCommand;
   }

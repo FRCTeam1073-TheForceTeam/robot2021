@@ -101,7 +101,7 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(5000);
+    rateLimiter = new SlewRateLimiter(300);
     
     hood = new CANSparkMax(25, MotorType.kBrushless);
     hood.clearFaults();
@@ -147,8 +147,9 @@ public class Shooter extends SubsystemBase {
    */
   public void setFlywheelVelocity(double velocity) {
     //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
-    flywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
-    shooterFlywheel1.set(ControlMode.Velocity, flywheelTargetVelocity);
+    flywheelTargetVelocity = velocity;
+    double rawFlywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
+    shooterFlywheel1.set(ControlMode.Velocity, rawFlywheelTargetVelocity);
   }
 
   /**
@@ -159,11 +160,23 @@ public class Shooter extends SubsystemBase {
     return shooterFlywheel1.getSelectedSensorVelocity() * 10.0 * (2.0 * Math.PI) / flywheelTicksPerRevolution;
   }
 
+  /**
+   * Instantly stops the flywheel motor. Due to the PIDF loop
+   * being tuned for high velocities, this may cause some oscillation.
+   */
   public void stop() {
     rateLimiter.reset(0);
     shooterFlywheel1.set(ControlMode.Velocity, 0);
   }
-  
+
+  /**
+   * Causes the flywheel motor to ramp down to zero (as opposed to
+   * stop() which causes it to halt near-instantly).
+   */
+  public void setZero() {
+    setFlywheelVelocity(0);
+  }
+
   /**
    * Directly sets the power to the hood motor.
    */

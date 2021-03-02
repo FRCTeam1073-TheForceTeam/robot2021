@@ -28,7 +28,7 @@ public class TurretPortAlignCommand extends CommandBase {
     turret = turret_;
     portTracker = portTracker_;
     endWhenAligned = endWhenAligned_;
-    addRequirements(turret, portTracker);
+    addRequirements(turret);
     coordinateSeparation = 0;
     portData = new PowerPortData();
     framesWithoutSignal = 0;

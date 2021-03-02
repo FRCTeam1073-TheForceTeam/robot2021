@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.PowerPortTracker;
@@ -22,6 +23,8 @@ public class WaitToFire extends CommandBase {
 
   PowerPortData portData;
 
+  boolean firstFrame = true;
+
   public WaitToFire(Shooter shooter_, PowerPortTracker portTracker_) {
     shooter = shooter_;
     portTracker = portTracker_;
@@ -35,14 +38,20 @@ public class WaitToFire extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (firstFrame) {
+      firstFrame = false;
+      return false;
+    }
     hasData = portTracker.getPortData(portData);
     if (hasData) {
       coordinateSeparation = 1 - 2 * (((double) portData.cx) / ((double) portTracker.getImageWidth()));
     }
 
     isPortTrackerAligned = hasData && (Math.abs(coordinateSeparation) <= Constants.ACCEPTABLE_PORT_TRACKER_ALIGNMENT);
-    isShooterReady = (shooter.getFlywheelVelocity() - shooter.getFlywheelTargetVelocity()) < Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
+    isShooterReady = Math.abs(shooter.getFlywheelVelocity() - shooter.getFlywheelTargetVelocity()) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
 
+    SmartDashboard.putNumber("[WaittoFire] get", shooter.getFlywheelVelocity());
+    SmartDashboard.putNumber("[WaittoFire] target", shooter.getFlywheelTargetVelocity());
     return (isPortTrackerAligned && isShooterReady);
   }
 }

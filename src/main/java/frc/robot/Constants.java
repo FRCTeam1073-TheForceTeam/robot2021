@@ -40,4 +40,5 @@ public final class Constants {
      * for autonomous port tracking commands to be considered to be aligned.
      */
     public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.02;
+    public static final double ACCEPTABLE_HOOD_POSITION_DIFFERENCE = 0.02;
 }

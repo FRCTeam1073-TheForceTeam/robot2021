@@ -4,10 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.PowerPortTracker.PowerPortData;
+import frc.robot.Constants;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
 
@@ -70,12 +72,14 @@ public class TargetHoodCommand extends CommandBase {
   @Override
   public void initialize() {
     shooter.lowerHood();
+    validRangeCounter = 0;
+    readyToFire = false;
   }
 
   public void execute() {
     if (!readyToFire && (validRangeCounter < requiredValidRangeCount)) {
       double currentRange = portTracker.getRange();
-      if (currentRange != -1 && (currentRange >= 1 && currentRange <= 6.5)) {
+      if (currentRange != -1 && (currentRange >= 1.0 && currentRange <= 6.5)) {
         validRangeCounter++;
         if (validRangeCounter == requiredValidRangeCount) {
           readyToFire = true;
@@ -85,6 +89,8 @@ public class TargetHoodCommand extends CommandBase {
     }
     if (readyToFire) {
       hoodAngle = hoodTable.getValue(range);
+      SmartDashboard.putNumber("[TargetHood] Hood target angle", hoodAngle);
+      SmartDashboard.putNumber("[TargetHood] Range", range);
       shooter.setHoodAngle(hoodAngle);      
     }
   }
@@ -93,6 +99,6 @@ public class TargetHoodCommand extends CommandBase {
   }
   
   public boolean isFinished() {
-    return readyToFire;
+    return readyToFire && (Math.abs(shooter.getHoodAngle() - hoodAngle) < Constants.ACCEPTABLE_HOOD_POSITION_DIFFERENCE);
   }
 }

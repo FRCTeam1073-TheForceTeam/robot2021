@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
@@ -57,7 +58,7 @@ public class TargetFlywheelCommand extends CommandBase {
     range = 0;
     numLoops = 0;
     hasValidRangeData = false;
-    addRequirements(shooter);
+    // addRequirements(shooter);
   }
 
   /**
@@ -99,6 +100,8 @@ public class TargetFlywheelCommand extends CommandBase {
     if (hasValidRangeData) {
       flywheelVelocity = flywheelTable.getValue(range);
       shooter.setFlywheelVelocity(flywheelVelocity);
+      SmartDashboard.putNumber("[TargetFlywheel] Flywheel target vel", flywheelVelocity);
+      SmartDashboard.putNumber("[TargetFlywheel] Flywheel range", range);
     }
   }
 
@@ -107,6 +110,7 @@ public class TargetFlywheelCommand extends CommandBase {
   
   public boolean isFinished() {
     currentFlywheelVelocity = shooter.getFlywheelVelocity();
-    return Math.abs(currentFlywheelVelocity - flywheelVelocity) <= acceptableVelocityDifference;
+    return false;
+    // return Math.abs(currentFlywheelVelocity - flywheelVelocity) <= acceptableVelocityDifference;
   }
 }
