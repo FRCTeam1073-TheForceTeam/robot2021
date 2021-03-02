@@ -33,12 +33,14 @@ public class ShooterSetCommand extends CommandBase {
   public void execute() {
     shooter.setHoodAngle(hoodAngle);
     shooter.setFlywheelVelocity(flywheelVelocity);
+    currentFlywheelVelocity = shooter.getFlywheelVelocity();
+    SmartDashboard.putNumber("[ShSCd] Flywheel velocity", currentFlywheelVelocity);
   }
 
   public void end(boolean interrupted) {
   }
   
   public boolean isFinished() {
-    return Math.abs(shooter.getFlywheelVelocity() - flywheelVelocity) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
+    return Math.abs(currentFlywheelVelocity - flywheelVelocity) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
   }
 }
