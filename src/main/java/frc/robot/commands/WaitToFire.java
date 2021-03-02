@@ -23,7 +23,7 @@ public class WaitToFire extends CommandBase {
 
   PowerPortData portData;
 
-  boolean firstFrame = true;
+  int frameCounter;
 
   public WaitToFire(Shooter shooter_, PowerPortTracker portTracker_) {
     shooter = shooter_;
@@ -32,26 +32,29 @@ public class WaitToFire extends CommandBase {
     isShooterReady = false;
     portData = new PowerPortData();
     coordinateSeparation = 0;
+    frameCounter = 0;
     hasData = false;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (firstFrame) {
-      firstFrame = false;
+    if (frameCounter < 2) {
       return false;
     }
+    frameCounter++;
     hasData = portTracker.getPortData(portData);
-    if (hasData) {
-      coordinateSeparation = 1 - 2 * (((double) portData.cx) / ((double) portTracker.getImageWidth()));
-    }
 
     isPortTrackerAligned = hasData && (Math.abs(coordinateSeparation) <= Constants.ACCEPTABLE_PORT_TRACKER_ALIGNMENT);
-    isShooterReady = Math.abs(shooter.getFlywheelVelocity() - shooter.getFlywheelTargetVelocity()) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
+    isShooterReady =
+      // No matter what the difference between target and actual velocities says, there is no way the flywheel is ready to fire if isn't trying to move.
+      (Math.abs(shooter.getFlywheelTargetVelocity()) != 0)
+      // And same with the actual velocity (though in this case the flywheel might actually be moving for some reason so a interval centered around zero is necessary).
+      && (Math.abs(shooter.getFlywheelVelocity()) < Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE)
+      && (Math.abs(shooter.getFlywheelVelocity() - shooter.getFlywheelTargetVelocity()) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE);
 
-    SmartDashboard.putNumber("[WaittoFire] get", shooter.getFlywheelVelocity());
-    SmartDashboard.putNumber("[WaittoFire] target", shooter.getFlywheelTargetVelocity());
+      SmartDashboard.putNumber("[WaitToFire] Get", shooter.getFlywheelVelocity());
+    SmartDashboard.putNumber("[WaitToFire] Target", shooter.getFlywheelTargetVelocity());
     return (isPortTrackerAligned && isShooterReady);
   }
 }
