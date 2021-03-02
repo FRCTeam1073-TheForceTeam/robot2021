@@ -36,6 +36,10 @@ public class AdvanceMagazineCommand extends CommandBase {
     addRequirements(magazine);
   }
 
+  public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_, double numPowerCells_) {
+    this(magazine_, magVelocity_, numPowerCells_, 0);
+  }
+
   public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_) {
     this(magazine_, magVelocity_, 1, 0);
   }

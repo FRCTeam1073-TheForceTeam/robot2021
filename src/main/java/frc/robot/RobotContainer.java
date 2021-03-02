@@ -142,8 +142,6 @@ public class RobotContainer {
       case 4:
         return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
       case 5:
-        return new DriveForwardCommand(drivetrain, bling, 1.5, 1.25);
-      case 5:
         return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
