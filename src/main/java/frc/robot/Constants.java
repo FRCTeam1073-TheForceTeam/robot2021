@@ -31,7 +31,7 @@ public final class Constants {
      * 
      * Units are in radians/sec difference.
      * */
-    public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 1.0;
+    public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 2.0;
 
 
     /**

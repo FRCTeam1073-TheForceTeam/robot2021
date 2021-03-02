@@ -40,9 +40,9 @@ public class WaitToFire extends CommandBase {
   @Override
   public boolean isFinished() {
     if (frameCounter < 2) {
+      frameCounter++;
       return false;
     }
-    frameCounter++;
     hasData = portTracker.getPortData(portData);
 
     isPortTrackerAligned = hasData && (Math.abs(coordinateSeparation) <= Constants.ACCEPTABLE_PORT_TRACKER_ALIGNMENT);
@@ -50,11 +50,14 @@ public class WaitToFire extends CommandBase {
       // No matter what the difference between target and actual velocities says, there is no way the flywheel is ready to fire if isn't trying to move.
       (Math.abs(shooter.getFlywheelTargetVelocity()) != 0)
       // And same with the actual velocity (though in this case the flywheel might actually be moving for some reason so a interval centered around zero is necessary).
-      && (Math.abs(shooter.getFlywheelVelocity()) < Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE)
+      && (Math.abs(shooter.getFlywheelVelocity()) > Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE)
       && (Math.abs(shooter.getFlywheelVelocity() - shooter.getFlywheelTargetVelocity()) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE);
 
     SmartDashboard.putNumber("[WaitToFire] Get", shooter.getFlywheelVelocity());
     SmartDashboard.putNumber("[WaitToFire] Target", shooter.getFlywheelTargetVelocity());
+    SmartDashboard.putNumber("[WaitToFire] CSep", coordinateSeparation);
+    SmartDashboard.putBoolean("[WaitToFire] iPTA", isPortTrackerAligned);
+    SmartDashboard.putBoolean("[WaitToFire] iSR", isShooterReady);
     return (isPortTrackerAligned && isShooterReady);
   }
 }
