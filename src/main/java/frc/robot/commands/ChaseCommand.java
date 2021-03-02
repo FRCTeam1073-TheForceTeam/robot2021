@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PowerCellTracker;
@@ -20,6 +21,7 @@ public class ChaseCommand extends CommandBase {
     private final double maxVelocity;
     private final boolean shouldScan;
     private boolean isFinished;
+    private boolean hasFinishedNormally;
 
     /**
      * The enum for the states the tracked powercell can be in: NOT_VISIBLE, LEFT,
@@ -85,6 +87,7 @@ public class ChaseCommand extends CommandBase {
         skipScan = true;
         isScanning = false;
         isFinished = false;
+        hasFinishedNormally = true;
     }
 
     /**
@@ -116,7 +119,7 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            if (lastData.cx < 139) {
+            if (lastData.cx < 160) {
                 scanRotationalSpeedMultiplier = Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
             } else {
                 scanRotationalSpeedMultiplier = -Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
@@ -149,10 +152,10 @@ public class ChaseCommand extends CommandBase {
         if (!hasData) {
             alignState = AlignState.NOT_VISIBLE;
 
-        } else if (powerCellData.cx >= 139 && powerCellData.cx <= 180) {
+        } else if (powerCellData.cx >= 144 && powerCellData.cx <= 175) {
             alignState = AlignState.ALIGNED;
 
-        } else if (powerCellData.cx < 139) {
+        } else if (powerCellData.cx < 144) {
             alignState = AlignState.LEFT;
 
         } else {
@@ -170,7 +173,7 @@ public class ChaseCommand extends CommandBase {
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
             rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
-            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.3, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.2, 1.0);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
                 rotationalSpeedMultiplier = 0.35;
@@ -182,7 +185,7 @@ public class ChaseCommand extends CommandBase {
 
         } else if (alignState == AlignState.ALIGNED) {
             rotationalSpeedMultiplier = -(powerCellData.cx - 159) / 160.0;
-            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.3, 1.0);
+            velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.2, 1.0);
 
             if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
                 rotationalSpeedMultiplier = 0.35;
@@ -230,6 +233,7 @@ public class ChaseCommand extends CommandBase {
             System.out.println("SCAN_DONE_SCAN_DONE");
             rotationalSpeedMultiplier = 0.0;
             velocityMultiplier = 0.0;
+            // hasFinishedNormally = false;
             // isFinished = true;
         }
     }
@@ -253,6 +257,7 @@ public class ChaseCommand extends CommandBase {
     public void end(boolean interrupted) {
         drivetrain.setVelocity(0.0, 0.0);
         bling.setColorRGBAll(0, 0, 0);
+        RobotContainer.memory.addToMemory("ChaseCommand", hasFinishedNormally);
     }
 
     // Returns true when the command should end.

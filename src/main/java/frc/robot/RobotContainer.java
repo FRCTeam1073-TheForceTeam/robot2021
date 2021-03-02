@@ -39,6 +39,7 @@ import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TurnCommand;
 // Import components: add software components (ex. InterpolatorTable, ErrorToOutput) here
+import frc.robot.memory.Memory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -50,6 +51,7 @@ import frc.robot.commands.TurnCommand;
 public class RobotContainer {
 
   // Subsystems: Add subsystems here
+  public static Memory memory = new Memory();
   private static final Bling bling = new Bling();
   private final Drivetrain drivetrain = new Drivetrain();
   private final Collector collector = new Collector();
@@ -70,7 +72,8 @@ public class RobotContainer {
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
 
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine, teleTurret, teleShooter, teleCollect);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine, teleTurret, teleShooter,
+      teleCollect);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -97,17 +100,6 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // JoystickButton magazineUpBinding = new JoystickButton(OI.operatorController, XboxController.Button.kB.value);
-    // JoystickButton fireBinding = new JoystickButton(OI.driverController, XboxController.Button.kA.value);
-    // magazineUpBinding.whenPressed(new AdvanceMagazineCommand(magazine));
-    // fireBinding.whenPressed(
-    //     (new ShooterSetCommand(shooter, shooter.hoodAngleLow+0.2, 250)
-    //         .andThen(new AdvanceMagazineCommand(magazine, 2, 4))
-    //         .andThen(new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)))
-    //         .alongWith(new TurretPortAlignCommand(turret, portTracker))
-    // );
-
-    //return new TurretPortAlignCommand(turret, portTracker);
   }
 
   /**
@@ -120,20 +112,36 @@ public class RobotContainer {
     switch (ShuffleboardWidgets.auto) {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 1.0));
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 1.0),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
-            new CollectCommand(drivetrain, collector, magazine, bling), new MagazineCommand(collector, magazine, bling),
-            new AdvanceMagazineCommand(magazine, 0.35, 1.0));
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
       case 2:
-        return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
+        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
       case 3:
-        return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
+        return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
       case 4:
+        return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
+      case 5:
         return new DriveForwardCommand(drivetrain, bling, 1.5, 1.25);
       case 5:
         return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
@@ -145,10 +153,7 @@ public class RobotContainer {
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
-    // return turretPositionTestCommand;
-    return new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, 0);
-
-    //    return teleopCommand;
+    return teleopCommand;
   }
 
   public Command getTestCommand() {

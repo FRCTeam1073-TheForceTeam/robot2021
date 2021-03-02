@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -16,7 +15,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -33,7 +31,7 @@ public class Shooter extends SubsystemBase {
   private double flywheelI = 0.001;
   private double flywheelD = 0;
   private double flywheelF = 0.045;
-  
+
   private double hoodP_HSensor = 1.8e-1;
   private double hoodI_HSensor = 1.2e-5;
   private double hoodD_HSensor = 0;
@@ -53,18 +51,11 @@ public class Shooter extends SubsystemBase {
   public final double minHoodPosition = 0;
   public final double maxHoodPosition = 16.306;
   public final double maxHoodPosition2 = 16.306;
-  // * 2.0 * Math.PI;
-//  private final double minAngle = 19.64 * Math.PI / 180;
-//  private final double maxAngle = 49.18 * Math.PI / 180;
-
-  public static final double hoodAngleHigh = 49.18 * Math.PI / 180.0;
-  public static final double hoodAngleLow = 19.64 * Math.PI / 180.0;
-
+  public final double hoodAngleHigh = 49.18 * Math.PI / 180.0;
+  public final double hoodAngleLow = 19.64 * Math.PI / 180.0;
   public final double kRawMotorRange = 2.523808240890503;
-//  public final double kMotorRadiansPerHoodRadian = kRawMotorRange * 2 * Math.PI / (maxAngle - minAngle);
   private boolean usingExternalHoodEncoder = true;
   SlewRateLimiter rateLimiter;
-
 
   public Shooter() {
     shooterFlywheel1 = new WPI_TalonFX(22);
@@ -75,8 +66,8 @@ public class Shooter extends SubsystemBase {
 
     shooterFlywheel2.follow(shooterFlywheel1);
 
-    //If the second flywheel motor *isn't* inverted, that would be pretty bad.
-    //Like, 'the flywheel tears itself apart' kind of bad.
+    // If the second flywheel motor *isn't* inverted, that would be pretty bad.
+    // Like, 'the flywheel tears itself apart' kind of bad.
     shooterFlywheel1.setInverted(false);
     shooterFlywheel2.setInverted(true);
 
@@ -116,7 +107,6 @@ public class Shooter extends SubsystemBase {
     hoodEncoder.setPosition(0);
     hoodEncoder.setInverted(true);
 
-
     hoodController = hood.getPIDController();
     if (usingExternalHoodEncoder) {
       hoodController.setFeedbackDevice(hoodEncoder);
@@ -141,7 +131,6 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.set(ControlMode.PercentOutput, power);
   }
 
-
   /**
    * Sets the flywheel velocity in radians/second.
    */
@@ -154,6 +143,7 @@ public class Shooter extends SubsystemBase {
 
   /**
    * Gets the flywheel velocity in radians/second
+   * 
    * @return The flywheel velocity in radians/second
    */
   public double getFlywheelVelocity() {
@@ -205,10 +195,13 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Sets the hood motor's position (as opposed to setHoodAngle, which sets the actual angle of the hood).
-   * Values are clamped between the minimum and maximum positions to prevent the mechanism from damaging
-   * itself. This requires that the hood is manually reset at the start of each match (auto-indexing is
-   * possible, but the only simple way to do it puts the mechanism under too much stress).
+   * Sets the hood motor's position (as opposed to setHoodAngle, which sets the
+   * actual angle of the hood). Values are clamped between the minimum and maximum
+   * positions to prevent the mechanism from damaging itself. This requires that
+   * the hood is manually reset at the start of each match (auto-indexing is
+   * possible, but the only simple way to do it puts the mechanism under too much
+   * stress).
+   * 
    * @param position The target position of the hood motor in radians
    */
   public void setHoodPosition(double position) {
@@ -223,20 +216,22 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Set's the hood's position to its lower bound (the steepest angle). Equivalent to setHoodPosition(0).
+   * Set's the hood's position to its lower bound (the steepest angle). Equivalent
+   * to setHoodPosition(0).
    */
   public void lowerHood() {
     setHoodPosition(0);
   }
 
   /**
-   * Sets the hood angle, with values clamped between the lowest possible angle (fully extended)
-   * and the steepest possible angle (fully retracted).
+   * Sets the hood angle, with values clamped between the lowest possible angle
+   * (fully extended) and the steepest possible angle (fully retracted).
+   * 
    * @param angle The angle of the hood in radians
    */
   public void setHoodAngle(double angle) {
-    double position = 
-        minHoodPosition + (maxHoodPosition - minHoodPosition) * ((angle - hoodAngleHigh) / (hoodAngleLow - hoodAngleHigh));
+    double position = minHoodPosition
+        + (maxHoodPosition - minHoodPosition) * ((angle - hoodAngleHigh) / (hoodAngleLow - hoodAngleHigh));
     setHoodPosition(position);
   }
 
@@ -263,9 +258,5 @@ public class Shooter extends SubsystemBase {
         "[" + flywheelTemperatures[0] + "," + flywheelTemperatures[1] + "]");
     SmartDashboard.putNumber("Raw hood position (motor radians) [S-HD]", getHoodPosition());
     SmartDashboard.putNumber("Hood angle (degs) [S-HD]", getHoodAngle() * 180.0 / Math.PI);
-    // SmartDashboard.putNumber("Hood velocity (motor radians/sec) [S-HD]",
-    //     hoodEncoder.getVelocity() * Math.PI / 30.0);
-
-    // This method will be called once per scheduler run
   }
 }
