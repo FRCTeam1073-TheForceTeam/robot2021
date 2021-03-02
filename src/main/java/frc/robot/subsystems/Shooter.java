@@ -244,19 +244,19 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
-    SmartDashboard.putNumber("Please don't break @#@#@#@#@#@#@#",
+    SmartDashboard.putNumber("[S-HD] Hood position @#@#@#@#@#@#@#",
     hoodEncoder.getPosition()
     );
-    SmartDashboard.putNumber("Flywheel current (A)",
+    SmartDashboard.putNumber("[Shooter] Flywheel current (A)",
     shooterFlywheel1.getSupplyCurrent()
     );
-    SmartDashboard.putNumber("Flywheel velocity (radians/sec)",
+    SmartDashboard.putNumber("[Shooter] Flywheel velocity (radians/sec)",
       getFlywheelVelocity()
     );
-    SmartDashboard.putNumber("Flywheel target velocity",
-    flywheelTargetVelocity
+    SmartDashboard.putNumber("[Shooter] Flywheel target velocity (radians/sec)",
+      flywheelTargetVelocity
     );
-    SmartDashboard.putNumber("Flywheel error",
+    SmartDashboard.putNumber("[Shooter] Flywheel error",
     shooterFlywheel1.getClosedLoopError()
     );
     SmartDashboard.putString("Flywheel temperature (degs C)",

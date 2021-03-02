@@ -46,8 +46,8 @@ public class TargetFlywheelCommand extends CommandBase {
   public TargetFlywheelCommand(Shooter shooter_, PowerPortTracker portTracker_, int rangeUpdatePeriod_, double acceptableVelocityDifference_) {
     portTracker = portTracker_;
     rangeUpdatePeriod = rangeUpdatePeriod_;
-    flywheelTable = new InterpolatorTable(new InterpolatorTableEntry(1.79, 281.25),
-        new InterpolatorTableEntry(2.35, 343.75), new InterpolatorTableEntry(3.02, 343.75),
+    flywheelTable = new InterpolatorTable(
+        new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
         new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
         new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
         new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
@@ -102,6 +102,8 @@ public class TargetFlywheelCommand extends CommandBase {
       shooter.setFlywheelVelocity(flywheelVelocity);
       SmartDashboard.putNumber("[TargetFlywheel] Flywheel target vel", flywheelVelocity);
       SmartDashboard.putNumber("[TargetFlywheel] Flywheel range", range);
+      currentFlywheelVelocity = shooter.getFlywheelVelocity();
+      SmartDashboard.putNumber("[TargetFlywheel] Flywheel actual vel", currentFlywheelVelocity);
     }
   }
 
@@ -109,7 +111,6 @@ public class TargetFlywheelCommand extends CommandBase {
   }
   
   public boolean isFinished() {
-    currentFlywheelVelocity = shooter.getFlywheelVelocity();
     return false;
     // return Math.abs(currentFlywheelVelocity - flywheelVelocity) <= acceptableVelocityDifference;
   }

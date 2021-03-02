@@ -46,8 +46,7 @@ public class TargetHoodCommand extends CommandBase {
     requiredValidRangeCount = requiredValidRangeCount_;
 
     hoodTable = new InterpolatorTable(
-      new InterpolatorTableEntry(1.79, 0.658353),
-      new InterpolatorTableEntry(2.35, 0.483353), new InterpolatorTableEntry(3.02, 0.508353),
+      new InterpolatorTableEntry(1.79, 0.658353), new InterpolatorTableEntry(2.35, 0.483353),
       new InterpolatorTableEntry(3.05, 0.483353), new InterpolatorTableEntry(3.54, 0.483353),
       new InterpolatorTableEntry(3.97, 0.408353), new InterpolatorTableEntry(4.56, 0.363353),
       new InterpolatorTableEntry(5.02, 0.358353), new InterpolatorTableEntry(5.51, 0.367783),
@@ -90,6 +89,7 @@ public class TargetHoodCommand extends CommandBase {
     if (readyToFire) {
       hoodAngle = hoodTable.getValue(range);
       SmartDashboard.putNumber("[TargetHood] Hood target angle", hoodAngle);
+      SmartDashboard.putNumber("[TargetHood] Actual hood angle", shooter.getHoodAngle());
       SmartDashboard.putNumber("[TargetHood] Range", range);
       shooter.setHoodAngle(hoodAngle);      
     }
@@ -99,6 +99,6 @@ public class TargetHoodCommand extends CommandBase {
   }
   
   public boolean isFinished() {
-    return readyToFire && (Math.abs(shooter.getHoodAngle() - hoodAngle) < Constants.ACCEPTABLE_HOOD_POSITION_DIFFERENCE);
+    return readyToFire && (Math.abs(shooter.getHoodAngle() - hoodAngle) < Constants.ACCEPTABLE_HOOD_ANGLE_DIFFERENCE);
   }
 }
