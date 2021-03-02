@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
@@ -24,13 +23,9 @@ import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.MagazineControls;
 import frc.robot.commands.ShooterControls;
-import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.TurretControls;
-import frc.robot.commands.TurretPortAlignCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
-import frc.robot.commands.AimingCalibrationControls;
-import frc.robot.commands.AutomaticFireCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.DriveForwardCommand;
@@ -143,10 +138,9 @@ public class RobotContainer {
         return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
       case 5:
         return new DriveForwardCommand(drivetrain, bling, 1.5, 1.25);
-      case 5:
-        return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
+
     }
   }
 

@@ -25,22 +25,4 @@ public final class Constants {
     considered safe (based on our kF values and some reasonable estimates of what the word
     'safety' means).**/
     public static final double MAXIMUM_SAFE_FLYHWEEL_SPEED = 625;
-
-    /**How close the actual flywheel velocity should be to the target velocity set in an
-     * autonomous command before it can be considered to have completed.
-     * 
-     * Units are in radians/sec difference.
-     * */
-    public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 2.0;
-
-
-    /**
-     * How close the center of the power port needs to be to the center in proportion to
-     * the image width (where -1 is all the way to the left and 1 is all the way to the right)
-     * for autonomous port tracking commands to be considered to be aligned.
-     */
-    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.02;
- 
- 
-    public static final double ACCEPTABLE_HOOD_ANGLE_DIFFERENCE = 0.02;
 }

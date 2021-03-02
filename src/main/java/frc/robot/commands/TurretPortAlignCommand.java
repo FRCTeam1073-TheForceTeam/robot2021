@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.Constants;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Turret;
@@ -28,7 +27,7 @@ public class TurretPortAlignCommand extends CommandBase {
     turret = turret_;
     portTracker = portTracker_;
     endWhenAligned = endWhenAligned_;
-    addRequirements(turret);
+    addRequirements(turret, portTracker);
     coordinateSeparation = 0;
     portData = new PowerPortData();
     framesWithoutSignal = 0;
@@ -112,6 +111,6 @@ public class TurretPortAlignCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return endWhenAligned && (Math.abs(coordinateSeparation) <= Constants.ACCEPTABLE_PORT_TRACKER_ALIGNMENT);
+    return endWhenAligned && (Math.abs(coordinateSeparation) <= 0.01);
   }
 }
