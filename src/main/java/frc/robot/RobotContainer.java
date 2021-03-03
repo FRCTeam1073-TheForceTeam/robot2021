@@ -120,7 +120,8 @@ public class RobotContainer {
       new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
+      new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0),
 
       //Chase and collect 3 power cells
@@ -142,7 +143,8 @@ public class RobotContainer {
       new TurretPositionCommand(turret, Math.PI),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
+      new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0)
     );
 

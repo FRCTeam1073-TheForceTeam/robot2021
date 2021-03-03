@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.PowerPortTracker.PowerPortData;
@@ -14,6 +15,7 @@ import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 public class WaitToFire extends CommandBase {
   Shooter shooter;
   PowerPortTracker portTracker;
+  Bling bling;
 
   boolean isPortTrackerAligned;
   boolean isShooterReady;
@@ -25,9 +27,18 @@ public class WaitToFire extends CommandBase {
 
   int frameCounter;
 
-  public WaitToFire(Shooter shooter_, PowerPortTracker portTracker_) {
+  public WaitToFire(Shooter shooter_, PowerPortTracker portTracker_, Bling bling_) {
     shooter = shooter_;
     portTracker = portTracker_;
+    bling = bling_;
+
+    addRequirements(bling);
+
+    bling.alternateRGB(0, 80, 
+      20, 227, 217,
+      255, 85, 0
+    );
+
     isPortTrackerAligned = false;
     isShooterReady = false;
     portData = new PowerPortData();
@@ -58,6 +69,12 @@ public class WaitToFire extends CommandBase {
     SmartDashboard.putNumber("[WaitToFire] CSep", coordinateSeparation);
     SmartDashboard.putBoolean("[WaitToFire] iPTA", isPortTrackerAligned);
     SmartDashboard.putBoolean("[WaitToFire] iSR", isShooterReady);
+
+    // Not the best way of doing this, but I feel like bling isn't really the biggest of our worries.
+    if (isPortTrackerAligned && isShooterReady) {
+      bling.setColorRGBAll(0, 0, 0);
+    }
+
     return (isPortTrackerAligned && isShooterReady);
   }
 }
