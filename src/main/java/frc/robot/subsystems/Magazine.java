@@ -112,7 +112,8 @@ public class Magazine extends SubsystemBase {
     // }
     isInTaking = !inTakeSensor.get();
     SmartDashboard.putBoolean("inTakeSensor.get() [MAG]", isInTaking);
-    SmartDashboard.putNumber("Magazine Velocity [MAG]", magazineMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Magazine Velocity [MAG]",
+        magazineMotor.getSelectedSensorVelocity() * 10.0 / magazineTicksPerMeter);
     SmartDashboard.putNumber("Magazine Target Velocity [MAG]", magazineVelocity);
     SmartDashboard.putNumber("Magazine Position [MAG]", magazineMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Magazine Power [MAG]", magazineMotor.getMotorOutputPercent());

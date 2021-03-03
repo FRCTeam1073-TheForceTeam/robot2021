@@ -29,7 +29,7 @@ public class Collector extends SubsystemBase {
 
     this.collectorMotor.enableCurrentLimit(true);
     this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 30.0, 0.25), 500);
-    this.collectorMotor.configPeakCurrentLimit(28, 500);
+    this.collectorMotor.configPeakCurrentLimit(30, 500);
     this.collectorMotor.configPeakCurrentDuration(750, 500);
 
     this.filter = LinearFilter.singlePoleIIR(0.75, 0.02);
@@ -37,7 +37,7 @@ public class Collector extends SubsystemBase {
 
   // Is the collector motor stalled?
   public boolean isStalled() {
-    return 27.85 < Math.abs(getfilteredCurrent());
+    return 29.85 < Math.abs(getfilteredCurrent());
   }
 
   /**

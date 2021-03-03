@@ -152,7 +152,7 @@ public class ChaseCommand extends CommandBase {
         if (!hasData) {
             alignState = AlignState.NOT_VISIBLE;
 
-        } else if (powerCellData.cx >= 144 && powerCellData.cx <= 175) {
+        } else if (powerCellData.cx >= (144-5) && powerCellData.cx <= (175+5)) {
             alignState = AlignState.ALIGNED;
 
         } else if (powerCellData.cx < 144) {
@@ -195,8 +195,8 @@ public class ChaseCommand extends CommandBase {
 
             }
 
-            if (powerCellData.cy >= 180) {
-                System.out.println("DONEDONEDONE");
+            if (powerCellData.cy >= 170) {
+                System.out.println("DONEDONEDONE\n!\n!!!!!!!\n!#@#$#@!$\n");
                 rotationalSpeedMultiplier = 0.0;
                 velocityMultiplier = 0.0;
                 drivetrain.setVelocity(0.0, 0.0);
@@ -222,7 +222,7 @@ public class ChaseCommand extends CommandBase {
      */
     private void scan360() {
 
-        if (time - initialTime >= 100) {
+        if (time - initialTime >= 500) {
             velocityMultiplier = 0.0;
             rotationalSpeedMultiplier = scanRotationalSpeedMultiplier;
         }

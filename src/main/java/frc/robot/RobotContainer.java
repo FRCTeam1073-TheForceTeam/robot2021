@@ -121,6 +121,7 @@ public class RobotContainer {
 
       //Shoot
       new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new TurretPositionCommand(turret, 0),
 
       //Chase and collect 3 power cells
       new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
@@ -141,7 +142,8 @@ public class RobotContainer {
       new TurretPositionCommand(turret, Math.PI),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine)
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new TurretPositionCommand(turret, 0)
     );
 
     // switch (ShuffleboardWidgets.auto) {
