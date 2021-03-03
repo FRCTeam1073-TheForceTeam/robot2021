@@ -118,30 +118,24 @@ public class RobotContainer {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
+            new MagazineCommand(collector, magazine, bling, 0.35, 2));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
+            new MagazineCommand(collector, magazine, bling, 0.35, 2));
       case 2:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
+            new MagazineCommand(collector, magazine, bling, 0.4, 2),
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
+            new MagazineCommand(collector, magazine, bling, 0.4, 2),
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
+            new MagazineCommand(collector, magazine, bling, 0.4, 2));
       case 3:
         return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
       case 4:
@@ -161,18 +155,15 @@ public class RobotContainer {
             new AutomaticFireCommand(turret, shooter, portTracker, magazine), new TurretPositionCommand(turret, 0),
 
             // Chase and collect 3 power cells
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-                new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-                new MagazineCommand(collector, magazine, bling, 0.35, 2),
-                new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-                new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-                new MagazineCommand(collector, magazine, bling, 0.35, 2),
-                new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-                new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-                new MagazineCommand(collector, magazine, bling, 0.35, 2),
-                new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
 
             // Rotate backwards
             new TurnToHeadingCommand(drivetrain, bling, Math.PI), new TurretPositionCommand(turret, Math.PI),

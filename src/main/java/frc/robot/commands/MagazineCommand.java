@@ -55,7 +55,7 @@ public class MagazineCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        sensor = magazine.getSensor();
+        sensor = magazine.getSensor() || magazine.getSensor2() || magazine.getSensor3();
         hadNothing = false;
         isFinished = false;
         hasFinishedNormally = true;
@@ -81,21 +81,22 @@ public class MagazineCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        sensor = magazine.getSensor();
+        sensor = magazine.getSensor() || magazine.getSensor2() || magazine.getSensor3();
         if (sensor) {
-            collector.setCollect(0.45);
+            collector.setCollect(0.8);
             magazine.setVelocity(velocity);
             bling.setArray("blue");
             loopsFalse = 0;
         } else {
-            collector.setCollect(0.0);
-            magazine.setVelocity(0.0);
-            bling.setArray("purple");
+            bling.setArray("yellow");
             loopsFalse++;
         }
         bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
         if (loopsFalse > 9) {
+            collector.setCollect(0.0);
+            magazine.setVelocity(0.0);
             isFinished = true;
+            bling.setArray("purple");
         }
     }
 

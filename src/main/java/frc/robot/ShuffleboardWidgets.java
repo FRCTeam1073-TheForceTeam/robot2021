@@ -198,7 +198,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 collectorCurrent = Math.abs(collector.getfilteredCurrent());
 
-                magazineSensor = magazine.getSensor();
+                magazineSensor = magazine.getSensor() || magazine.getSensor2() || magazine.getSensor3();
                 magazinePosition = magazine.getPosition();
                 magazineCount = magazine.getPowerCellCount();
 

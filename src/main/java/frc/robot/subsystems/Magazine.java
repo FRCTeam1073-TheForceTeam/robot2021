@@ -16,7 +16,11 @@ public class Magazine extends SubsystemBase {
 
   private WPI_TalonSRX magazineMotor;
   private final DigitalInput inTakeSensor = new DigitalInput(0);
+  private final DigitalInput inTakeSensor2 = new DigitalInput(1);
+  private final DigitalInput inTakeSensor3 = new DigitalInput(2);
   private boolean isInTaking;
+  private boolean isInTaking2;
+  private boolean isInTaking3;
   private int cellCount;
   private double P = 0.6;
   private double I = 0.01;
@@ -30,9 +34,6 @@ public class Magazine extends SubsystemBase {
     SmartDashboard.putNumber("AAAAA", magazineTicksPerMeter);
     magazineMotor = new WPI_TalonSRX(26);
     cellCount = 0;
-    // cellCheck = false;
-    // cellEntering = false;
-    // cellExiting = false;
     magazineMotor.configFactoryDefault();
     magazineMotor.setSafetyEnabled(false);
     magazineMotor.setNeutralMode(NeutralMode.Brake);
@@ -90,6 +91,14 @@ public class Magazine extends SubsystemBase {
     return isInTaking;
   }
 
+  public boolean getSensor2() {
+    return isInTaking2;
+  }
+
+  public boolean getSensor3() {
+    return isInTaking3;
+  }
+
   // Add to the number of power cells.
   public void addPowerCell() {
     cellCount++;
@@ -111,6 +120,8 @@ public class Magazine extends SubsystemBase {
     // magazineMotor.setSelectedSensorPosition(0);
     // }
     isInTaking = !inTakeSensor.get();
+    isInTaking2 = !inTakeSensor2.get();
+    isInTaking3 = !inTakeSensor3.get();
     SmartDashboard.putBoolean("inTakeSensor.get() [MAG]", isInTaking);
     SmartDashboard.putNumber("Magazine Velocity [MAG]",
         magazineMotor.getSelectedSensorVelocity() * 10.0 / magazineTicksPerMeter);

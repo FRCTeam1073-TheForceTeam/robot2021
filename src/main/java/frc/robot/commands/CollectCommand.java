@@ -69,7 +69,7 @@ public class CollectCommand extends CommandBase {
     @Override
     public void initialize() {
         firstLoop = true;
-        powerMultiplier = 1.0;
+        powerMultiplier = 0.8;
         velocity = 0.35;
         shouldUnstall = false;
         isFinished = false;
@@ -110,7 +110,7 @@ public class CollectCommand extends CommandBase {
                 velocity = 0.0;
                 powerMultiplier *= -1;
                 hasFinishedNormally = false;
-            } else if (time - initialTime >= 1600) {
+            } else if (time - initialTime >= 1500) {
                 velocity = 0.0;
                 bling.setArray("purple");
             } else {
@@ -121,13 +121,16 @@ public class CollectCommand extends CommandBase {
         collector.setCollect(powerMultiplier * maxPower);
         drivetrain.setVelocity(velocity, 0.0);
         bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-        if (magazine.getSensor()) {
+        if (magazine.getSensor() || magazine.getSensor2() || magazine.getSensor3()) {
             trueLoops++;
         } else {
             trueLoops = 0;
         }
-        if (trueLoops > 9) {
-            isFinished = magazine.getSensor();
+        if (trueLoops > 4) {
+            isFinished = magazine.getSensor() || magazine.getSensor2() || magazine.getSensor3();
+        } else if (time - initialTime > 6000) {
+            hasFinishedNormally = false;
+            isFinished = true;
         }
     }
 
@@ -138,6 +141,9 @@ public class CollectCommand extends CommandBase {
         collector.setCollect(0.0);
         bling.setColorRGBAll(0, 0, 0);
         RobotContainer.memory.addToMemory("CollectCommand", hasFinishedNormally);
+        if (hasFinishedNormally) {
+            magazine.addPowerCell();
+        }
     }
 
     // Returns true when the command should end.
