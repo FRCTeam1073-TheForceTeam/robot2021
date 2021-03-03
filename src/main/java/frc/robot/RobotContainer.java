@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
@@ -27,9 +29,11 @@ import frc.robot.commands.ShooterControls;
 import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.TurretControls;
 import frc.robot.commands.TurretPortAlignCommand;
+import frc.robot.commands.TurretPositionCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
 import frc.robot.commands.AimingCalibrationControls;
+import frc.robot.commands.AutoDriveShootCommand;
 import frc.robot.commands.AutomaticFireCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
@@ -38,6 +42,7 @@ import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TurnCommand;
+import frc.robot.commands.TurnToHeadingCommand;
 // Import components: add software components (ex. InterpolatorTable, ErrorToOutput) here
 import frc.robot.memory.Memory;
 
@@ -109,43 +114,84 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
-    switch (ShuffleboardWidgets.auto) {
-      case 0:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+    return new SequentialCommandGroup(
+      new PrintCommand("RUNNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n!!!!!!!!!!!!!!!!!\n!!!!!!!"),
+      //Drive forward 2 meters
+      new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
+
+      //Shoot
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+
+      //Chase and collect 3 power cells
+      new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
-      case 1:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
+      new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
+      new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
-      case 2:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
-      case 3:
-        return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
-      case 4:
-        return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
-      case 5:
-        return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
-      default:
-        return new TurnCommand(drivetrain, bling, 0.0);
-    }
+            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
+
+      // Rotate backwards
+      new TurnToHeadingCommand(drivetrain, bling, Math.PI),
+      new TurretPositionCommand(turret, Math.PI),
+
+      //Shoot
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine)
+    );
+
+    // switch (ShuffleboardWidgets.auto) {
+    //   case 0:
+    //     return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+    //         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+    //         new MagazineCommand(collector, magazine, bling, 0.35, 2),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
+    //   case 1:
+    //     return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+    //         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+    //         new MagazineCommand(collector, magazine, bling, 0.35, 2),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
+    //         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+    //         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+    //         new MagazineCommand(collector, magazine, bling, 0.35, 2),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
+    //   case 2:
+    //     return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+    //         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+    //         new MagazineCommand(collector, magazine, bling, 0.35, 2),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
+    //         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+    //         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+    //         new MagazineCommand(collector, magazine, bling, 0.35, 2),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
+    //         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
+    //         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+    //         new MagazineCommand(collector, magazine, bling, 0.35, 2),
+    //         new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
+    //   case 3:
+    //     return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
+    //   case 4:
+    //     return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
+    //   case 5:
+    //     return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
+    //   case 6:
+    //     return new AutoDriveShootCommand(
+    //         drivetrain, 
+    //         bling, 
+    //         cellTracker, 
+    //         collector, 
+    //         turret, 
+    //         shooter, 
+    //         portTracker,
+    //         magazine
+    //     );
+    //   default:
+    //     return new TurnCommand(drivetrain, bling, 0.0);
+    // }
   }
 
   // Command that we run in teleoperation mode.
