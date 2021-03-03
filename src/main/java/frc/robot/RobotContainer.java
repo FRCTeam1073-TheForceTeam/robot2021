@@ -115,34 +115,39 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
     return new SequentialCommandGroup(
-      new PrintCommand("RUNNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n!!!!!!!!!!!!!!!!!\n!!!!!!!"),
+      //[[EMERGENCY BACKUP AUTONOMOUS]]
+      //[[IN CASE OF COLLECTOR DOING WEIRD THINGS BREAK GLASS]]
+      new PrintCommand("[BackupAutonomousRoutine] INITIALIZED!!!\n.\n.\n.\n."),
+
       //Drive forward 2 meters
       new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
 
       //Shoot
       new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0),
 
-      //Chase and collect 3 power cells
-      new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
-      new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
-      new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)),
+      //Drive forward 1.5 more meters, going a bit faster.
+      new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
 
-      // Rotate backwards
-      new TurnToHeadingCommand(drivetrain, bling, Math.PI),
-      new TurretPositionCommand(turret, Math.PI),
+      // Rotate 90 degrees to the right (negative rotation on flyhweel, positive on turret).
+      new TurnToHeadingCommand(drivetrain, bling, -Math.PI * 0.5),
+      new TurretPositionCommand(turret, Math.PI * 0.5),
 
       //Shoot
       new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new InstantCommand(shooter::stop, shooter),
+      new TurretPositionCommand(turret, 0),
+
+      //Drive forward 2.5 more meters at the same speed (I'd make it go faster but I want this to work every time).
+      new DriveForwardCommand(drivetrain, bling, 2.5, 1.5),
+
+      //Shoot
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new InstantCommand(shooter::stop, shooter),
+      new TurretPositionCommand(turret, 0),
+
+      new TurnToHeadingCommand(drivetrain, bling, 0),
       new TurretPositionCommand(turret, 0)
     );
 
