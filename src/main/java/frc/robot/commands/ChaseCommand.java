@@ -183,12 +183,8 @@ public class ChaseCommand extends CommandBase {
 
             }
 
-            if (powerCellData.cy >= 168) {
-                velocityMultiplier = 0;
-            }
-
         } else if (alignState == AlignState.ALIGNED) {
-            rotationalSpeedMultiplier = 0.0;
+            rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
             velocityMultiplier = Math.min(-(powerCellData.cy - 239) / 200.0, 1.0);
 
             if (powerCellData.cy >= 195) {
@@ -200,7 +196,7 @@ public class ChaseCommand extends CommandBase {
             }
 
         } else {
-            if (loopsWithoutData > 1) {
+            if (loopsWithoutData > 4) {
                 rotationalSpeedMultiplier = 0.0;
                 velocityMultiplier = 0.0;
             }

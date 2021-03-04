@@ -111,7 +111,7 @@ public class TargetFlywheelCommand extends CommandBase {
   }
   
   public boolean isFinished() {
-    // return false;
-    return Math.abs(currentFlywheelVelocity - flywheelVelocity) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
+    return false;
+    // return Math.abs(currentFlywheelVelocity - flywheelVelocity) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
   }
 }
