@@ -25,7 +25,7 @@ import frc.robot.subsystems.Turret;
 public class AutomaticFireCommand extends ParallelDeadlineGroup {
 
   /** Creates a new AutomaticFireCommand. */
-  public AutomaticFireCommand(Turret turret, Shooter shooter, PowerPortTracker portTracker, Magazine magazine) {
+  public AutomaticFireCommand(Turret turret, Shooter shooter, PowerPortTracker portTracker, Magazine magazine, double amt) {
     super(
       //Deadline command
       new SequentialCommandGroup(
@@ -35,7 +35,7 @@ public class AutomaticFireCommand extends ParallelDeadlineGroup {
           // new WaitCommand(0.75),
           // new AdvanceMagazineCommand(magazine, 1, 2.0),
           // new WaitCommand(0.75),
-          new AdvanceMagazineCommand(magazine, 1, 2.5),
+          new AdvanceMagazineCommand(magazine, 1, amt),
           new InstantCommand(shooter::stop, shooter),
           new InstantCommand(shooter::lowerHood, shooter)
       ),

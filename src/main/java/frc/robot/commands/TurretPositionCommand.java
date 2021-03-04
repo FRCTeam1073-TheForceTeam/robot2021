@@ -75,6 +75,6 @@ public class TurretPositionCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(angSeparation) <= 0.025);
+    return (Math.abs(angSeparation) <= 0.1);
   }
 }

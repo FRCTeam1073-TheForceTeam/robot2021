@@ -70,7 +70,7 @@ public class TurnToHeadingCommand extends CommandBase {
     angleTurned = MathUtil.angleModulus(drivetrain.getRobotPose().getRotation().getRadians() - initAngle);
     double angleRemaining = (angleToTurn - angleTurned);
     speed = maxSpeed * Math.signum(angleRemaining)
-        * Math.min(Math.pow(Math.abs(angleRemaining / angleToTurn), 0.5) + 0.2, 1);
+        * Math.min(Math.pow(Math.abs(angleRemaining / angleToTurn), 0.5) + 0.4, 1);
     SmartDashboard.putNumber("[Turn] Target Angle", angleToTurn);
     SmartDashboard.putNumber("[Turn] Current Angle", angleTurned);
     System.out.println("[TurnCommand] Turn speed is " + speed + " rad/sec");
@@ -93,6 +93,6 @@ public class TurnToHeadingCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (angleToTurn - angleTurned) * Math.signum(angleToTurn) <= 0.02;
+    return (angleToTurn - angleTurned) * Math.signum(angleToTurn) <= 0.1;
   }
 }

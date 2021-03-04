@@ -33,7 +33,6 @@ import frc.robot.commands.TurretPositionCommand;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
 import frc.robot.commands.AimingCalibrationControls;
-import frc.robot.commands.AutoDriveShootCommand;
 import frc.robot.commands.AutomaticFireCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
@@ -123,27 +122,27 @@ public class RobotContainer {
       new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
       new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0),
 
       //Drive forward 1.5 more meters, going a bit faster.
       new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
 
-      // Rotate 90 degrees to the right (negative rotation on flyhweel, positive on turret).
-      new TurnToHeadingCommand(drivetrain, bling, -Math.PI * 0.5),
-      new TurretPositionCommand(turret, Math.PI * 0.5),
-
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
       new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0),
 
-      //Drive forward 2.5 more meters at the same speed (I'd make it go faster but I want this to work every time).
-      new DriveForwardCommand(drivetrain, bling, 2.5, 1.5),
+      // Rotate 90 degrees to the left (positive rotation on flyhweel, negative rotation on turret).
+      new TurnToHeadingCommand(drivetrain, bling, Math.PI * 0.5),
+      new TurretPositionCommand(turret, -Math.PI * 0.5),
 
+      //Drive forward 2.5 more meters at the same speed (I'd make it go faster but I want this to work every time).
+      new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
+      
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, 5),
       new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0),
 
