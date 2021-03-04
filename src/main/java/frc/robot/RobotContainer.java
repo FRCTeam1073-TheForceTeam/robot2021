@@ -123,7 +123,7 @@ public class RobotContainer {
       new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
       new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0),
 
@@ -135,7 +135,7 @@ public class RobotContainer {
       new TurretPositionCommand(turret, Math.PI * 0.5),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
       new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0),
 
@@ -143,7 +143,7 @@ public class RobotContainer {
       new DriveForwardCommand(drivetrain, bling, 2.5, 1.5),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
       new InstantCommand(shooter::stop, shooter),
       new TurretPositionCommand(turret, 0),
 
@@ -184,7 +184,7 @@ public class RobotContainer {
     //   case 4:
     //     return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
     //   case 5:
-    //     return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
+    //     return new AutomaticFireCommand(turret, shooter, portTracker, magazne, bling);
     //   case 6:
     //     return new AutoDriveShootCommand(
     //         drivetrain, 
