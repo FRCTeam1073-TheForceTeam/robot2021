@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
@@ -25,11 +26,11 @@ import frc.robot.subsystems.Turret;
 public class AutomaticFireCommand extends ParallelDeadlineGroup {
 
   /** Creates a new AutomaticFireCommand. */
-  public AutomaticFireCommand(Turret turret, Shooter shooter, PowerPortTracker portTracker, Magazine magazine) {
+  public AutomaticFireCommand(Turret turret, Shooter shooter, PowerPortTracker portTracker, Magazine magazine, Bling bling) {
     super(
       //Deadline command
       new SequentialCommandGroup(
-          new WaitToFire(shooter, portTracker),
+          new WaitToFire(shooter, portTracker, bling),
           new TargetHoodCommand(shooter, portTracker),
           new AdvanceMagazineCommand(magazine, 1, 2.5),
           new WaitCommand(0.75),

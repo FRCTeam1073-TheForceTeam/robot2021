@@ -34,7 +34,7 @@ public class AutoDriveShootCommand extends SequentialCommandGroup {
       new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine),
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
 
       //Chase and collect 3 power cells
       new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
@@ -55,7 +55,7 @@ public class AutoDriveShootCommand extends SequentialCommandGroup {
       new TurretPositionCommand(turret, Math.PI),
 
       //Shoot
-      new AutomaticFireCommand(turret, shooter, portTracker, magazine)
+      new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling)
       );
   }
 
