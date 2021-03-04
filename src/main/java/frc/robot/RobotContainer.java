@@ -152,7 +152,8 @@ public class RobotContainer {
             new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
 
             // Shoot
-            new AutomaticFireCommand(turret, shooter, portTracker, magazine), new TurretPositionCommand(turret, 0),
+            new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
+            new InstantCommand(shooter::stop, shooter), new TurretPositionCommand(turret, 0),
 
             // Chase and collect 3 power cells
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
@@ -169,7 +170,8 @@ public class RobotContainer {
             new TurnToHeadingCommand(drivetrain, bling, Math.PI), new TurretPositionCommand(turret, Math.PI),
 
             // Shoot
-            new AutomaticFireCommand(turret, shooter, portTracker, magazine), new TurretPositionCommand(turret, 0));
+            new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling),
+            new InstantCommand(shooter::stop, shooter), new TurretPositionCommand(turret, 0));
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
