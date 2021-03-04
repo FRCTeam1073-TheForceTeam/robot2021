@@ -141,7 +141,7 @@ public class RobotContainer {
       case 4:
         return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
       case 5:
-        return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
+        return new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling);
       case 6:
         return new AutoDriveShootCommand(drivetrain, bling, cellTracker, collector, turret, shooter, portTracker,
             magazine);
