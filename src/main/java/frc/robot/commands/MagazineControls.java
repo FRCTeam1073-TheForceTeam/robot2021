@@ -34,7 +34,7 @@ public class MagazineControls extends CommandBase {
     if (OI.operatorController.getBumper(Hand.kLeft)) {
       magazineVelocity *= 6;
     }
-    if (OI.operatorController.getBumper(Hand.kLeft)) {
+    if (OI.operatorController.getBumper(Hand.kRight)) {
       magazineVelocity *= -1;
     }
     //SmartDashboard.putNumber("Magazine Power", magazineVelocity);

@@ -33,10 +33,12 @@ public class CollectorControls extends CommandBase {
     public void execute() {
         if (OI.operatorController.getAButton()) {
             power = OI.operatorController.getRawAxis(1);
+            SmartDashboard.putNumber("sfdsfd", 247);
         } else {
             power = 0;
         }
         SmartDashboard.putNumber("Collector Power", power);
+        SmartDashboard.putBoolean("[ClCtls] Collector Stalled", collector.isStalled());
         collector.setCollect(power);
         if (OI.operatorController.getBackButtonPressed()) {
             collector.lower();

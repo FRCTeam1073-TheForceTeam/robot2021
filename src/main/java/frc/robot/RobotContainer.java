@@ -72,8 +72,7 @@ public class RobotContainer {
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
 
-  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleMagazine, teleTurret, teleShooter,
-      teleCollect);
+  private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
