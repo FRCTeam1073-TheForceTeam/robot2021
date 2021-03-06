@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.OI;
 
@@ -30,16 +31,13 @@ public class MagazineControls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    magazineVelocity = OI.operatorController.getRawAxis(2);
-    if (OI.operatorController.getBumper(Hand.kLeft)) {
-      magazineVelocity *= 6;
-    }
+    magazineVelocity = OI.operatorController.getRawAxis(2) * Constants.MAX_FLYWHEEL_SPEED;
     if (OI.operatorController.getBumper(Hand.kRight)) {
       magazineVelocity *= -1;
     }
     //SmartDashboard.putNumber("Magazine Power", magazineVelocity);
 
-    magazine.setPower(magazineVelocity);
+    magazine.setVelocity(magazineVelocity);
 
     // magazine.setVelocity(magazineVelocity);
   }

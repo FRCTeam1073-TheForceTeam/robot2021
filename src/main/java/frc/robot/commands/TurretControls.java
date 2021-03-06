@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.Turret;
+import frc.robot.Utility;
 import frc.robot.subsystems.OI;
 
 public class TurretControls extends CommandBase {
@@ -31,7 +32,7 @@ public class TurretControls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turretVelocity = 2 * OI.operatorController.getRawAxis(4);
+    turretVelocity = 2 * Utility.deadzone(OI.operatorController.getRawAxis(4));
       // turretVelocity = 0;
       // if (Math.abs(OI.operatorController.getRawAxis(4)) > 0.2) {
       //   turretVelocity = 0.75 * Math.signum(OI.operatorController.getRawAxis(4));

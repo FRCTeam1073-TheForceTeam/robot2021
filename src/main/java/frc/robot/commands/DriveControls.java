@@ -52,8 +52,8 @@ public class DriveControls extends CommandBase {
         }
     }
 
-    double maxForwardSpeed = 2.0; // in m/s
-    double maxRotationalSpeed = 2.0; // in radians/s
+    double maxForwardSpeed = 1.5; // in m/s
+    double maxRotationalSpeed = 3.0; // in radians/s
 
     public void execute() {
         multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * Utility.deadzone(OI.driverController.getRawAxis((3))));

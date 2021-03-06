@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Utility;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.OI;
 
@@ -31,20 +32,16 @@ public class CollectorControls extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (OI.operatorController.getAButton()) {
-            power = OI.operatorController.getRawAxis(1);
-            SmartDashboard.putNumber("sfdsfd", 247);
-        } else {
-            power = 0;
-        }
+        power = Utility.deadzone(OI.operatorController.getRawAxis(1));
+        SmartDashboard.putNumber("sfdsfd", 247);
         SmartDashboard.putNumber("Collector Power", power);
         SmartDashboard.putBoolean("[ClCtls] Collector Stalled", collector.isStalled());
         collector.setCollect(power);
         if (OI.operatorController.getBackButtonPressed()) {
-            collector.lower();
+            collector.raise();
         }
         if (OI.operatorController.getStartButtonPressed()) {
-            collector.raise();
+            collector.lower();
         }
     }
 
