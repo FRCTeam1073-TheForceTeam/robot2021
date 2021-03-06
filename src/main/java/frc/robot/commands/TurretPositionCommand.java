@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.Constants;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Turret;
@@ -41,7 +42,7 @@ public class TurretPositionCommand extends CommandBase {
   }
 
   public double curve(double input, double maxSpeed) {
-    if (Math.abs(input) > 0.025) {
+    if (Math.abs(input) > 0.0225) {
       return Math.signum(input) * (0.3 + Math.pow(Math.abs(input / maxSpeed), 0.65) * maxSpeed);
     } else {
       return 0;
@@ -75,6 +76,6 @@ public class TurretPositionCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(angSeparation) <= 0.025);
+    return (Math.abs(angSeparation) <= 0.03);
   }
 }

@@ -12,8 +12,8 @@ import frc.robot.subsystems.Magazine;
 
 public class AdvanceMagazineCommand extends CommandBase {
   /** Creates a new AdvancedMagazineCommand. */
-  private final Magazine magazine;
-  private final double magVelocity;
+  private Magazine magazine;
+  private double magVelocity;
   private double initPosition;
   private double distanceTraveled;
   private double numPowerCells;
@@ -22,6 +22,7 @@ public class AdvanceMagazineCommand extends CommandBase {
 
   /**
    * Advances magazine by a certain number of power cell diameters.
+   * If the number of diameters is negative, it will run backwards.
    * 
    * @param magazine_      Magazine subsystem
    * @param magVelocity_   Magazine velocity (m/s) (defaults to 1 m/s)
@@ -32,6 +33,7 @@ public class AdvanceMagazineCommand extends CommandBase {
     magazine = magazine_;
     magVelocity = magVelocity_;
     numPowerCells = numPowerCells_;
+    magVelocity = Math.abs(magVelocity) * Math.signum(numPowerCells);
     this.checkNumPreviousMemoryEntries = checkNumPreviousMemoryEntries;
     addRequirements(magazine);
   }
@@ -67,7 +69,7 @@ public class AdvanceMagazineCommand extends CommandBase {
     distanceTraveled = (magazine.getPosition() - initPosition);
     SmartDashboard.putNumber("y [MAGCTL]", distanceTraveled);
     magazine.setVelocity(magVelocity);
-    isFinished = (distanceTraveled >= Constants.POWER_CELL_DIAMETER * numPowerCells);
+    isFinished = (Math.signum(numPowerCells) * distanceTraveled >= Math.signum(numPowerCells) * Constants.POWER_CELL_DIAMETER * numPowerCells);
   }
 
   // Called once the command ends or is interrupted.

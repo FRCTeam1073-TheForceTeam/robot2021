@@ -32,15 +32,20 @@ public class CollectorControls extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        power = Utility.deadzone(OI.operatorController.getRawAxis(1));
-        SmartDashboard.putNumber("sfdsfd", 247);
-        SmartDashboard.putNumber("Collector Power", power);
-        SmartDashboard.putBoolean("[ClCtls] Collector Stalled", collector.isStalled());
+        if (collector.isStalled()) {
+            power = -0.3;  
+        } else if (OI.driverController.getBumper(Hand.kLeft)) {
+            power = 1;
+        }else if (OI.driverController.getBumper(Hand.kRight)) {
+            power = -1;            
+        } else {
+            power = 0;
+        }
         collector.setCollect(power);
-        if (OI.operatorController.getBackButtonPressed()) {
+        if (OI.driverController.getBackButtonPressed()) {
             collector.raise();
         }
-        if (OI.operatorController.getStartButtonPressed()) {
+        if (OI.driverController.getStartButtonPressed()) {
             collector.lower();
         }
     }

@@ -68,11 +68,6 @@ public class DriveControls extends CommandBase {
         
                 // drivetrain.setPower(leftOutput, rightOutput);
         drivetrain.setVelocity(forward, rotation);
-        // ensures that the driver doesn't accidentally reset the odometry but makes it
-        // an option
-        if (OI.driverController.getStartButtonPressed() && OI.driverController.getBackButtonPressed()) {
-            drivetrain.resetRobotOdometry();
-        }
     }
 
     public boolean isFinished() {
