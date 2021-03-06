@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import edu.wpi.first.hal.CANData;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -9,7 +12,7 @@ public class PowerCellTracker extends OpenMVSubsystem {
     /**
      * This is the data for each active power cell target visible.
      */
-    public static class PowerCellData {
+    public static class PowerCellData implements Cloneable {
       public int cx = 0;  // X coordinate of target center in image (pixels)
       public int cy = 0;  // Y coordinate of target center in image (pixels)
       public int vx = 0;  // X veloicity of target in image pixels/second
@@ -42,12 +45,28 @@ public class PowerCellTracker extends OpenMVSubsystem {
         quality = 0;
         timestamp = 0;
       }
+      
+      @Override
+      protected Object clone() throws CloneNotSupportedException {
+        PowerCellData clone = null;
+
+        clone = new PowerCellData();
+        clone.cx = cx;
+        clone.cy = cy;
+        clone.vx = vx;
+        clone.vy = vy;
+        clone.targetType = targetType;
+        clone.quality = quality;
+        clone.timestamp = timestamp;
+        
+        return clone;
+      }
     }
 
     private CANData targetData;
     private long lastDataUpdate = 0;
     private long failedReadCount = 0;
-    private PowerCellData m_cellData;
+    private ArrayList<PowerCellData> m_cellData;
 
     
     private double m_range = -1.0;
@@ -58,22 +77,46 @@ public class PowerCellTracker extends OpenMVSubsystem {
     public PowerCellTracker() {
       super(2);
       targetData = new CANData();
-      m_cellData = new PowerCellData();
+      m_cellData = new ArrayList<PowerCellData>();
     }
 
     /// Return set of active targets.
     public boolean getCellData(PowerCellData data) {
-      if (m_cellData.quality > 10) {
-        data.cx = m_cellData.cx;
-        data.cy = m_cellData.cy;
-        data.vx = m_cellData.vx;
-        data.vy = m_cellData.vy;
-        data.targetType = m_cellData.targetType;
-        data.quality = m_cellData.quality;
-        data.timestamp = lastDataUpdate;
-        return true;
+      if (m_cellData.size() > 0) {
+        if (m_cellData.get(0).quality > 10) {
+          data.cx = m_cellData.get(0).cx;
+          data.cy = m_cellData.get(0).cy;
+          data.vx = m_cellData.get(0).vx;
+          data.vy = m_cellData.get(0).vy;
+          data.targetType = m_cellData.get(0).targetType;
+          data.quality = m_cellData.get(0).quality;
+          data.timestamp = lastDataUpdate;
+          return true;
+        } else {
+          data.clear();
+          return false;
+        }
       } else {
         data.clear();
+        return false;
+      }
+    }
+
+    public boolean getCellData(ArrayList<PowerCellData> cells) {
+      if (m_cellData.size() > 0) {
+        cells.clear();
+        Iterator<PowerCellData> iterator = m_cellData.iterator();
+        while (iterator.hasNext()) {
+          try {
+            cells.add((PowerCellData)iterator.next().clone());
+          }
+
+          catch (CloneNotSupportedException e) {
+          }
+        }
+        return true;
+      } else {
+        cells.clear();
         return false;
       }
     }
@@ -92,30 +135,34 @@ public class PowerCellTracker extends OpenMVSubsystem {
 
     // Updates our config and mode:
     private boolean readAdvancedTracking() {
-      if (read(apiIndex(5, 1), targetData) == true && targetData.length == 8) {
-        int cxhi = targetData.data[0] & 0xFF;
-        int cxlo = targetData.data[1] & 0xF0;
-        m_cellData.cx = (cxhi << 4) | (cxlo >> 4);
-        int cyhi = targetData.data[1] & 0x0F;
-        int cylo = targetData.data[2] & 0xFF;
-        m_cellData.cy = (cyhi << 8) | cylo;
-        int areahi = targetData.data[3] & 0xFF;
-        int arealo = targetData.data[4] & 0xFF;
-        m_cellData.area = (areahi << 8) | arealo;
-        m_cellData.targetType = targetData.data[5];
-        m_cellData.quality = targetData.data[6];
-        m_cellData.timestamp = targetData.timestamp; // Assign the CANBus message timestamp
-        lastDataUpdate = targetData.timestamp;
-        return true;
-      }
-      else {
-        // 10 Failures is ~ 0.5 seconds with 50Hz loop.
-        if(failedReadCount++ >= 10){
-          m_cellData.quality = 0;
-          failedReadCount = 0;
-          return false;
+      m_cellData.clear();
+      for (int index = 1; index <= 3; index++) {
+        if (read(apiIndex(5, index), targetData) == true && targetData.length == 8) {
+          PowerCellData tempCellData = new PowerCellData();
+          int cxhi = targetData.data[0] & 0xFF;
+          int cxlo = targetData.data[1] & 0xF0;
+          tempCellData.cx = (cxhi << 4) | (cxlo >> 4);
+          int cyhi = targetData.data[1] & 0x0F;
+          int cylo = targetData.data[2] & 0xFF;
+          tempCellData.cy = (cyhi << 8) | cylo;
+          int areahi = targetData.data[3] & 0xFF;
+          int arealo = targetData.data[4] & 0xFF;
+          tempCellData.area = (areahi << 8) | arealo;
+          tempCellData.targetType = targetData.data[5];
+          tempCellData.quality = targetData.data[6];
+          tempCellData.timestamp = targetData.timestamp; // Assign the CANBus message timestamp
+          lastDataUpdate = targetData.timestamp;
+          m_cellData.add(tempCellData);
         }
-        else return true;
+        else {
+          // 10 Failures is ~ 0.5 seconds with 50Hz loop.
+          failedReadCount++;
+        }
+      }
+      if (m_cellData.size() > 0) {
+        return true;
+      } else {
+        return false;
       }
     }
 
@@ -149,13 +196,22 @@ public class PowerCellTracker extends OpenMVSubsystem {
 
       // Now do PowerPortTracker specific things.
       readAdvancedTracking();
-      SmartDashboard.putNumber("PowerCell.CX", m_cellData.cx);
-      SmartDashboard.putNumber("PowerCell.CY", m_cellData.cy);
-      SmartDashboard.putNumber("PowerCell.Qual", m_cellData.quality);
-      SmartDashboard.putNumber("PowerCell.Area", m_cellData.area);
+      for (int index = 0; index < 3; index++) {
+        if (m_cellData.size() > index) {
+          SmartDashboard.putNumber(String.format("PowerCell[%d].CX", index), m_cellData.get(index).cx);
+          SmartDashboard.putNumber(String.format("PowerCell[%d].CY", index), m_cellData.get(index).cy);
+          SmartDashboard.putNumber(String.format("PowerCell[%d].Qual", index), m_cellData.get(index).quality);
+          SmartDashboard.putNumber(String.format("PowerCell[%d].Area", index), m_cellData.get(index).area);
+        } else {
+          SmartDashboard.putNumber(String.format("PowerCell[%d].CX", index), 0);
+          SmartDashboard.putNumber(String.format("PowerCell[%d].CY", index), 0);
+          SmartDashboard.putNumber(String.format("PowerCell[%d].Qual", index), 0);
+          SmartDashboard.putNumber(String.format("PowerCell[%d].Area", index), 0);
+        }
+      }
 
-     readRange();
-     SmartDashboard.putNumber("PowerCell.Range", m_range);
-     SmartDashboard.putNumber("PowerCell.RangeSignal", m_rangeSignalStrength);
+      readRange();
+      SmartDashboard.putNumber("PowerCell.Range", m_range);
+      SmartDashboard.putNumber("PowerCell.RangeSignal", m_rangeSignalStrength);
     }
 }
