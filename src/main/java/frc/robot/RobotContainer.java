@@ -113,7 +113,7 @@ public class RobotContainer {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new MagazineCommand(collector, magazine, bling, 0.5, 2),
             new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(

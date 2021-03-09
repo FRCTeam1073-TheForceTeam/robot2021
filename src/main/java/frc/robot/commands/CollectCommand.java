@@ -126,7 +126,7 @@ public class CollectCommand extends CommandBase {
         } else {
             trueLoops = 0;
         }
-        if (trueLoops > 9) {
+        if (trueLoops > 4) {
             isFinished = true;
         }
     }
