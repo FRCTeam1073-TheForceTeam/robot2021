@@ -23,6 +23,8 @@ public class MagazineCommand extends CommandBase {
     private boolean hasFinishedNormally;
     private int checkNumPreviousMemoryEntries;
     private int loopsFalse;
+    private boolean lastReading;
+    private boolean wasFalse;
 
     /**
      * Creates a new MagazineCommand.
@@ -56,16 +58,17 @@ public class MagazineCommand extends CommandBase {
     @Override
     public void initialize() {
         sensor = magazine.getSensor();
+        lastReading = sensor;
         hadNothing = false;
         isFinished = false;
         hasFinishedNormally = true;
-        if (!sensor) {
-            bling.setArray("red");
-            bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-            hadNothing = true;
-            hasFinishedNormally = false;
-            isFinished = true;
-        }
+        // if (!sensor) {
+        //     bling.setArray("red");
+        //     bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+        //     hadNothing = true;
+        //     hasFinishedNormally = false;
+        //     isFinished = true;
+        // }
         loopsFalse = 0;
         if (checkNumPreviousMemoryEntries > 0
                 && !RobotContainer.memory.havePreviousFinished(checkNumPreviousMemoryEntries)) {
@@ -81,22 +84,24 @@ public class MagazineCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        // num switched greater than 2, sensor sees no ball
         sensor = magazine.getSensor();
-        if (sensor) {
-            collector.setCollect(0.45);
-            magazine.setVelocity(velocity);
-            bling.setArray("blue");
-            loopsFalse = 0;
-        } else {
+
+        if (lastReading == true && sensor == false) {
             collector.setCollect(0.0);
             magazine.setVelocity(0.0);
-            bling.setArray("purple");
-            loopsFalse++;
-        }
-        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-        if (loopsFalse > 9) {
+            bling.setArray("orange");
             isFinished = true;
+        } else {
+            collector.setCollect(0.45);
+            magazine.setVelocity(velocity);
+            bling.setArray("green");
+            // loopsFalse = 0;
         }
+
+        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+
+        lastReading = sensor;
     }
 
     // Called once the command ends or is interrupted.

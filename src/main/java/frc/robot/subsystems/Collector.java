@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.LinearFilter;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,10 +16,12 @@ public class Collector extends SubsystemBase {
   private boolean isRelaxed = false;
   private WPI_TalonSRX collectorMotor;
   private Solenoid collectorWithdrawPneumatic, collectorDeployPneumatic;
+  private final DigitalInput collectorSensor = new DigitalInput(1);
   private LinearFilter filter;
   private double power;
   private double rawCurrent;
   private double filteredCurrent;
+  private boolean isIntaking;
 
   public Collector() {
     this.collectorWithdrawPneumatic = new Solenoid(1, 6);
@@ -38,6 +41,10 @@ public class Collector extends SubsystemBase {
   // Is the collector motor stalled?
   public boolean isStalled() {
     return 27.85 < Math.abs(getfilteredCurrent());
+  }
+
+  public boolean getSensor() {
+    return isIntaking;
   }
 
   /**
@@ -146,6 +153,7 @@ public class Collector extends SubsystemBase {
 
   @Override
   public void periodic() {
+    isIntaking = !collectorSensor.get();
     // This method will be called once per scheduler run
     rawCurrent = collectorMotor.getStatorCurrent();
     filteredCurrent = filter.calculate(rawCurrent);

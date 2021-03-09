@@ -95,7 +95,7 @@ public class CollectCommand extends CommandBase {
         }
         time = System.currentTimeMillis();
         if (shouldUnstall) {
-            if (time - initialTime >= 3000) {
+            if (time - initialTime >= 5000) {
                 powerMultiplier = 0.0;
                 velocity = 0.0;
                 drivetrain.setVelocity(0.0, 0.0);
@@ -121,13 +121,13 @@ public class CollectCommand extends CommandBase {
         collector.setCollect(powerMultiplier * maxPower);
         drivetrain.setVelocity(velocity, 0.0);
         bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-        if (magazine.getSensor()) {
+        if (collector.getSensor()) {
             trueLoops++;
         } else {
             trueLoops = 0;
         }
         if (trueLoops > 9) {
-            isFinished = magazine.getSensor();
+            isFinished = true;
         }
     }
 
