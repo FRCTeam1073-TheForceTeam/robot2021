@@ -18,6 +18,7 @@ public class ShooterControls extends CommandBase {
   public ShooterControls(Shooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
+    setName("[Teleop] ShooterControls");
     flywheelVelocity = 0;
     hoodAngle = shooter.hoodAngleHigh;
     currDPadState = -1;

@@ -7,12 +7,14 @@ package frc.robot;
 import java.time.Instant;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
@@ -124,6 +126,11 @@ public class RobotContainer {
           )
         );
 
+    SequentialCommandGroup cmd1=new SequentialCommandGroup(
+      new WaitForTarget(portTracker),
+      new TargetFlywheelCommand(shooter, portTracker)
+    );
+    cmd1.setName("WaitThenSpinUp");
     (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
       .whenPressed(
         new SequentialCommandGroup(
@@ -136,10 +143,7 @@ public class RobotContainer {
               new TargetHoodCommand(shooter, portTracker),
               new PrintCommand("AAAAAAAAAAAA\n\n\n")
             ),
-            new SequentialCommandGroup(
-              new WaitForTarget(portTracker),
-              new TargetFlywheelCommand(shooter, portTracker)
-            ),
+            cmd1,
             new TurretPortAlignCommand(turret, portTracker)
           )
         )
@@ -150,7 +154,15 @@ public class RobotContainer {
             new InstantCommand(shooter::interruptCurrentCommand, shooter),
             new InstantCommand(shooter::stop, shooter),
             new InstantCommand(shooter::lowerHood, shooter),
-            new ShooterControls(shooter)
+            new ShooterControls(shooter),
+            new InstantCommand(
+              () -> {
+                  SmartDashboard.putString("[InstantCommand2]whatsTheName",
+                      shooter.getCurrentCommand().getName());
+                  SmartDashboard.putBoolean("[InstantCommand2]isTheShooterDoingAnything[IC2]",
+                      shooter.getCurrentCommand() != null);
+              }, shooter
+            )
           )
         );
     (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
@@ -160,12 +172,36 @@ public class RobotContainer {
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value))
         .whenPressed(
           new SequentialCommandGroup(
-            new InstantCommand(shooter::interruptCurrentCommand, shooter),
+            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
             new AdvanceMagazineCommand(magazine, 1.25, 4),
             new TurretPositionCommand(turret, 0),
-            new InstantCommand(shooter::stop,shooter),
-            new InstantCommand(shooter::lowerHood,shooter),
-            new ShooterControls(shooter)
+            new InstantCommand(shooter::interruptCurrentCommand, shooter),
+            new WaitCommand(0.1),
+            new InstantCommand(shooter::stop, shooter),
+            new InstantCommand(shooter::lowerHood, shooter),
+            new ShooterControls(shooter),
+            new InstantCommand(
+              () -> {
+                  SmartDashboard.putString("[InstantCommand2]whatsTheName",
+                      shooter.getCurrentCommand().getName());
+                  SmartDashboard.putBoolean("[InstantCommand2]isTheShooterDoingAnything[IC2]",
+                      shooter.getCurrentCommand() != null);
+              }, shooter
+            )
+
+            // new InstantCommand(shooter::stop,shooter),
+            // new InstantCommand(shooter::lowerHood,shooter),
+            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+            // // new InstantCommand(turret::interruptCurrentCommand, turret),
+            // new PrintCommand("DSADSAFDSAFDSAFAFDSA\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"),
+            // new InstantCommand(
+            //   () -> {
+            //     SmartDashboard.putNumber("@$$@$$@", 4141414);
+            //     SmartDashboard.putString("[InstantCommand]whatsTheName");
+            //       SmartDashboard.putBoolean("[InstantCommand]isTheShooterDoingAnything[IC]",
+            //           shooter.getCurrentCommand() != null);
+            //   }, shooter
+            // )
           )
         );
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
