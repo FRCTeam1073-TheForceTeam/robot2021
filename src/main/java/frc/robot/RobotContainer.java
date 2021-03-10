@@ -111,38 +111,55 @@ public class RobotContainer {
     drivetrain.resetRobotOdometry();
     switch (ShuffleboardWidgets.auto) {
       case 0:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          new MagazineCommand(collector, magazine, bling, 0.35, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
+      case 1:
+        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3),
+            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.5, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
-      case 1:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
+            new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
       case 2:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3),
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3));
+        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          new MagazineCommand(collector, magazine, bling, 0.35, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3),
+          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          new MagazineCommand(collector, magazine, bling, 0.5, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3),
+          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          new MagazineCommand(collector, magazine, bling, 0.5, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
       case 3:
         return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
       case 4:
         return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
       case 5:
         return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
+      case 6:
+        return new DriveForwardCommand(drivetrain, bling, 1.5, 2.5).andThen(
+          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          new MagazineCommand(collector, magazine, bling, 0.35, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          new MagazineCommand(collector, magazine, bling, 0.5, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          new MagazineCommand(collector, magazine, bling, 0.5, 2));
+          // new TurnToHeadingCommand());
+        
+
+
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

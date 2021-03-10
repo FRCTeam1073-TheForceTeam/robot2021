@@ -124,7 +124,8 @@ public class ChaseCommand extends CommandBase {
             } else {
                 scanRotationalSpeedMultiplier = -Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
             }
-            timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity));
+            // timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity));
+            timeToTurn = 8000;
             initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
             initialTime = System.currentTimeMillis();
         } else {
@@ -175,33 +176,25 @@ public class ChaseCommand extends CommandBase {
             rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
             velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.2, 1.0);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
-                rotationalSpeedMultiplier = 0.35;
+            // if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
+            //     rotationalSpeedMultiplier = 0.35;
 
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
-                rotationalSpeedMultiplier = -0.35;
+            // } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
+            //     rotationalSpeedMultiplier = -0.35;
 
-            }
+            // }
 
         } else if (alignState == AlignState.ALIGNED) {
-            rotationalSpeedMultiplier = -(powerCellData.cx - 159) / 160.0;
+            rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
             velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.2, 1.0);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
-                rotationalSpeedMultiplier = 0.35;
+            // if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
+            //     rotationalSpeedMultiplier = 0.35;
 
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
-                rotationalSpeedMultiplier = -0.35;
+            // } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
+                // rotationalSpeedMultiplier = -0.35;
 
-            }
-
-            if (powerCellData.cy >= 180) {
-                System.out.println("DONEDONEDONE");
-                rotationalSpeedMultiplier = 0.0;
-                velocityMultiplier = 0.0;
-                drivetrain.setVelocity(0.0, 0.0);
-                isFinished = true;
-            }
+            // }
 
         } else {
             if (loopsWithoutData > 5) {
@@ -211,6 +204,14 @@ public class ChaseCommand extends CommandBase {
             if (shouldScan) {
                 skipScan = false;
             }
+        }
+
+        if (powerCellData.cy >= 180) {
+            System.out.println("DONEDONEDONE");
+            rotationalSpeedMultiplier = 0.0;
+            velocityMultiplier = 0.0;
+            drivetrain.setVelocity(0.0, 0.0);
+            isFinished = true;
         }
     }
 
@@ -227,9 +228,10 @@ public class ChaseCommand extends CommandBase {
             rotationalSpeedMultiplier = scanRotationalSpeedMultiplier;
         }
 
-        if ((Math.signum(rotationalSpeedMultiplier) == 1.0 && time - initialTime >= timeToTurn
-                && MathUtil.angleModulus(angle - initialAngle) >= initialAngle)
-                || (time - initialTime >= timeToTurn && MathUtil.angleModulus(angle - initialAngle) <= initialAngle)) {
+        if ((time - initialTime >= timeToTurn)) {
+            //Math.signum(rotationalSpeedMultiplier) == 1.0 && 
+                // && MathUtil.angleModulus(angle - initialAngle) >= initialAngle)
+                // || (time - initialTime >= timeToTurn && MathUtil.angleModulus(angle - initialAngle) <= initialAngle)) {
             System.out.println("SCAN_DONE_SCAN_DONE");
             rotationalSpeedMultiplier = 0.0;
             velocityMultiplier = 0.0;

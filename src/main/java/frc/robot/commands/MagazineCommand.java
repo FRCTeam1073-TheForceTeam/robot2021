@@ -107,7 +107,7 @@ public class MagazineCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        magazine.setPower(0.0);
+        magazine.setVelocity(0.0);
         collector.setCollect(0.0);
         RobotContainer.memory.addToMemory("MagazineCommand", hasFinishedNormally);
     }
