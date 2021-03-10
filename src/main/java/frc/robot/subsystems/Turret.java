@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Turret extends SubsystemBase {
@@ -81,6 +82,19 @@ public class Turret extends SubsystemBase {
     public void stop() {
       turretRateLimiter.reset(0);
       turretRotator.set(ControlMode.Velocity, 0);
+    }
+    
+    /**
+     * Kills whatever command is running on the turret.
+     * This could cause some unintended behavior if the code assumes a command is active
+     * and it isn't, so it should be used only in situations where it is properly
+     * accounted for.
+     */
+    public void interruptCurrentCommand() {
+      Command currentCommand = getCurrentCommand();
+      if (currentCommand != null) {
+        getCurrentCommand().cancel();
+      }
     }
 
     @Override
