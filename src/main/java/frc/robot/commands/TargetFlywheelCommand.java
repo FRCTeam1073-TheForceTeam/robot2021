@@ -46,7 +46,6 @@ public class TargetFlywheelCommand extends CommandBase {
   public TargetFlywheelCommand(Shooter shooter_, PowerPortTracker portTracker_, int rangeUpdatePeriod_, double acceptableVelocityDifference_) {
     portTracker = portTracker_;
     rangeUpdatePeriod = rangeUpdatePeriod_;
-    setName("[Autonomous] TargetFlywheelCommand");
     flywheelTable = new InterpolatorTable(
         new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
         new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),

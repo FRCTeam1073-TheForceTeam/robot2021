@@ -29,12 +29,9 @@ public class TurretControls extends CommandBase {
 
   }
 
-  boolean a = false;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    a = !a;
-    SmartDashboard.putBoolean("[TurretControls] Still running?", a);
     turretVelocity = 1.5 * Utility.deadzone(OI.operatorController.getRawAxis(4));
       // turretVelocity = 0;
       // if (Math.abs(OI.operatorController.getRawAxis(4)) > 0.2) {

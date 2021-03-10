@@ -18,7 +18,6 @@ public class ShooterControls extends CommandBase {
   public ShooterControls(Shooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
-    setName("[Teleop] ShooterControls");
     flywheelVelocity = 0;
     hoodAngle = shooter.hoodAngleHigh;
     currDPadState = -1;
@@ -28,8 +27,8 @@ public class ShooterControls extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setFlywheelPower(0);
-    shooter.lowerHood();
+    flywheelVelocity = shooter.getFlywheelTargetVelocity();
+    hoodAngle = shooter.getHoodAngle();
     // shooter.setHoodPower(0);
   }
 
@@ -38,17 +37,19 @@ public class ShooterControls extends CommandBase {
   public void execute() {
     currDPadState = OI.operatorController.getPOV();
 
-    if (currDPadState == 90 && prevDPadState == -1) {
-      flywheelVelocity += 31.25;
-    }
-    if (currDPadState == 270 && prevDPadState == -1) {
-      flywheelVelocity -= 31.25;
-    }
-    if (currDPadState == 180 && prevDPadState == -1) {
-      hoodAngle += 0.025;
-    }
-    if (currDPadState == 0 && prevDPadState == -1) {
-      hoodAngle -= 0.025;
+    if (prevDPadState == -1) {
+      if (currDPadState == 90) {
+        flywheelVelocity += 31.25;
+      }
+      if (currDPadState == 270) {
+        flywheelVelocity -= 31.25;
+      }
+      if (currDPadState == 180) {
+        hoodAngle += 0.025;
+      }
+      if (currDPadState == 0) {
+        hoodAngle -= 0.025;
+      }        
     }
 
     if (OI.operatorController.getBButtonPressed()) {
@@ -68,8 +69,6 @@ public class ShooterControls extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setFlywheelPower(0);
-    shooter.lowerHood();
   }
 
   // Returns true when the command should end.

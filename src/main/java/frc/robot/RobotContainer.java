@@ -107,7 +107,7 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(teleDrive);
     turret.setDefaultCommand(teleTurret);
     collector.setDefaultCommand(teleCollect);
-    // shooter.setDefaultCommand(teleShooter);
+    shooter.setDefaultCommand(teleShooter);
   }
 
   /**
@@ -119,75 +119,67 @@ public class RobotContainer {
   private void configureButtonBindings() {
     (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
         .whenPressed(
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.35, 0.25, 3)
+          // new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+          new SequentialCommandGroup(
+            // new CollectCommand(drivetrain, collector, magazine, bling, 1.0),
+            // new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            // new AdvanceMagazineCommand(magazine, 0.35, 0.25, 2)
           )
         );
-
-    SequentialCommandGroup cmd1=new SequentialCommandGroup(
-      new WaitForTarget(portTracker),
-      new TargetFlywheelCommand(shooter, portTracker)
-    );
-    cmd1.setName("WaitThenSpinUp");
     (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
       .whenPressed(
         new SequentialCommandGroup(
-          new InstantCommand(shooter::interruptCurrentCommand, shooter),
+          // new InstantCommand(shooter::interruptCurrentCommand, shooter),
           new InstantCommand(shooter::stop, shooter),
           new InstantCommand(shooter::lowerHood, shooter),
           new ParallelDeadlineGroup(
             new SequentialCommandGroup(
               new WaitToFire(shooter, portTracker),
-              new TargetHoodCommand(shooter, portTracker),
-              new PrintCommand("AAAAAAAAAAAA\n\n\n")
+              new TargetHoodCommand(shooter, portTracker)
             ),
-            cmd1,
+            new SequentialCommandGroup(
+              new WaitForTarget(portTracker),
+              new TargetFlywheelCommand(shooter, portTracker)
+            ),
             new TurretPortAlignCommand(turret, portTracker)
           )
         )
       );
     (new JoystickButton(OI.operatorController, XboxController.Button.kB.value))
         .whenPressed(
-          new SequentialCommandGroup(
-            new InstantCommand(shooter::interruptCurrentCommand, shooter),
-            new InstantCommand(shooter::stop, shooter),
-            new InstantCommand(shooter::lowerHood, shooter),
-            new ShooterControls(shooter),
-            new InstantCommand(
-              () -> {
-                  SmartDashboard.putString("[InstantCommand2]whatsTheName",
-                      shooter.getCurrentCommand().getName());
-                  SmartDashboard.putBoolean("[InstantCommand2]isTheShooterDoingAnything[IC2]",
-                      shooter.getCurrentCommand() != null);
-              }, shooter
-            )
+          new ParallelCommandGroup(
+            new TurretPositionCommand(turret, 0),
+            new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
           )
+            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+            // new ShooterControls(shooter),
+            // new InstantCommand(
+            //   () -> {
+            //       SmartDashboard.putString("[InstantCommand2]whatsTheName",
+            //           shooter.getCurrentCommand().getName());
+            //       SmartDashboard.putBoolean("[InstantCommand2]isTheShooterDoingAnything[IC2]",
+            //           shooter.getCurrentCommand() != null);
+            //   }, shooter
+            // )
+          // )
         );
     (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
       .whenPressed(
-        new TurretPositionCommand(turret, 0)        
+        new TurretPositionCommand(turret, 0)
       );
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value))
         .whenPressed(
           new SequentialCommandGroup(
             // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-            new AdvanceMagazineCommand(magazine, 1.25, 4),
-            new TurretPositionCommand(turret, 0),
-            new InstantCommand(shooter::interruptCurrentCommand, shooter),
-            new WaitCommand(0.1),
-            new InstantCommand(shooter::stop, shooter),
-            new InstantCommand(shooter::lowerHood, shooter),
-            new ShooterControls(shooter),
-            new InstantCommand(
-              () -> {
-                  SmartDashboard.putString("[InstantCommand2]whatsTheName",
-                      shooter.getCurrentCommand().getName());
-                  SmartDashboard.putBoolean("[InstantCommand2]isTheShooterDoingAnything[IC2]",
-                      shooter.getCurrentCommand() != null);
-              }, shooter
-            )
+            new AdvanceMagazineCommand(magazine, 1.25, 4)
+
+            // new TurretPositionCommand(turret, 0),
+            // new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+
+            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+            // new InstantCommand(shooter::stop, shooter),
+            // new InstantCommand(shooter::lowerHood, shooter),
+            // new ShooterControls(shooter)
 
             // new InstantCommand(shooter::stop,shooter),
             // new InstantCommand(shooter::lowerHood,shooter),
@@ -259,7 +251,8 @@ public class RobotContainer {
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
-    return teleShooter;
+    return null;
+    // return teleShooter;
   }
 
   public Command getTestCommand() {
