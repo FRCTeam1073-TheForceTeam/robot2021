@@ -52,14 +52,15 @@ public class DriveControls extends CommandBase {
         }
     }
 
-    double maxForwardSpeed = 2.0; // in m/s
-    double maxRotationalSpeed = 2.0; // in radians/s
+    double maxForwardSpeed = 1.5; // in m/s
+    double maxRotationalSpeed = 3.0; // in radians/s
 
     public void execute() {
-        multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * Utility.deadzone(OI.driverController.getRawAxis((3))));
+        multiplier = Math
+                .exp(-Constants.THROTTLE_FALLOFF * (1 - Utility.deadzone(OI.driverController.getRawAxis((3)))));
         forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier * maxForwardSpeed;
-        rotation = Utility.deadzone(OI.driverController.getRawAxis(4)) * multiplier * maxRotationalSpeed;
-        arcadeCompute();
+        rotation = Utility.deadzone(-OI.driverController.getRawAxis(4)) * multiplier * maxRotationalSpeed;
+        // arcadeCompute();
         // System.out.println("Output power: [" + leftOutput + "," + rightOutput + "]");
         
 
@@ -68,11 +69,6 @@ public class DriveControls extends CommandBase {
         
                 // drivetrain.setPower(leftOutput, rightOutput);
         drivetrain.setVelocity(forward, rotation);
-        // ensures that the driver doesn't accidentally reset the odometry but makes it
-        // an option
-        if (OI.driverController.getStartButtonPressed() && OI.driverController.getBackButtonPressed()) {
-            drivetrain.resetRobotOdometry();
-        }
     }
 
     public boolean isFinished() {
