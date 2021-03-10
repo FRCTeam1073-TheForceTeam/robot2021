@@ -51,6 +51,7 @@ import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TargetFlywheelCommand;
 import frc.robot.commands.TargetHoodCommand;
 import frc.robot.commands.TurnCommand;
+import frc.robot.commands.TurnToHeading;
 // Import components: add software components (ex. InterpolatorTable, ErrorToOutput) here
 import frc.robot.memory.Memory;
 
@@ -243,6 +244,43 @@ public class RobotContainer {
         return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
       case 5:
         return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
+      case 12:
+        return new SequentialCommandGroup(
+          //[[EMERGENCY BACKUP AUTONOMOUS]]
+          //[[IN CASE OF COLLECTOR DOING WEIRD THINGS BREAK GLASS]]
+          new PrintCommand("[BackupAutonomousRoutine] INITIALIZED!!!\n.\n.\n.\n."),
+    
+          //Drive forward 2 meters
+          new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
+    
+          //Shoot
+          new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
+          new InstantCommand(shooter::stop, shooter),
+          new TurretPositionCommand(turret, 0),
+    
+          //Drive forward 1.5 more meters, going a bit faster.
+          new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
+    
+          //Shoot
+          new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
+          new InstantCommand(shooter::stop, shooter),
+          new TurretPositionCommand(turret, 0),
+    
+          // Rotate 90 degrees to the left (positive rotation on flyhweel, negative rotation on turret).
+          new TurnToHeading(drivetrain, bling, Math.PI * 0.5),
+          new TurretPositionCommand(turret, -Math.PI * 0.5),
+    
+          //Drive forward 2.5 more meters at the same speed (I'd make it go faster but I want this to work every time).
+          new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
+    
+          //Shoot
+          new AutomaticFireCommand(turret, shooter, portTracker, magazine, 5),
+          new InstantCommand(shooter::stop, shooter),
+          new TurretPositionCommand(turret, 0),
+    
+          new TurnToHeading(drivetrain, bling, 0),
+          new TurretPositionCommand(turret, 0)
+        );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
