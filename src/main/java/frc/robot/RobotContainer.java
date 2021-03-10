@@ -118,15 +118,15 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
-        .whenPressed(
-          // new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-          new SequentialCommandGroup(
-            // new CollectCommand(drivetrain, collector, magazine, bling, 1.0),
-            // new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            // new AdvanceMagazineCommand(magazine, 0.35, 0.25, 2)
-          )
-        );
+    // (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
+    //     .whenPressed(
+    //       // new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
+    //       new SequentialCommandGroup(
+    //         // new CollectCommand(drivetrain, collector, magazine, bling, 1.0),
+    //         // new MagazineCommand(collector, magazine, bling, 0.35, 2),
+    //         // new AdvanceMagazineCommand(magazine, 0.35, 0.25, 2)
+    //       )
+    //     );
     (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
       .whenPressed(
         new SequentialCommandGroup(
