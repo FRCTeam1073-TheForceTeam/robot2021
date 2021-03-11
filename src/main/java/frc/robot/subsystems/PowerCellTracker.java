@@ -121,6 +121,11 @@ public class PowerCellTracker extends OpenMVSubsystem {
       }
     }
 
+  //If there is a cell in the list, we "have data" and will return true 
+  public boolean hasData() {
+    return m_cellData.size() > 0;
+  }
+
     // Returns range sent by range sensor or -1.0 if there is an error.
     public double getRange() {
       if (m_rangeSignalStrength < 10)

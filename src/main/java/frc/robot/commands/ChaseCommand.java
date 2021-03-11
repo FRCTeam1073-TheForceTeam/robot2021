@@ -132,7 +132,7 @@ public class ChaseCommand extends CommandBase {
             bling.setArray("orange");
             loopsWithoutData++;
             System.out.println("2LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
-            if (loopsWithoutData > 5) {
+            if (loopsWithoutData > 7) {
                 bling.setArray("red");
                 rotationalSpeedMultiplier = 0.0;
                 velocityMultiplier = 0.0;

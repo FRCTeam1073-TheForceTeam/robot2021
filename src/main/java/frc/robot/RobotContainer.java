@@ -9,10 +9,12 @@ import java.time.Instant;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -29,8 +31,10 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 // Import controls: Add controls here.
 import frc.robot.commands.CollectorControls;
+import frc.robot.commands.DeployCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.MagazineControls;
+import frc.robot.commands.RetractCommand;
 import frc.robot.commands.ShooterControls;
 import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.TurretControls;
@@ -245,19 +249,39 @@ public class RobotContainer {
       case 5:
         return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
       case 6:
-        return new DriveForwardCommand(drivetrain, bling, 1.5, 2.5).andThen(
-          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+        return new SequentialCommandGroup(
+          new DeployCommand(collector),
+
+          /*Condition 1: If there is a powercell (if PC data is accessible) then chase and move directly into collect.
+          / Condition 2: If there is not a powercell, then drive and then chase before moving into collect
+          */
+          new ConditionalCommand( 
+            new SequentialCommandGroup(new DriveForwardCommand(drivetrain, bling, 1.0, 2.0), 
+                new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true)),
+            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true), 
+            cellTracker::hasData),
+          //Deploy collector from upright starting state to extend outside of the frame perimeter
+
+          //Collect PC one
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
           new MagazineCommand(collector, magazine, bling, 0.35, 2),
           new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+
+          //Collect PC two
           new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
           new MagazineCommand(collector, magazine, bling, 0.5, 2),
           new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+
+          //Collect PC three
           new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.5, 2));
-          // new TurnToHeadingCommand());
+          new MagazineCommand(collector, magazine, bling, 0.5, 2),
+
+          //Turn to original pointing position and drive to cross the #11 line (Galactic Search)
+          new TurnToHeading(drivetrain, bling, 0),
+          new RetractCommand(collector),
+          new DriveForwardCommand(drivetrain, bling, 1.0, 2.0));
 
       case 12:
         return new SequentialCommandGroup(

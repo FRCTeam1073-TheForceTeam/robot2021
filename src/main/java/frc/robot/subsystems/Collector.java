@@ -92,13 +92,13 @@ public class Collector extends SubsystemBase {
 
   /// Is the collector deployed?
   public void raise() {
-    collectorDeployPneumatic.set(true);
-    collectorWithdrawPneumatic.set(false);
+    collectorDeployPneumatic.set(false);
+    collectorWithdrawPneumatic.set(true);
   }
 
   public void lower() {
-    collectorDeployPneumatic.set(false);
-    collectorWithdrawPneumatic.set(true);
+    collectorDeployPneumatic.set(true);
+    collectorWithdrawPneumatic.set(false);
   }
 
   /**
