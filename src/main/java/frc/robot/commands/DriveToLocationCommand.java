@@ -58,7 +58,7 @@ public class DriveToLocationCommand extends CommandBase {
   public double curveAngularVelocity(double angle) {
     if (angle > 0.05) {
       return rotationalVelocityScale * Math.signum(angle) * (0.3 + Math.pow(
-          MathUtil.clamp(Math.abs(angle),0,1),
+          Math.abs(angle),
           0.65));
     } else {
       return 0;
@@ -81,7 +81,7 @@ public class DriveToLocationCommand extends CommandBase {
     /* It also doesn't let the robot drive backwards, which I think makes sense right now (of course, the robot can drive backwards
     as well as it does forwards, but doing so efficiently would make the calculations for the rotational velocity more
     complicated and probably a lot harder to debug).*/
-    double projectedDistance = Math.min(0,
+    double projectedDistance = Math.max(0,
       distanceRemaining.getX() * Math.cos(currentRobotPose.getRotation().getRadians()) +
       distanceRemaining.getY() * Math.sin(currentRobotPose.getRotation().getRadians())
     );
