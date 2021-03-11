@@ -6,8 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.Utility;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.OI;
@@ -24,9 +26,9 @@ public class DriveToLocationCommand extends CommandBase {
   Pose2d initialRobotPose;
   Pose2d currentRobotPose;
   // How fast the robot will move based on its distance from the destination (in units of (meters/s)/meter).
-  double distanceVelocityScale = 1.0;
+  double distanceVelocityScale = 3.0;
   // How fast the robot will turn based on its angle from the target (in units of (radians/s)/radian).
-  double rotationalVelocityScale = 1.0;
+  double rotationalVelocityScale = 3.25;
 
   public DriveToLocationCommand(Drivetrain drivetrain_, Translation2d destination_, Bling bling_) {
     drivetrain = drivetrain_;
@@ -45,9 +47,9 @@ public class DriveToLocationCommand extends CommandBase {
   }
 
 
-  public double curveVelocity(double distance) {
+  public double curveVelocity(double distance, double angleDiff) {
     if (distance > 0.05) {
-      return distanceVelocityScale * Math.signum(distance) * (0.3 + Math.pow(
+      return Math.cos(MathUtil.clamp(3.0*angleDiff, -Math.PI*0.5, Math.PI*0.5))*distanceVelocityScale * Math.signum(distance) * (0.3 + Math.pow(
           MathUtil.clamp(Math.abs(distance / 10.0),0,1),
           0.65));
     } else {
@@ -55,10 +57,10 @@ public class DriveToLocationCommand extends CommandBase {
     }
   }
 
-  public double curveAngularVelocity(double angle) {
-    if (angle > 0.05) {
+  public double curveAngularVelocity(double angle, double distanceNorm) {
+    if (Math.abs(angle) > 0.03 || distanceNorm > 0.12) {
       return rotationalVelocityScale * Math.signum(angle) * (0.3 + Math.pow(
-          Math.abs(angle),
+          MathUtil.clamp(Math.abs(angle),0,1),
           0.65));
     } else {
       return 0;
@@ -89,12 +91,24 @@ public class DriveToLocationCommand extends CommandBase {
       Math.atan2(distanceRemaining.getY(), distanceRemaining.getX())- currentRobotPose.getRotation().getRadians()
     );
 
-    // For testing purposes, the auto-driving will only run when the X button is held down on the driver controller.
-    if (OI.driverController.getXButton()) {
-      // Both the forward distance and rotation are run through curve functions, the same way as a lot of the other auto-aligning commands.
-      forwardVelocity = curveVelocity(projectedDistance);
-      turnVelocity = curveAngularVelocity(angleDifference);
-    }
+    // Both the forward distance and rotation are run through curve functions, the same way as a lot of the other auto-aligning commands.
+    forwardVelocity = curveVelocity(projectedDistance, angleDifference);
+    turnVelocity = curveAngularVelocity(angleDifference, distanceRemaining.getNorm());
+
+    bling.rangeRGB(20, 40,
+      (int)(255*turnVelocity / rotationalVelocityScale),
+      (int)(255*(1-turnVelocity / rotationalVelocityScale)),
+      (int)(255*(forwardVelocity/distanceVelocityScale))
+    );
+
+    SmartDashboard.putNumber("[DtLoc] Difference X", distanceRemaining.getX());
+    SmartDashboard.putNumber("[DtLoc] Difference Y", distanceRemaining.getY());
+    SmartDashboard.putNumber("[DtLoc] Projected distance", projectedDistance);
+    SmartDashboard.putNumber("[DtLoc] Angle distance", angleDifference);
+    SmartDashboard.putNumber("[DtLoc] Target forward vel", forwardVelocity);
+    SmartDashboard.putNumber("[DtLoc] Target angular vel", turnVelocity);
+    SmartDashboard.putNumber("[DtLoc] Odometry X", forwardVelocity);
+    SmartDashboard.putNumber("[DtLoc] Odometry Y", turnVelocity);
 
     drivetrain.setVelocity(forwardVelocity, turnVelocity);
   }
@@ -113,6 +127,6 @@ public class DriveToLocationCommand extends CommandBase {
     // Ends the command when the robot's within 10 cm of its end point.
     /* 10cm is a lot less precision than I'd like (that's like 4 inches), but I want to avoid situations where the robot ends up driving in a
     small circle around the destination because it's just slightly off, so hopefully this will work as an end condition for now.*/
-    return distanceRemaining.getNorm() < 0.1;
+    return (distanceRemaining.getNorm() < 0.1);
   }
 }

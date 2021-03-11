@@ -172,7 +172,11 @@ public class Drivetrain extends SubsystemBase  {
             double[] xyz_dps = new double[3];
             gyro.getRawGyro(xyz_dps);
             SmartDashboard.putNumber("[IMU] Actual Rotational Speed (radians/s)", xyz_dps[0] * Math.PI / 180.0);
-            
+
+            // *shudder* converting to feet/s
+            SmartDashboard.putNumber("[Drivetrain] Drivetrain (forward) velocity (feet/s)",
+                    Units.metersToFeet(getDrivetrainVelocity().vxMetersPerSecond));
+
             SmartDashboard.putNumber("[Drivetrain] Left Output Power", leftMotorLeader.getMotorOutputPercent());
             SmartDashboard.putNumber("[Drivetrain] Right Output Power", rightMotorLeader.getMotorOutputPercent());
 
