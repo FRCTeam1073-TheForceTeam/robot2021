@@ -8,29 +8,34 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 
-public class TurretPositionCommand extends CommandBase {
+public class AlignTurretToHeading extends CommandBase {
 
   Turret turret;
+  Drivetrain drivetrain;
   PowerPortTracker portTracker;
   double currentPosition;
   double targetPosition;
+  double targetHeading;
   double angSeparation = 0;
 
   /**
+   * 
    * Sets the turret's angle in radians.
    * @param turret_ The turret object
    * @param targetPosition_ The target angle in radians
    */
-  public TurretPositionCommand(Turret turret_, double targetPosition_) {
+  public AlignTurretToHeading(Turret turret_, Drivetrain drivetrain_, double targetHeading_) {
     turret = turret_;
+    drivetrain = drivetrain_;
     currentPosition = 0;
-    targetPosition = targetPosition_;
-    addRequirements(turret);
+    targetHeading = targetHeading_;
+    targetPosition = 0;
+    addRequirements(turret, drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -50,21 +55,22 @@ public class TurretPositionCommand extends CommandBase {
   }
 
   public double curve(double input) {
-    return curve(input, 1); 
+    return curve(input, 1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void execute() {  
+    targetPosition = targetHeading - drivetrain.getAngleRadians().getRadians();
     currentPosition = turret.getPosition();
     angSeparation = targetPosition - currentPosition;
     double input = MathUtil.clamp(angSeparation, -1, 1);
     double output = 2 * curve(input);
     double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
     turret.setVelocity(output);
-    SmartDashboard.putNumber("[T-POS] Actual velocity", actualOutput);
-    SmartDashboard.putNumber("[T-POS] Intended velocity", output);
-    SmartDashboard.putNumber("[T-POS] Angular separation", angSeparation);
+    SmartDashboard.putNumber("[T-THC] Actual velocity", actualOutput);
+    SmartDashboard.putNumber("[T-THC] Intended velocity", output);
+    SmartDashboard.putNumber("[T-THC] Angular separation", angSeparation);
   }
 
   // Called once the command ends or is interrupted.

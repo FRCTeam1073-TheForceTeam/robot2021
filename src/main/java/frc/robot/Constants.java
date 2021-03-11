@@ -16,9 +16,9 @@ package frc.robot;
  */
 public final class Constants {
     public static final double CONTROLLER_DEADZONE = 0.06;
-    public static final double THROTTLE_FALLOFF = 1.5;
+    public static final double THROTTLE_FALLOFF = 0.7;
 
-    /**Power cell diameter in meters**/
+    /**Power cell diameter in meters.**/
     public static final double POWER_CELL_DIAMETER = 0.18;
 
     /**The highest flywheel velocity in radians/sec (equivalent to 5968 RPM) that can be
@@ -39,8 +39,9 @@ public final class Constants {
      * the image width (where -1 is all the way to the left and 1 is all the way to the right)
      * for autonomous port tracking commands to be considered to be aligned.
      */
-    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.02;
- 
+    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.03;
  
     public static final double ACCEPTABLE_HOOD_ANGLE_DIFFERENCE = 0.02;
+
+    public static final double MAX_FLYWHEEL_SPEED = 0.8;
 }

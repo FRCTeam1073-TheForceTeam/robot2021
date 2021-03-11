@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
@@ -92,7 +93,7 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(2000);
+    rateLimiter = new SlewRateLimiter(4000);
     
     hood = new CANSparkMax(25, MotorType.kBrushless);
     hood.clearFaults();
@@ -136,7 +137,7 @@ public class Shooter extends SubsystemBase {
    */
   public void setFlywheelVelocity(double velocity) {
     //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
-    flywheelTargetVelocity = velocity;
+    flywheelTargetVelocity = Math.max(0, velocity);
     double rawFlywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
     shooterFlywheel1.set(ControlMode.Velocity, rawFlywheelTargetVelocity);
   }
@@ -157,6 +158,23 @@ public class Shooter extends SubsystemBase {
   public void stop() {
     rateLimiter.reset(0);
     shooterFlywheel1.set(ControlMode.Velocity, 0);
+  }
+
+  /**
+   * Cancels whatever command is currently requiring the shooter. Due to the way the
+   * shooter works, this is almost always ShooterControls.
+   * This is necessary for the auto-aiming in the teleop controls, but it really
+   * shouldn't be used in situations where it's not properly accounted for and it could
+   * cause a bunch of super weird problems if the current command is canceled when the
+   * rest of the code doesn't expect it, so, uh, use it responsibly?
+   * 
+   * Also, if there isn't currently a command requiring the shooter, nothing should happen.
+   */
+  public void interruptCurrentCommand() {
+    Command currentCommand=getCurrentCommand();
+    if (currentCommand != null) {
+      getCurrentCommand().cancel();      
+    }
   }
 
   /**
