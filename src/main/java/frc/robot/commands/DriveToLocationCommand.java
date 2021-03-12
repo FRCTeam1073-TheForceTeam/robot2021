@@ -26,9 +26,9 @@ public class DriveToLocationCommand extends CommandBase {
   Pose2d initialRobotPose;
   Pose2d currentRobotPose;
   // How fast the robot will move based on its distance from the destination (in units of (meters/s)/meter).
-  double distanceVelocityScale = 3.0;
+  double distanceVelocityScale = 1.5;
   // How fast the robot will turn based on its angle from the target (in units of (radians/s)/radian).
-  double rotationalVelocityScale = 3.25;
+  double rotationalVelocityScale = 2.0;
 
   public DriveToLocationCommand(Drivetrain drivetrain_, Translation2d destination_, Bling bling_) {
     drivetrain = drivetrain_;
@@ -58,7 +58,7 @@ public class DriveToLocationCommand extends CommandBase {
   }
 
   public double curveAngularVelocity(double angle, double distanceNorm) {
-    if (Math.abs(angle) > 0.03 || distanceNorm > 0.12) {
+    if (Math.abs(angle) > 0.03) {
       return rotationalVelocityScale * Math.signum(angle) * (0.3 + Math.pow(
           MathUtil.clamp(Math.abs(angle),0,1),
           0.65));
@@ -79,16 +79,20 @@ public class DriveToLocationCommand extends CommandBase {
 
     double forwardVelocity = 0;
     double turnVelocity = 0;
+
+    double angleDifference = MathUtil.angleModulus(
+      Math.atan2(distanceRemaining.getY(), distanceRemaining.getX()) - currentRobotPose.getRotation().getRadians()
+    );
+
     // The velocity of the robot is based on the dot product of the distance vector with the robot's orientation vector.
     /* It also doesn't let the robot drive backwards, which I think makes sense right now (of course, the robot can drive backwards
     as well as it does forwards, but doing so efficiently would make the calculations for the rotational velocity more
     complicated and probably a lot harder to debug).*/
+
+    //Minus because the angle is inverted.
     double projectedDistance = Math.max(0,
       distanceRemaining.getX() * Math.cos(currentRobotPose.getRotation().getRadians()) +
       distanceRemaining.getY() * Math.sin(currentRobotPose.getRotation().getRadians())
-    );
-    double angleDifference = MathUtil.angleModulus(
-      Math.atan2(distanceRemaining.getY(), distanceRemaining.getX())- currentRobotPose.getRotation().getRadians()
     );
 
     // Both the forward distance and rotation are run through curve functions, the same way as a lot of the other auto-aligning commands.
@@ -107,10 +111,17 @@ public class DriveToLocationCommand extends CommandBase {
     SmartDashboard.putNumber("[DtLoc] Angle distance", angleDifference);
     SmartDashboard.putNumber("[DtLoc] Target forward vel", forwardVelocity);
     SmartDashboard.putNumber("[DtLoc] Target angular vel", turnVelocity);
-    SmartDashboard.putNumber("[DtLoc] Odometry X", forwardVelocity);
-    SmartDashboard.putNumber("[DtLoc] Odometry Y", turnVelocity);
+    SmartDashboard.putNumber("[DtLoc] scompX", distanceRemaining.getX() * Math.cos(currentRobotPose.getRotation().getRadians()));
+    SmartDashboard.putNumber("[DtLoc] scompY", distanceRemaining.getY() * Math.sin(currentRobotPose.getRotation().getRadians()));
+    SmartDashboard.putNumber("[DtLoc] rrot", currentRobotPose.getRotation().getRadians());
+    SmartDashboard.putNumber("[DtLoc] hah!", Math.atan2(distanceRemaining.getY(), distanceRemaining.getX()));
 
-    drivetrain.setVelocity(forwardVelocity, turnVelocity);
+    if (OI.driverController.getXButton()) {
+      drivetrain.setVelocity(forwardVelocity, turnVelocity);
+    } else {
+      drivetrain.setVelocity(0, 0);
+    }
+
   }
 
   // Called once the command ends or is interrupted.

@@ -129,6 +129,10 @@ public class RobotContainer {
     //         // new AdvanceMagazineCommand(magazine, 0.35, 0.25, 2)
     //       )
     //     );
+    (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
+      .whenPressed(
+        new DriveToLocationCommand(drivetrain, new Translation2d(0,0), bling)
+      );
     (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
       .whenPressed(
         new SequentialCommandGroup(
@@ -260,9 +264,6 @@ public class RobotContainer {
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
           new MagazineCommand(collector, magazine, bling, 0.5, 2));
           // new TurnToHeadingCommand());
-        
-
-
       case 12:
         return new SequentialCommandGroup(
           //[[EMERGENCY BACKUP AUTONOMOUS]]
