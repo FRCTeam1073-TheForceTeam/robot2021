@@ -9,6 +9,7 @@ import java.time.Instant;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -50,6 +51,8 @@ import frc.robot.commands.AutomaticFireCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.DriveForwardCommand;
+import frc.robot.commands.DriveForwardToXCoord;
+import frc.robot.commands.DriveForwardToXCoord.DriveDirection;
 import frc.robot.commands.DriveToLocationCommand;
 import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.MagazineCommand;
@@ -180,9 +183,9 @@ public class RobotContainer {
     switch (ShuffleboardWidgets.auto) {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1));
+          // new MagazineCommand(collector, magazine, bling, 0.35, 2),
+          // new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
@@ -194,17 +197,28 @@ public class RobotContainer {
             new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
       case 2:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
+            
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
           new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+            
           new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+            
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.5, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3),
+          new MagazineCommand(collector, magazine, bling, 0.35, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+            
           new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.5, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
+          new MagazineCommand(collector, magazine, bling, 0.35, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3)
+        );
+
+          // new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          // new MagazineCommand(collector, magazine, bling, 0.35, 2),
+          // new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
+
       case 3:
         return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
       case 4:
@@ -218,11 +232,11 @@ public class RobotContainer {
           /*Condition 1: If there is a powercell (if PC data is accessible) then chase and move directly into collect.
           / Condition 2: If there is not a powercell, then drive and then chase before moving into collect
           */
-          new ConditionalCommand( 
+          new ConditionalCommand(
+            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true), 
             new SequentialCommandGroup(
               new DriveForwardCommand(drivetrain, bling, 1.0, 2.0), 
               new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true)),
-            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true), 
             cellTracker::hasData),
           //Deploy collector from upright starting state to extend outside of the frame perimeter
 
@@ -240,14 +254,28 @@ public class RobotContainer {
           //Collect PC three
           new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.5, 2),
 
           //Turn to original pointing position and drive to cross the #11 line (Galactic Search)
+          new TurnToHeading(drivetrain, bling, 0).alongWith(
+            new RetractCommand(collector)
+          ),
+          new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(300), 2.5, DriveDirection.FORWARD, bling)
+        );
+      case 7:
+        return new ConditionalCommand(
+            new InstantCommand(() -> {bling.setColorRGBAll(255,0,0);},bling).andThen(new WaitCommand(1)),
+            new InstantCommand(() -> {bling.setColorRGBAll(0,0,255);},bling).andThen(new WaitCommand(1)),
+            cellTracker::hasData
+        );
+      case 10:
+        return new SequentialCommandGroup(
+          new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
+          new WaitCommand(2),
           new TurnToHeading(drivetrain, bling, 0),
-          new RetractCommand(collector),
-          new DriveForwardCommand(drivetrain, bling, 1.0, 2.0));
-
+          new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(300), 2.5, DriveDirection.FORWARD, bling)
+        );
       case 12:
+
         return new SequentialCommandGroup(
           //[[EMERGENCY BACKUP AUTONOMOUS]]
           //[[IN CASE OF COLLECTOR DOING WEIRD THINGS BREAK GLASS]]

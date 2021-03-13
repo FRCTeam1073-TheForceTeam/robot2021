@@ -113,14 +113,13 @@ public class DriveToLocationCommand extends CommandBase {
     SmartDashboard.putNumber("[DtLoc] Target forward vel", forwardVelocity);
     SmartDashboard.putNumber("[DtLoc] Target angular vel", turnVelocity);
     SmartDashboard.putNumber("[DtLoc] Projected distance", projectedDistance);
-    SmartDashboard.putNumber("[DtLoc] scompY", distanceRemaining.getY() * Math.sin(currentRobotPose.getRotation().getRadians()));
     SmartDashboard.putNumber("[DtLoc] rrot", currentRobotPose.getRotation().getRadians());
     SmartDashboard.putNumber("[DtLoc] hah!", Math.atan2(distanceRemaining.getY(), distanceRemaining.getX()));
 
     if (OI.driverController.getXButton()) {
       drivetrain.setVelocity(forwardVelocity, turnVelocity);
     } else {
-      drivetrain.setVelocity(0, 0);
+      drivetrain.setVelocity(-2.0*Utility.deadzone(OI.driverController.getRawAxis(1)), -2.0*Utility.deadzone(OI.driverController.getRawAxis(5)));
     }
   }
 

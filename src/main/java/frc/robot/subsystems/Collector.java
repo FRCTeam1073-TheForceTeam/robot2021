@@ -158,5 +158,6 @@ public class Collector extends SubsystemBase {
     rawCurrent = collectorMotor.getStatorCurrent();
     filteredCurrent = filter.calculate(rawCurrent);
     SmartDashboard.putNumber("[collector] filteredOutputCurrent", filteredCurrent);
+    SmartDashboard.putBoolean("[Collector] Sensor", collectorSensor.get());
   }
 }

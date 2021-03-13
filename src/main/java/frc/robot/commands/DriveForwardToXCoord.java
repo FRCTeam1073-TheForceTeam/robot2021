@@ -10,11 +10,12 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Drivetrain;
 
-enum DriveDirection {
-  FORWARD, BACKWARD
-}
+public class DriveForwardToXCoord extends CommandBase {
 
-public class DriveToXCoord extends CommandBase {
+  public enum DriveDirection {
+    FORWARD, BACKWARD
+  }
+  
   Drivetrain drivetrain;
   Bling bling;
   double destinationX;
@@ -26,7 +27,7 @@ public class DriveToXCoord extends CommandBase {
   final double distanceLimit = 0.05;
 
   /** Creates a new DriveToXCoord. */
-  public DriveToXCoord(Drivetrain drivetrain_, double destinationX_, double velocity_, DriveDirection direction_, Bling bling_) {
+  public DriveForwardToXCoord(Drivetrain drivetrain_, double destinationX_, double velocity_, DriveDirection direction_, Bling bling_) {
     drivetrain = drivetrain_;
     bling = bling_;
     destinationX = destinationX_;
@@ -39,7 +40,7 @@ public class DriveToXCoord extends CommandBase {
   }
 
   /** Creates a new DriveToXCoord. */
-  public DriveToXCoord(Drivetrain drivetrain_, double destinationX_, DriveDirection direction_, Bling bling_) {
+  public DriveForwardToXCoord(Drivetrain drivetrain_, double destinationX_, DriveDirection direction_, Bling bling_) {
     this(drivetrain_, destinationX_, 1.5, direction_, bling_);
   }
   

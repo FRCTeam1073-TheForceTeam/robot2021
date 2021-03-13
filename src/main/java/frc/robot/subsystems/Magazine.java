@@ -117,5 +117,6 @@ public class Magazine extends SubsystemBase {
     SmartDashboard.putNumber("Magazine Position [MAG]", magazineMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Magazine Power [MAG]", magazineMotor.getMotorOutputPercent());
     SmartDashboard.putNumber("Magazine Error [MAG]", magazineMotor.getClosedLoopError());
+    SmartDashboard.putBoolean("[Magazine] Sensor", inTakeSensor.get());
   }
 }
