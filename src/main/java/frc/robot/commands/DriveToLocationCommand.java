@@ -23,6 +23,7 @@ public class DriveToLocationCommand extends CommandBase {
   Bling bling;
   Translation2d destination;
   Translation2d distanceRemaining;
+  double projectedDistance;
   Pose2d initialRobotPose;
   Pose2d currentRobotPose;
   // How fast the robot will move based on its distance from the destination (in units of (meters/s)/meter).
@@ -90,7 +91,7 @@ public class DriveToLocationCommand extends CommandBase {
     complicated and probably a lot harder to debug).*/
 
     //Minus because the angle is inverted.
-    double projectedDistance = Math.max(0,
+    projectedDistance = Math.max(0,
       distanceRemaining.getX() * Math.cos(currentRobotPose.getRotation().getRadians()) +
       distanceRemaining.getY() * Math.sin(currentRobotPose.getRotation().getRadians())
     );
@@ -111,7 +112,7 @@ public class DriveToLocationCommand extends CommandBase {
     SmartDashboard.putNumber("[DtLoc] Angle distance", angleDifference);
     SmartDashboard.putNumber("[DtLoc] Target forward vel", forwardVelocity);
     SmartDashboard.putNumber("[DtLoc] Target angular vel", turnVelocity);
-    SmartDashboard.putNumber("[DtLoc] scompX", distanceRemaining.getX() * Math.cos(currentRobotPose.getRotation().getRadians()));
+    SmartDashboard.putNumber("[DtLoc] Projected distance", projectedDistance);
     SmartDashboard.putNumber("[DtLoc] scompY", distanceRemaining.getY() * Math.sin(currentRobotPose.getRotation().getRadians()));
     SmartDashboard.putNumber("[DtLoc] rrot", currentRobotPose.getRotation().getRadians());
     SmartDashboard.putNumber("[DtLoc] hah!", Math.atan2(distanceRemaining.getY(), distanceRemaining.getX()));
@@ -121,7 +122,6 @@ public class DriveToLocationCommand extends CommandBase {
     } else {
       drivetrain.setVelocity(0, 0);
     }
-
   }
 
   // Called once the command ends or is interrupted.
@@ -138,6 +138,6 @@ public class DriveToLocationCommand extends CommandBase {
     // Ends the command when the robot's within 10 cm of its end point.
     /* 10cm is a lot less precision than I'd like (that's like 4 inches), but I want to avoid situations where the robot ends up driving in a
     small circle around the destination because it's just slightly off, so hopefully this will work as an end condition for now.*/
-    return (distanceRemaining.getNorm() < 0.1);
+    return (projectedDistance > 0 && projectedDistance < 0.1);
   }
 }
