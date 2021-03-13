@@ -124,15 +124,6 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
-    //     .whenPressed(
-    //       // new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.25, true).andThen(
-    //       new SequentialCommandGroup(
-    //         // new CollectCommand(drivetrain, collector, magazine, bling, 1.0),
-    //         // new MagazineCommand(collector, magazine, bling, 0.35, 2),
-    //         // new AdvanceMagazineCommand(magazine, 0.35, 0.25, 2)
-    //       )
-    //     );
     (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
       .whenPressed(
         new DriveToLocationCommand(drivetrain, new Translation2d(0,0), bling)
@@ -162,17 +153,6 @@ public class RobotContainer {
             new TurretPositionCommand(turret, 0),
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
           )
-            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-            // new ShooterControls(shooter),
-            // new InstantCommand(
-            //   () -> {
-            //       SmartDashboard.putString("[InstantCommand2]whatsTheName",
-            //           shooter.getCurrentCommand().getName());
-            //       SmartDashboard.putBoolean("[InstantCommand2]isTheShooterDoingAnything[IC2]",
-            //           shooter.getCurrentCommand() != null);
-            //   }, shooter
-            // )
-          // )
         );
     (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
       .whenPressed(
@@ -181,30 +161,7 @@ public class RobotContainer {
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value))
         .whenPressed(
           new SequentialCommandGroup(
-            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
             new AdvanceMagazineCommand(magazine, 1.25, 4)
-
-            // new TurretPositionCommand(turret, 0),
-            // new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
-
-            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-            // new InstantCommand(shooter::stop, shooter),
-            // new InstantCommand(shooter::lowerHood, shooter),
-            // new ShooterControls(shooter)
-
-            // new InstantCommand(shooter::stop,shooter),
-            // new InstantCommand(shooter::lowerHood,shooter),
-            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-            // // new InstantCommand(turret::interruptCurrentCommand, turret),
-            // new PrintCommand("DSADSAFDSAFDSAFAFDSA\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"),
-            // new InstantCommand(
-            //   () -> {
-            //     SmartDashboard.putNumber("@$$@$$@", 4141414);
-            //     SmartDashboard.putString("[InstantCommand]whatsTheName");
-            //       SmartDashboard.putBoolean("[InstantCommand]isTheShooterDoingAnything[IC]",
-            //           shooter.getCurrentCommand() != null);
-            //   }, shooter
-            // )
           )
         );
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
@@ -262,8 +219,9 @@ public class RobotContainer {
           / Condition 2: If there is not a powercell, then drive and then chase before moving into collect
           */
           new ConditionalCommand( 
-            new SequentialCommandGroup(new DriveForwardCommand(drivetrain, bling, 1.0, 2.0), 
-                new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true)),
+            new SequentialCommandGroup(
+              new DriveForwardCommand(drivetrain, bling, 1.0, 2.0), 
+              new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true)),
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true), 
             cellTracker::hasData),
           //Deploy collector from upright starting state to extend outside of the frame perimeter
