@@ -41,7 +41,6 @@ public class MagazineCommand extends CommandBase {
         this.velocity = velocity;
         this.checkNumPreviousMemoryEntries = checkNumPreviousMemoryEntries;
         addRequirements(magazine);
-        addRequirements(bling);
     }
 
     /**
@@ -90,16 +89,16 @@ public class MagazineCommand extends CommandBase {
         if (lastReading == true && sensor == false) {
             collector.setCollect(0.0);
             magazine.setVelocity(0.0);
-            bling.setArray("orange");
+            // bling.setArray("orange");
             isFinished = true;
         } else {
             collector.setCollect(0.45);
             magazine.setVelocity(velocity);
-            bling.setArray("green");
+            // bling.setArray("green");
             // loopsFalse = 0;
         }
 
-        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+        // bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
 
         lastReading = sensor;
     }

@@ -31,7 +31,7 @@ public class Collector extends SubsystemBase {
     this.collectorMotor.setNeutralMode(NeutralMode.Coast);
 
     this.collectorMotor.enableCurrentLimit(true);
-    this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 30.0, 0.25), 500);
+    this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 27.5, 0.25), 500);
     this.collectorMotor.configPeakCurrentLimit(28, 500);
     this.collectorMotor.configPeakCurrentDuration(750, 500);
 
@@ -57,7 +57,6 @@ public class Collector extends SubsystemBase {
   public void setCollect(double power) {
     this.power = power;
     collectorMotor.set(ControlMode.PercentOutput, power);
-
   }
 
   /**

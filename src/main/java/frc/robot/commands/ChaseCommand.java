@@ -73,7 +73,6 @@ public class ChaseCommand extends CommandBase {
         this.maxVelocity = maxVelocity;
         this.shouldScan = shouldScan;
         addRequirements(drivetrain);
-        addRequirements(bling);
     }
 
     // Called when the command is initially scheduled.
