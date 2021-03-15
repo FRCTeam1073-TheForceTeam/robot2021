@@ -146,7 +146,8 @@ public class PowerCellTracker extends OpenMVSubsystem {
       m_lastLastCellDataSize = m_lastCellDataSize;
       m_lastCellDataSize = m_cellData.size();
       m_cellData.clear();
-      for (int index = 1; index <= 3; index++) {
+      //Used to be 3 instead of 1
+      for (int index = 1; index <= 1; index++) {
         if (read(apiIndex(5, index), targetData) == true && targetData.length == 8) {
           if (targetData.data[6]!=0) {
             PowerCellData tempCellData = new PowerCellData();

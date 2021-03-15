@@ -187,7 +187,7 @@ public class ChaseCommand extends CommandBase {
             }
         }
 
-        if (powerCellData.cy >= 180) {
+        if (powerCellData.cy >= 170) {
             drivetrain.setVelocity(0.0, 0.0);
             System.out.println("DONEDONEDONE");
             rotationalSpeedMultiplier = 0.0;

@@ -31,9 +31,10 @@ public class Collector extends SubsystemBase {
     this.collectorMotor.setNeutralMode(NeutralMode.Coast);
 
     this.collectorMotor.enableCurrentLimit(true);
-    this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 27.5, 0.25), 500);
+    // this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 27.5, 0.25), 500);
     this.collectorMotor.configPeakCurrentLimit(28, 500);
     this.collectorMotor.configPeakCurrentDuration(750, 500);
+    this.collectorMotor.configContinuousCurrentLimit(15, 500);
 
     this.filter = LinearFilter.singlePoleIIR(0.75, 0.02);
   }
@@ -156,7 +157,11 @@ public class Collector extends SubsystemBase {
     // This method will be called once per scheduler run
     rawCurrent = collectorMotor.getStatorCurrent();
     filteredCurrent = filter.calculate(rawCurrent);
-    SmartDashboard.putNumber("[collector] filteredOutputCurrent", filteredCurrent);
+    SmartDashboard.putNumber("[Collector] Filtered Output Current", filteredCurrent);
     SmartDashboard.putBoolean("[Collector] Sensor", collectorSensor.get());
+    SmartDashboard.putNumber("[Collector] Immediate Output Current", collectorMotor.getStatorCurrent());
+    SmartDashboard.putBoolean("[Collector] Is alive?", collectorMotor.isAlive());
+    SmartDashboard.putBoolean("[Collector] Is stalled?", isStalled());
+    SmartDashboard.putNumber("[Collector] Output percent", collectorMotor.getMotorOutputPercent());
   }
 }
