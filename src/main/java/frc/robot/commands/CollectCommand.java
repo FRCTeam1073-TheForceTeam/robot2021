@@ -82,7 +82,7 @@ public class CollectCommand extends CommandBase {
     public void initialize() {
         firstLoop = true;
         powerMultiplier = 1.0;
-        velocity = 0.7; // 0.35
+        velocity = 0.95;
         shouldUnstall = false;
         isFinished = false;
         trueLoops = 0;
@@ -138,7 +138,7 @@ public class CollectCommand extends CommandBase {
         } else {
             trueLoops = 0;
         }
-        if (trueLoops > 4) {
+        if (trueLoops > 2) {
             isFinished = true;
         }
     }

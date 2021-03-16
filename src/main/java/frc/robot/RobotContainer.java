@@ -183,9 +183,9 @@ public class RobotContainer {
     switch (ShuffleboardWidgets.auto) {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1));
-          // new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          // new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
+          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+          new MagazineCommand(collector, magazine, bling, 0.35, 2),
+          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
@@ -234,10 +234,10 @@ public class RobotContainer {
           / Condition 2: If there is not a powercell, then drive and then chase before moving into collect
           */
           new ConditionalCommand(
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.3, 2.0, true), 
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true), 
             new SequentialCommandGroup(
-              new DriveForwardCommand(drivetrain, bling, 1.7, 2.0), 
-              new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true)),
+              new DriveForwardCommand(drivetrain, bling, 1.7, 2.3), 
+              new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true)),
             cellTracker::hasData),
           //Deploy collector from upright starting state to extend outside of the frame perimeter
 
@@ -247,17 +247,17 @@ public class RobotContainer {
           new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
           //Collect PC two
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.3, 2.0, true),
+          new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
           new MagazineCommand(collector, magazine, bling, 0.5, 2),
           new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
           //Collect PC three
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.3, 2.0, true),
+          new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
           new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
 
           //Turn to original pointing position and drive to cross the #11 line (Galactic Search)
-          new TurnToHeading(drivetrain, bling, 0),
+          new TurnToHeading(drivetrain, bling, 0, 3.0),
           new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling)
       );
       case 7:
@@ -320,10 +320,10 @@ public class RobotContainer {
         / Condition 2: If there is not a powercell, then drive and then chase before moving into collect
         */
         new ConditionalCommand(
-          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+          new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true),
           new SequentialCommandGroup(
-            new DriveForwardCommand(drivetrain, bling, 1.7, 3.0), 
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.7, 2.5, true)),
+            new DriveForwardCommand(drivetrain, bling, 1.7, 3.3), 
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)),
           cellTracker::hasData),
         //Deploy collector from upright starting state to extend outside of the frame perimeter
 
@@ -331,28 +331,28 @@ public class RobotContainer {
         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
         new ParallelCommandGroup(
           new SequentialCommandGroup(
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.2, 0.35, 3)
+            new MagazineCommand(collector, magazine, bling, 0.55, 2),
+            new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)
           ),
           //Collect PC two
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.7, 2.5, true)
+          new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)
         ),
 
         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
         new ParallelCommandGroup(
           new SequentialCommandGroup(
-            new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.2, 0.35, 3)
+            new MagazineCommand(collector, magazine, bling, 0.55, 2),
+            new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)
           ),
           //Collect PC three
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.7, 2.5, true)
+          new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)
         ),
         
         new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
 
         //Turn to original pointing position and drive to cross the #11 line (Galactic Search)
         new TurnToHeading(drivetrain, bling, 0, 3.0),
-        new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.8, DriveDirection.FORWARD, bling)
+        new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling)
       );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);

@@ -92,7 +92,7 @@ public class MagazineCommand extends CommandBase {
             // bling.setArray("orange");
             isFinished = true;
         } else {
-            collector.setCollect(0.45);
+            collector.setCollect(0.4);
             magazine.setVelocity(velocity);
             // bling.setArray("green");
             // loopsFalse = 0;
