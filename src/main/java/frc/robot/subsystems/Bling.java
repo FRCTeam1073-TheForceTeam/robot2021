@@ -85,7 +85,7 @@ public class Bling extends SubsystemBase {
       // } else {
       batteryBling(0, 10, 8.0, 12.5);
 
-      LEDRainbow(10, m_ledBuffer.getLength() - 10);
+      LEDRainbow(10, m_ledBuffer.getLength() - 10, 250);
 
       // dashing(20, 10, 255, 192, 203);
 
@@ -314,7 +314,7 @@ public class Bling extends SubsystemBase {
     return m_ledBuffer;
   }
 
-  public void LEDRainbow(int startLEDs, int numLEDs) {
+  public void LEDRainbow(int startLEDs, int numLEDs, int time) {
     for (int i = startLEDs; i < startLEDs + numLEDs; i++) {
 
       if (((i + move_rainbow) % 12) == 0 || ((i + move_rainbow) % 12) == 1) {
@@ -337,7 +337,7 @@ public class Bling extends SubsystemBase {
         m_ledBuffer.setRGB(i, (int) (128 * brightness), 0, (int) (128 * brightness));
       }
 
-      if (counter_rainbow < 100) {
+      if (counter_rainbow < time) {
         counter_rainbow++;
       } else {
         move_rainbow++;
