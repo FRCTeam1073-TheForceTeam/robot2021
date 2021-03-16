@@ -85,6 +85,8 @@ public class Bling extends SubsystemBase {
       // } else {
       batteryBling(0, 10, 8.0, 12.5);
 
+      LEDRainbow(10, m_ledBuffer.getLength() - 10);
+
       // dashing(20, 10, 255, 192, 203);
 
       // if (collector.isDeployed()) {
@@ -312,10 +314,8 @@ public class Bling extends SubsystemBase {
     return m_ledBuffer;
   }
 
-  public void LEDRainbow() {
-    int numLEDs = m_ledBuffer.getLength();
-
-    for (int i = 0; i < numLEDs; i++) {
+  public void LEDRainbow(int startLEDs, int numLEDs) {
+    for (int i = startLEDs; i < startLEDs + numLEDs; i++) {
 
       if (((i + move_rainbow) % 12) == 0 || ((i + move_rainbow) % 12) == 1) {
         // Sets first LED, then sets every 6 after it "red"
