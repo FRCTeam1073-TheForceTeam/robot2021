@@ -173,7 +173,7 @@ public class Drivetrain extends SubsystemBase  {
             SmartDashboard.putNumber("[Drivetrain] Drivetrain (forward) velocity (feet/s)",
                     Units.metersToFeet(getDrivetrainVelocity().vxMetersPerSecond));
 
-            SmartDashboard.putNumber("[Drivetrain] Left Output Power", leftMotorLeader.getMotorOutputPercent());
+                    SmartDashboard.putNumber("[Drivetrain] Left Output Power", leftMotorLeader.getMotorOutputPercent());
             SmartDashboard.putNumber("[Drivetrain] Right Output Power", rightMotorLeader.getMotorOutputPercent());
 
             SmartDashboard.putNumber("[Drivetrain] Raw Left Position (ticks)", leftMotorLeader.getSelectedSensorPosition());

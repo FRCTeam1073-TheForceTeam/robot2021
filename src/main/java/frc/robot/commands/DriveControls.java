@@ -1,9 +1,12 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Utility;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.OI;
@@ -15,6 +18,7 @@ public class DriveControls extends CommandBase {
     private double rightOutput;
     private double leftOutput;
     private double multiplier;
+    private SlewRateLimiter multiplierRateLimiter;
 
     public DriveControls(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -24,6 +28,7 @@ public class DriveControls extends CommandBase {
         leftOutput = 0;
         rightOutput = 0;
         multiplier = 1;
+        multiplierRateLimiter = new SlewRateLimiter(4.0, Math.exp(Constants.THROTTLE_FALLOFF));
     }
 
     public void initialize() {
@@ -53,15 +58,13 @@ public class DriveControls extends CommandBase {
         }
     }
 
-    double maxForwardSpeed = 2.0; // in m/s
-    double maxRotationalSpeed = 3.0; // in radians/s
+    double maxForwardSpeed = 3.0; // in m/s
+    double maxRotationalSpeed = 7.5; // in radians/s
 
     public void execute() {
-        multiplier = Math.exp(
-                    -Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3)) + 2.0 * Utility.deadzone(OI.driverController.getRawAxis(2))), 0, 1)
-                );
-        multiplier *= Math.pow(2.25, Utility.deadzone(OI.driverController.getRawAxis(2)));
-
+        multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3)) + 0.0 * Utility.deadzone(OI.driverController.getRawAxis(2))), 0, 1));
+        // multiplier = multiplierRateLimiter.calculate(Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3)) + 0.0 * Utility.deadzone(OI.driverController.getRawAxis(2))), 0, 1)));
+        // multiplier *= Math.pow(2.25, Utility.deadzone(OI.driverController.getRawAxis(2)));
         forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier * maxForwardSpeed;
         rotation = Utility.deadzone(-OI.driverController.getRawAxis(4)) * multiplier * maxRotationalSpeed;
         drivetrain.setVelocity(forward, rotation);
