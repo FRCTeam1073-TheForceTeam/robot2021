@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.Utility;
 import frc.robot.subsystems.Drivetrain;
@@ -52,12 +53,15 @@ public class DriveControls extends CommandBase {
         }
     }
 
-    double maxForwardSpeed = 3.0; // in m/s
-    double maxRotationalSpeed = 5.0; // in radians/s
+    double maxForwardSpeed = 2.0; // in m/s
+    double maxRotationalSpeed = 3.0; // in radians/s
 
     public void execute() {
-        multiplier = Math
-                .exp(-Constants.THROTTLE_FALLOFF * (1 - Utility.deadzone(OI.driverController.getRawAxis((3)))));
+        multiplier = Math.exp(
+                    -Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3)) + 2.0 * Utility.deadzone(OI.driverController.getRawAxis(2))), 0, 1)
+                );
+        multiplier *= Math.pow(2.25, Utility.deadzone(OI.driverController.getRawAxis(2)));
+
         forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier * maxForwardSpeed;
         rotation = Utility.deadzone(-OI.driverController.getRawAxis(4)) * multiplier * maxRotationalSpeed;
         drivetrain.setVelocity(forward, rotation);

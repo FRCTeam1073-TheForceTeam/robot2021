@@ -73,11 +73,7 @@ public class Drivetrain extends SubsystemBase  {
     (double) (
             //Raw Encoder Ticks
             /*Left    Right*/
-            119300 + 119130 +
-            118144 + 117828 +
-            114665 + 119048 +
-            120111 + 119625 +
-            119420 + 119625
+            119300 + 119130 + 118144 + 117828 + 114665 + 119048 + 120111 + 119625 + 119420 + 119625
         ) / 10.0
     ) / Units.feetToMeters(10.0);
     private double robotWidth = 0.5969;
@@ -303,14 +299,14 @@ public class Drivetrain extends SubsystemBase  {
     }
 
     public void engagePneumatics() {
-        drivetrain.set(true);
-        winch.set(false);
+        // drivetrain.set(true);
+        // winch.set(false);
     }
     
     public void engageDrivetrain() {
 
-        drivetrain.set(true);
-        winch.set(false);
+        // drivetrain.set(true);
+        // winch.set(false);
 
         //Factory default
         leftMotorLeader.configFactoryDefault();
