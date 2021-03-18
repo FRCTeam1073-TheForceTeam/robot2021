@@ -62,7 +62,7 @@ public class DriveControls extends CommandBase {
     double maxRotationalSpeed = 7.5; // in radians/s
 
     public void execute() {
-        multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3)) + 0.0 * Utility.deadzone(OI.driverController.getRawAxis(2))), 0, 1));
+        multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - ((Utility.deadzone(OI.driverController.getRawAxis(3)) + Utility.deadzone(OI.driverController.getRawAxis(2))) / 2), 0, 1));
         // multiplier = multiplierRateLimiter.calculate(Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3)) + 0.0 * Utility.deadzone(OI.driverController.getRawAxis(2))), 0, 1)));
         // multiplier *= Math.pow(2.25, Utility.deadzone(OI.driverController.getRawAxis(2)));
         forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier * maxForwardSpeed;
