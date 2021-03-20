@@ -4,12 +4,18 @@
 
 package frc.robot.commands;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.Utility;
+import frc.robot.components.DataRecorder;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.OI;
@@ -25,6 +31,8 @@ public class AimingCalibrationControls extends CommandBase {
   PowerPortTracker portTracker;
   PowerPortData portData;
   Drivetrain drivetrain;
+
+  DataRecorder dataRecorder;
 
   double targetFlywheelVelocity;
   double targetHoodAngle;
@@ -56,6 +64,7 @@ public class AimingCalibrationControls extends CommandBase {
     drivetrain = drivetrain_;
     initRange = initRange_;
     portData = new PowerPortData();
+    dataRecorder = new DataRecorder("AimingDataFile.txt");
     addRequirements(shooter, magazine, portTracker, drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -150,6 +159,7 @@ public class AimingCalibrationControls extends CommandBase {
     targetHoodAngle = MathUtil.clamp(targetHoodAngle, shooter.hoodAngleLow, shooter.hoodAngleHigh);
 
     if (OI.operatorController.getBackButtonPressed()) {
+      dataRecorder.writeMap(Map.of("Flywheel velocity",targetFlywheelVelocity,"Hood angle",targetHoodAngle,"recordedRange",currentRange));
       recordedFlywheelVelocity = targetFlywheelVelocity;
       recordedHoodAngle = targetHoodAngle;
       recordedRange = currentRange;
