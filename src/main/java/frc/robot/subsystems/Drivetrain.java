@@ -219,6 +219,18 @@ public class Drivetrain extends SubsystemBase  {
         lastGyroValue = 0;
     }
 
+    public void resetRobotOdometry(Pose2d newPose) {
+        robotPose = new Pose2d(newPose.getTranslation(), newPose.getRotation());
+        odometry.resetPosition(robotPose,robotPose.getRotation());//robotPose.getRotation());
+        leftMotorLeader.setSelectedSensorPosition(0);
+        rightMotorLeader.setSelectedSensorPosition(0);
+        gyro.setYaw(newPose.getRotation().getDegrees());
+        gyroAngle = newPose.getRotation().getRadians();
+        gyroDriftValue = 0;
+        totalGyroDrift = 0;
+        lastGyroValue = gyroAngle;
+    }
+
     /**
      * Sets motor rotational speeds in radians/second.
      * @param left The left motor speed in radians/second.
@@ -250,6 +262,21 @@ public class Drivetrain extends SubsystemBase  {
         leftMotorLeader.set(ControlMode.Velocity, leftVelocity);
         rightMotorLeader.set(ControlMode.Velocity, rightVelocity);
         //System.out.println("x");
+    }
+
+    public void curvatureDrive(double curvature, double velocity) {
+        if (Math.abs(curvature) < 0.01) {
+            // Driving straight
+            leftVelocity = velocity * ticksPerMeter * 0.1;
+            rightVelocity = velocity * ticksPerMeter * 0.1;
+        } else {
+            // Driving on a curve
+            double W = velocity / curvature;
+            leftVelocity = (curvature + robotWidth / 2.0) * W * ticksPerMeter * 0.1;
+            rightVelocity = (curvature - robotWidth / 2.0) * W * ticksPerMeter * 0.1;
+        }
+        leftMotorLeader.set(ControlMode.Velocity, leftVelocity);
+        rightMotorLeader.set(ControlMode.Velocity, rightVelocity);
     }
 
     public void setPower(double left, double right) {
