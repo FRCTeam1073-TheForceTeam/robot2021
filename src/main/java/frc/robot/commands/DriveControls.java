@@ -58,13 +58,14 @@ public class DriveControls extends CommandBase {
         }
     }
 
-    double maxForwardSpeed = 3.0; // in m/s
-    double maxRotationalSpeed = 7.5; // in radians/s
+    double maxForwardSpeed = 1.5; // in m/s
+    double maxRotationalSpeed = 3.0; // in radians/s
 
     public void execute() {
         multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - ((Utility.deadzone(OI.driverController.getRawAxis(3)) + Utility.deadzone(OI.driverController.getRawAxis(2))) / 2), 0, 1));
         // multiplier = multiplierRateLimiter.calculate(Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3)) + 0.0 * Utility.deadzone(OI.driverController.getRawAxis(2))), 0, 1)));
         // multiplier *= Math.pow(2.25, Utility.deadzone(OI.driverController.getRawAxis(2)));
+        if(OI.driverController.getPOV()==180) {multiplier*=0.25;}
         forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier * maxForwardSpeed;
         rotation = Utility.deadzone(-OI.driverController.getRawAxis(4)) * multiplier * maxRotationalSpeed;
         drivetrain.setVelocity(forward, rotation);

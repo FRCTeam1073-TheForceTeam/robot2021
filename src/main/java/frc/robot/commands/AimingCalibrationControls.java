@@ -52,7 +52,7 @@ public class AimingCalibrationControls extends CommandBase {
    * @@param initRange_ The starting range (in meters)
    */
 
-  public AimingCalibrationControls(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_, Drivetrain drivetrain_, double initRange_) {
+  public AimingCalibrationControls(Shooter shooter_, Magazine magazine_, PowerPortTracker portTracker_, Drivetrain drivetrain_, DataRecorder dataRecorder_, double initRange_) {
     shooter = shooter_;
     magazine = magazine_;
     portTracker = portTracker_;
@@ -64,7 +64,7 @@ public class AimingCalibrationControls extends CommandBase {
     drivetrain = drivetrain_;
     initRange = initRange_;
     portData = new PowerPortData();
-    dataRecorder = new DataRecorder("AimingDataFile.txt");
+    dataRecorder = dataRecorder_;
     addRequirements(shooter, magazine, portTracker, drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
