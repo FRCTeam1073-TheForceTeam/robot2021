@@ -58,17 +58,24 @@ public class DriveControls extends CommandBase {
         }
     }
 
-    double maxForwardSpeed = 3.65; // in m/s
-    double maxRotationalSpeed = 8.5; // in radians/s
-    double forwardSuper = 0.0;
+    // double maxForwardSpeed = 3.65; // in m/s
+    // double maxRotationalSpeed = 8.5; // in radians/s
+    // double forwardSuper = 0.0;
+
+    double maxForwardSpeed = 1.5; // in m/s
+    double maxRotationalSpeed = 3.0; // in radians/s
+
     public void execute() {
         //multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (0.5 * (Utility.deadzone(OI.driverController.getRawAxis(3)) + Utility.deadzone(OI.driverController.getRawAxis(2)))), 0, 1));
         multiplier = Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3))), 0, 1));
-        forwardSuper = 0.3 * MathUtil.clamp(Utility.deadzone(OI.driverController.getRawAxis(2)), 0, 1);
+        // forwardSuper = 0.3 * MathUtil.clamp(Utility.deadzone(OI.driverController.getRawAxis(2)), 0, 1);
         // multiplier = 0.5 + Utility.deadzone(OI.driverController.getRawAxis(3) / 2;
         // multiplier = multiplierRateLimiter.calculate(Math.exp(-Constants.THROTTLE_FALLOFF * MathUtil.clamp(1 - (Utility.deadzone(OI.driverController.getRawAxis(3)) + 0.0 * Utility.deadzone(OI.driverController.getRawAxis(2))), 0, 1)));
         // multiplier *= Math.pow(2.25, Utility.deadzone(OI.driverController.getRawAxis(2)));
-        forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * (multiplier + forwardSuper) * maxForwardSpeed;
+
+        // forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * (multiplier + forwardSuper) * maxForwardSpeed;
+        // if(OI.driverController.getPOV()==180) {multiplier*=0.25;}
+        forward = Utility.deadzone(-OI.driverController.getRawAxis(1)) * multiplier * maxForwardSpeed;
         rotation = Utility.deadzone(-OI.driverController.getRawAxis(4)) * multiplier * maxRotationalSpeed;
         drivetrain.setVelocity(forward, rotation);
     }

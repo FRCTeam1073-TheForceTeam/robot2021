@@ -91,7 +91,7 @@ public class TargetFlywheelCommand extends CommandBase {
     //Only check every (rangeUpdatePeriod) loops
     if (numLoops % rangeUpdatePeriod == 0) {
       double currentRange = portTracker.getRange();
-      if (currentRange != -1 && (currentRange >= 1 && currentRange <= 6.5)) {
+      if (currentRange != -1 && (currentRange >= 1 && currentRange <= Constants.MAXIMUM_DETECTABLE_RANGE)) {
         hasValidRangeData = true;
         range = currentRange;
       }        

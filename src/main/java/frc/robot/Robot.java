@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     // TODO: Any additional disable logic.
     RobotContainer.getBling().clearLEDs();
-    RobotContainer.getBling().cleared();
+    RobotContainer.aimingDataRecorder.onDisable();
   }
 
   @Override

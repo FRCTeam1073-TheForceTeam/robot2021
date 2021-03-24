@@ -78,7 +78,7 @@ public class TargetHoodCommand extends CommandBase {
   public void execute() {
     if (!readyToFire && (validRangeCounter < requiredValidRangeCount)) {
       double currentRange = portTracker.getRange();
-      if (currentRange != -1 && (currentRange >= 1.0 && currentRange <= 6.5)) {
+      if (currentRange != -1 && (currentRange >= 1.0 && currentRange <= Constants.MAXIMUM_DETECTABLE_RANGE)) {
         validRangeCounter++;
         if (validRangeCounter == requiredValidRangeCount) {
           readyToFire = true;

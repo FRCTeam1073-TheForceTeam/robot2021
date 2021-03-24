@@ -44,4 +44,9 @@ public final class Constants {
     public static final double ACCEPTABLE_HOOD_ANGLE_DIFFERENCE = 0.02;
 
     public static final double MAX_FLYWHEEL_SPEED = 0.8;
+
+    /**
+     * The farthest distance from the power port (in meters) before the results are unreliable.
+     */
+    public static final double MAXIMUM_DETECTABLE_RANGE = 9.5;
 }

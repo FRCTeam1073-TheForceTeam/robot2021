@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.time.Instant;
+import java.util.Map;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -25,7 +26,6 @@ import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Map;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.subsystems.PowerPortTracker;
@@ -61,8 +61,9 @@ import frc.robot.commands.TargetFlywheelCommand;
 import frc.robot.commands.TargetHoodCommand;
 import frc.robot.commands.TurnCommand;
 import frc.robot.commands.TurnToHeading;
-// Import components: add software components (ex. InterpolatorTable, ErrorToOutput) here
+// Import components: add software components (ex. InterpolatorTable, ErrorToOutput, DataRecorder) here
 import frc.robot.memory.Memory;
+import frc.robot.components.DataRecorder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -81,7 +82,7 @@ public class RobotContainer {
   private final Magazine magazine = new Magazine();
   private final Turret turret = new Turret();
   private final Shooter shooter = new Shooter();
-  private final Map map = new Map();
+  private final frc.robot.subsystems.Map map = new frc.robot.subsystems.Map();
   // private final Localizer localizer = new Localizer(drivetrain);
   private final PowerPortTracker portTracker = new PowerPortTracker();
   private final PowerCellTracker cellTracker = new PowerCellTracker();
@@ -94,6 +95,8 @@ public class RobotContainer {
   private final ShooterControls teleShooter = new ShooterControls(shooter);
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
+
+  static final DataRecorder aimingDataRecorder = new DataRecorder("/tmp/AimingDataFile.txt");
 
   // private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
@@ -362,7 +365,8 @@ public class RobotContainer {
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     drivetrain.resetRobotOdometry();
-    return null;
+    // return null;
+    return new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, aimingDataRecorder, 0);
   }
 
   public Command getTestCommand() {
