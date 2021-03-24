@@ -47,11 +47,22 @@ public class TargetFlywheelCommand extends CommandBase {
     portTracker = portTracker_;
     rangeUpdatePeriod = rangeUpdatePeriod_;
     flywheelTable = new InterpolatorTable(
-        new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
-        new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
-        new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
-        new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
-        new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51, 468.75));
+      new InterpolatorTableEntry(1.5,343.75),
+      new InterpolatorTableEntry(2.609,375),
+      new InterpolatorTableEntry(4.01,406.25),
+      new InterpolatorTableEntry(6.51,468.75),
+      new InterpolatorTableEntry(8.25,531.25),
+      new InterpolatorTableEntry(1.759,343.75),
+      new InterpolatorTableEntry(3.069,406.25),
+      new InterpolatorTableEntry(5.019,437.5),
+      new InterpolatorTableEntry(7.1,500),
+      new InterpolatorTableEntry(8.7,562.5)
+    );
+    // new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
+        // new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
+        // new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
+        // new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
+        // new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51, 468.75));
     shooter = shooter_;
     currentFlywheelVelocity = 0;
     flywheelVelocity = 0;

@@ -85,7 +85,7 @@ public class Bling extends SubsystemBase {
       // } else {
       batteryBling(0, 10, 8.0, 12.5);
 
-      LEDRainbow(10, m_ledBuffer.getLength() - 10, 250);
+      LEDRainbow(10, m_ledBuffer.getLength() - 10, 50);
 
       // dashing(20, 10, 255, 192, 203);
 
