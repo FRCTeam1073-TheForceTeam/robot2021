@@ -47,15 +47,20 @@ public class TargetFlywheelCommand extends CommandBase {
     portTracker = portTracker_;
     rangeUpdatePeriod = rangeUpdatePeriod_;
     flywheelTable = new InterpolatorTable(
-      new InterpolatorTableEntry(1.5,343.75),
-      new InterpolatorTableEntry(1.759,343.75),
-      new InterpolatorTableEntry(2.609,375),
-      new InterpolatorTableEntry(3.34,360.1),
-      new InterpolatorTableEntry(4.76,430),
-      new InterpolatorTableEntry(5.019,467.8),
-      new InterpolatorTableEntry(6.52,503.5),
-      new InterpolatorTableEntry(8.25,531.25),
-      new InterpolatorTableEntry(8.7,562.5)
+      new InterpolatorTableEntry(1.65, 343.75),
+      new InterpolatorTableEntry(3.26, 378.0),
+      new InterpolatorTableEntry(4.60, 451.4),
+      new InterpolatorTableEntry(6.18, 527.15)
+
+      // new InterpolatorTableEntry(1.5,343.75),
+      // new InterpolatorTableEntry(1.759,343.75),
+      // new InterpolatorTableEntry(2.609,375),
+      // new InterpolatorTableEntry(3.34,360.1),
+      // new InterpolatorTableEntry(4.76,430),
+      // new InterpolatorTableEntry(5.019,467.8),
+      // new InterpolatorTableEntry(6.52,503.5),
+      // new InterpolatorTableEntry(8.25,531.25),
+      // new InterpolatorTableEntry(8.7,562.5)
     );
     // new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
         // new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),

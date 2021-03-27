@@ -46,15 +46,20 @@ public class TargetHoodCommand extends CommandBase {
     requiredValidRangeCount = requiredValidRangeCount_;
 
     hoodTable = new InterpolatorTable(
-      new InterpolatorTableEntry(1.5,0.732),
-      new InterpolatorTableEntry(1.759,0.708),
-      new InterpolatorTableEntry(2.609,0.583),
-      new InterpolatorTableEntry(3.34,0.583),
-      new InterpolatorTableEntry(4.76,0.504),
-      new InterpolatorTableEntry(5.02,0.41),
-      new InterpolatorTableEntry(6.52,0.394),
-      new InterpolatorTableEntry(8.25,0.408),
-      new InterpolatorTableEntry(8.7,0.408)
+      new InterpolatorTableEntry(1.65, 0.661),
+      new InterpolatorTableEntry(3.26, 0.557),
+      new InterpolatorTableEntry(4.60, 0.447),
+      new InterpolatorTableEntry(6.18, 0.355)
+
+      // new InterpolatorTableEntry(1.5,0.732),
+      // new InterpolatorTableEntry(1.759,0.708),
+      // new InterpolatorTableEntry(2.609,0.583),
+      // new InterpolatorTableEntry(3.34,0.583),
+      // new InterpolatorTableEntry(4.76,0.504),
+      // new InterpolatorTableEntry(5.02,0.41),
+      // new InterpolatorTableEntry(6.52,0.394),
+      // new InterpolatorTableEntry(8.25,0.408),
+      // new InterpolatorTableEntry(8.7,0.408)
     );
       // new InterpolatorTableEntry(1.79, 0.658353), new InterpolatorTableEntry(2.35, 0.483353),
       // new InterpolatorTableEntry(3.05, 0.483353), new InterpolatorTableEntry(3.54, 0.483353),
