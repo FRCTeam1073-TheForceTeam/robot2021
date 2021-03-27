@@ -39,16 +39,16 @@ public class ShooterControls extends CommandBase {
 
     if (prevDPadState == -1) {
       if (currDPadState == 90) {
-        flywheelVelocity += 31.25*0.5;
+        flywheelVelocity += 31.25 * 0.5;
       }
       if (currDPadState == 270) {
-        flywheelVelocity -= 31.25*0.5;
+        flywheelVelocity -= 31.25 * 0.5;
       }
       if (currDPadState == 180) {
-        hoodAngle += 0.025;
+        hoodAngle += 0.025 * 0.5;
       }
       if (currDPadState == 0) {
-        hoodAngle -= 0.025;
+        hoodAngle -= 0.025 * 0.5;
       }        
     }
 
