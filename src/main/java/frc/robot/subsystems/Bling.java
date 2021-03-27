@@ -84,7 +84,7 @@ public class Bling extends SubsystemBase {
       // // setColorRGBAll(0, 0, 0);
       // } else {
 
-      // LEDRainbow(10, m_ledBuffer.getLength() - 10, 2000);
+      LEDRainbow(10, 20, 2000);
 
       batteryBling(0, 10, 8.0, 12.5);
 
@@ -322,7 +322,7 @@ public class Bling extends SubsystemBase {
       m_ledBuffer.setRGB(i, 0, 0, 0);
     }
 
-    for (int i = 0; i < numLEDs; i++) {
+    for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
 
       if (((i + move_rainbow) % 12) == 0 || ((i + move_rainbow) % 12) == 1) {
         // Sets first LED, then sets every 6 after it "red"
