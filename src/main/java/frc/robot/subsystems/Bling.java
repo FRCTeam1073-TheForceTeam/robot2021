@@ -84,7 +84,7 @@ public class Bling extends SubsystemBase {
       // // setColorRGBAll(0, 0, 0);
       // } else {
 
-      LEDRainbow(10, m_ledBuffer.getLength() - 10, 2000);
+      // LEDRainbow(10, m_ledBuffer.getLength() - 10, 2000);
 
       batteryBling(0, 10, 8.0, 12.5);
 
