@@ -49,7 +49,8 @@ public class TargetFlywheelCommand extends CommandBase {
     flywheelTable = new InterpolatorTable(
       new InterpolatorTableEntry(1.65, 343.75),
       new InterpolatorTableEntry(3.26, 378.0),
-      new InterpolatorTableEntry(4.60, 451.4),
+      new InterpolatorTableEntry(4.80, 494.2),
+      // new InterpolatorTableEntry(4.60, 449.4),
       new InterpolatorTableEntry(6.18, 527.15)
 
       // new InterpolatorTableEntry(1.5,343.75),

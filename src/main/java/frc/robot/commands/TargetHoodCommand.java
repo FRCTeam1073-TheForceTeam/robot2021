@@ -48,7 +48,8 @@ public class TargetHoodCommand extends CommandBase {
     hoodTable = new InterpolatorTable(
       new InterpolatorTableEntry(1.65, 0.661),
       new InterpolatorTableEntry(3.26, 0.557),
-      new InterpolatorTableEntry(4.60, 0.447),
+      new InterpolatorTableEntry(4.80, 0.355),
+      // new InterpolatorTableEntry(4.60, 0.447),
       new InterpolatorTableEntry(6.18, 0.355)
 
       // new InterpolatorTableEntry(1.5,0.732),

@@ -162,9 +162,10 @@ public class RobotContainer {
       );
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value))
         .whenPressed(
-          new SequentialCommandGroup(
-            new AdvanceMagazineCommand(magazine, 1.25, 4)
-          )
+          new TurretPortAlignCommand(turret, portTracker)
+          // new SequentialCommandGroup(
+          //   new AdvanceMagazineCommand(magazine, 1.25, 4)
+          // )
         );
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
       .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
