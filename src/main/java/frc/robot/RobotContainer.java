@@ -130,10 +130,6 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
-      .whenPressed(
-        new DriveToLocationCommand(drivetrain, new Translation2d(0,0), bling)
-      );
     (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
       .whenPressed(
         new SequentialCommandGroup(
@@ -173,6 +169,10 @@ public class RobotContainer {
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
       .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperRight.value))
+      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+    (new JoystickButton(OI.driverController, XboxController.Button.kX.value))
+      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+    (new JoystickButton(OI.driverController, XboxController.Button.kB.value))
       .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
   }
 
