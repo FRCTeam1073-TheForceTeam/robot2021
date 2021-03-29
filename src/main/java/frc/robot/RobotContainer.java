@@ -36,6 +36,7 @@ import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DeployCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.MagazineControls;
+import frc.robot.commands.PurePursuit;
 import frc.robot.commands.RetractCommand;
 import frc.robot.commands.ShooterControls;
 import frc.robot.commands.ShooterSetCommand;
@@ -354,6 +355,9 @@ public class RobotContainer {
         new TurnToHeading(drivetrain, bling, 0, 3.0),
         new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling)
       );
+      case 18:
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        return new PurePursuit(drivetrain);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

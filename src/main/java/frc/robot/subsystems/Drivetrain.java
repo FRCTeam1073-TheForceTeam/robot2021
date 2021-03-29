@@ -267,16 +267,12 @@ public class Drivetrain extends SubsystemBase  {
     public void curvatureDrive(double curvature, double velocity) {
         if (Math.abs(curvature) < 0.01) {
             // Driving straight
-            leftVelocity = velocity * ticksPerMeter * 0.1;
-            rightVelocity = velocity * ticksPerMeter * 0.1;
+            setVelocity(velocity, 0);
         } else {
             // Driving on a curve
             double W = velocity / curvature;
-            leftVelocity = (curvature + robotWidth / 2.0) * W * ticksPerMeter * 0.1;
-            rightVelocity = (curvature - robotWidth / 2.0) * W * ticksPerMeter * 0.1;
+            setVelocity(velocity, W);
         }
-        leftMotorLeader.set(ControlMode.Velocity, leftVelocity);
-        rightMotorLeader.set(ControlMode.Velocity, rightVelocity);
     }
 
     public void setPower(double left, double right) {
