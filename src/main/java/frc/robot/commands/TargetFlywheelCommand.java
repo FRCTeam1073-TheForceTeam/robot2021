@@ -100,7 +100,7 @@ public class TargetFlywheelCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setFlywheelVelocity(0);
+    
   }
 
   public void execute() {

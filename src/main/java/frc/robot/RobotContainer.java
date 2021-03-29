@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -134,8 +135,6 @@ public class RobotContainer {
       .whenPressed(
         new SequentialCommandGroup(
           // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-          new InstantCommand(shooter::stop, shooter),
-          new InstantCommand(shooter::lowerHood, shooter),
           new ParallelDeadlineGroup(
             new SequentialCommandGroup(
               new WaitToFire(shooter, portTracker),
