@@ -1,28 +1,23 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
-
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
-
-import javax.annotation.PropertyKey;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 /*
 
@@ -264,15 +259,17 @@ public class Drivetrain extends SubsystemBase  {
         //System.out.println("x");
     }
 
-    public void curvatureDrive(double curvature, double velocity) {
-        if (Math.abs(curvature) < 0.01) {
+    public void curvatureDrive(double radius, double velocity) {
+        if (Math.abs(radius) < 0.01) {
             // Driving straight
-            setVelocity(velocity, 0);
+            leftVelocity = rightVelocity = velocity * ticksPerMeter * 0.1;
         } else {
             // Driving on a curve
-            double W = velocity / curvature;
-            setVelocity(velocity, W);
+            leftVelocity = (radius - 0.5 * 0.9) * velocity / radius * ticksPerMeter * 0.1;
+            rightVelocity = (radius + 0.5 * 0.9) * velocity / radius * ticksPerMeter * 0.1;
         }
+        leftMotorLeader.set(ControlMode.Velocity, leftVelocity);
+        rightMotorLeader.set(ControlMode.Velocity, rightVelocity);
     }
 
     public void setPower(double left, double right) {

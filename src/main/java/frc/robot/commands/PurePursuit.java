@@ -11,19 +11,20 @@ public class PurePursuit extends CommandBase {
     private double angle;
     
     public PurePursuit(Drivetrain drivetrain) {
-        this.drivetrain = drivetrain;
-        addRequirements(drivetrain);
+      this.drivetrain = drivetrain;
+      addRequirements(drivetrain);
     }
     // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     drivetrain.resetRobotOdometry(new Pose2d(0, Units.feetToMeters(7.5), new Rotation2d(1, 0)));
+    System.out.println("PurePursuit Init");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.curvatureDrive(1.0, 1.0);
+    drivetrain.curvatureDrive(-1.0, 0.5);
     angle = drivetrain.getAngleDegrees();
   }
 
@@ -34,8 +35,7 @@ public class PurePursuit extends CommandBase {
   // Returns true when the command should end. Teleop never quits.
   @Override
   public boolean isFinished() {
-    return angle >= 180;
+    System.out.println("PurePursuit Fin, angle: " + angle);
+    return Math.abs(angle) >= 180;
   }
 }
-
-

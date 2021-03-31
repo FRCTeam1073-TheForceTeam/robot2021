@@ -44,4 +44,6 @@ public final class Constants {
     public static final double ACCEPTABLE_HOOD_ANGLE_DIFFERENCE = 0.02;
 
     public static final double MAX_FLYWHEEL_SPEED = 0.8;
+
+    public static final double DRIVETRAIN_WIDTH = 0.647;
 }

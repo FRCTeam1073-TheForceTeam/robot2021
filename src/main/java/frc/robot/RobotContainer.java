@@ -181,6 +181,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     drivetrain.resetRobotOdometry();
+    System.out.println("\n\n\n\n\n\n\n\n!!!!!!!!!!!!!! auto: " + ShuffleboardWidgets.auto);
     switch (ShuffleboardWidgets.auto) {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
@@ -356,7 +357,7 @@ public class RobotContainer {
         new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling)
       );
       case 18:
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
         return new PurePursuit(drivetrain);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
