@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
 
     rateLimiter = new SlewRateLimiter(4000);
     
-    hood = new CANSparkMax(25, MotorType.kBrushless);
+    hood = new CANSparkMax(28, MotorType.kBrushless);
     hood.clearFaults();
     hood.restoreFactoryDefaults();
     hood.setIdleMode(IdleMode.kBrake);
