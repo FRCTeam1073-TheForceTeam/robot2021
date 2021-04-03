@@ -1,42 +1,57 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.components.WaypointPath;
+import frc.robot.components.WaypointPath.Waypoint;
 import frc.robot.subsystems.Drivetrain;
 
 public class PurePursuit extends CommandBase {
     private final Drivetrain drivetrain;
-    private final double[][] xyv;
-    private double[] point;
-    private double[] nextPoint;
+    private final WaypointPath points;
+    private int place;
+    private Pose2d robot;
+    private Vector2d botVec;
+    private Waypoint nextPoint;
+    private Vector2d nextVector;
     private double radius;
-    private int counter;
+    private boolean isFinished;
     
-    public PurePursuit(Drivetrain drivetrain, double[][] xyv) {
+    public PurePursuit(Drivetrain drivetrain, WaypointPath points, double x, double y) {
       this.drivetrain = drivetrain;
-      this.xyv = xyv;
+      this.points = points;
       addRequirements(drivetrain);
+      drivetrain.resetRobotOdometry(new Pose2d(x, y, new Rotation2d(1, 0)));
     }
+
+    public PurePursuit(Drivetrain drivetrain, WaypointPath points) {
+      this(drivetrain, points, 0.0, Units.feetToMeters(7.5));
+    }
+
     // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drivetrain.resetRobotOdometry(new Pose2d(0, Units.feetToMeters(7.5), new Rotation2d(1, 0)));
     System.out.println("PurePursuit Init");
-    counter = 0;
+    robot = drivetrain.getRobotPose();
+    botVec = new Vector2d(robot.getX(), robot.getY());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    point = xyv[counter];
-    nextPoint = xyv[counter + 1];
-    radius = (Math.pow(point[0], 2) + Math.pow(point[1], 2)) / (2 * point[1]);// Translate
-    drivetrain.curvatureDrive(xyv[counter][3], xyv[counter][5]);
-    if (point != xyv[counter] && xyv[counter + 1] != null) {
-      counter++;
+    nextPoint = points.getNextWaypoint();
+    robot = drivetrain.getRobotPose();
+    nextVector = points.getRobotCoordinates(nextPoint, robot);
+    if (Math.abs(nextVector.y) >= 0.05) {
+      radius = (Math.pow(nextVector.x, 2) + Math.pow(nextVector.y, 2)) / (2 * nextVector.y);
+    } else {
+      radius = 0;
     }
+    drivetrain.curvatureDrive(radius, nextPoint.speed);
+    botVec = new Vector2d(robot.getX(), robot.getY());
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +61,13 @@ public class PurePursuit extends CommandBase {
   // Returns true when the command should end. Teleop never quits.
   @Override
   public boolean isFinished() {
-    return xyv[counter + 1] == null;
+    place = points.findClosestWaypoint(botVec);
+    if (place != points.getIndex()) {
+      System.out.println("Changed to next Waypoint from: " + place);
+    }
+    points.updateCurrentWaypoint(place);
+    isFinished = points.getNextWaypoint() == null;
+    System.out.println("isFinished condition: " + isFinished);
+    return isFinished;
   }
 }
