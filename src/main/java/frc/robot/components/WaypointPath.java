@@ -85,10 +85,15 @@ public class WaypointPath {
 
     /// Get the current segment or null if there is no current segment.
     public Waypoint getCurrentWaypoint() {
-        if (currentWaypoint >= 0 && currentWaypoint < path.size())
+        if (currentWaypoint >= 0 && currentWaypoint < path.size()) {
             return path.get(currentWaypoint);
-        else
+        } else {
             return null;
+        }
+    }
+
+    public int getIndex() {
+        return currentWaypoint;
     }
 
     /// Get the next waypoint on the path.
