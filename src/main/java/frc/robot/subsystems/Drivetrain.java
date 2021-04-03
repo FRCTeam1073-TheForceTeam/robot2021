@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import edu.wpi.first.wpiutil.math.MathUtil;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -119,7 +119,7 @@ public class Drivetrain extends SubsystemBase  {
      */
     public double getAngleDegrees() {
         // Rotrwation?
-        return gyroAngle;
+        return Units.radiansToDegrees(MathUtil.angleModulus(Units.degreesToRadians(gyroAngle)));
     }
 
     /**
@@ -127,7 +127,7 @@ public class Drivetrain extends SubsystemBase  {
      */
     public Rotation2d getAngleRadians() {
         // Rotrwation?
-        return Rotation2d.fromDegrees(gyroAngle);
+        return new Rotation2d(MathUtil.angleModulus(Units.degreesToRadians(gyroAngle)));
     }
 
     @Override
@@ -271,6 +271,10 @@ public class Drivetrain extends SubsystemBase  {
         leftMotorLeader.set(ControlMode.Velocity, leftVelocity);
         rightMotorLeader.set(ControlMode.Velocity, rightVelocity);
     }
+
+    //public void xydv(double x, double y, double degrees, double velocity) {
+    //
+    //}
 
     public void setPower(double left, double right) {
         leftMotorLeader.set(ControlMode.PercentOutput, left);
