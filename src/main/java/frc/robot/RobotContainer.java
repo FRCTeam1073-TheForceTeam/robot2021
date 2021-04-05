@@ -7,6 +7,8 @@ package frc.robot;
 import java.time.Instant;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
@@ -45,6 +47,7 @@ import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
+import frc.robot.Utility.PathBuilder.PathIndex;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
 import frc.robot.commands.AimingCalibrationControls;
@@ -358,7 +361,14 @@ public class RobotContainer {
       );
       case 18:
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
-        return new PurePursuit(drivetrain);
+        return 
+          new SequentialCommandGroup(
+            new InstantCommand(
+              ()->{drivetrain.resetRobotOdometry(new Pose2d(0.0, 0, new Rotation2d(1, 0)));},
+              drivetrain
+            ),
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0)
+          );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

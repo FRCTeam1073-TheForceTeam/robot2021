@@ -16,13 +16,14 @@ public class WaypointPath {
      * This class represents one waypoint on the path including speed information
      * and the lookahead to use when this is the current waypoint.
      */
-    public class Waypoint {
+    public static class Waypoint {
 
         public Vector2d point;            // Location of the waypoint.
         public double   speed;            // The desired speed for this waypoint.
         public double   tolerance;        // The tolerance for being at this point.
 
         public Waypoint(double x, double y, double spd, double tol) {
+            point = new Vector2d();
             point.x = x;
             point.y = y;
             speed = spd;

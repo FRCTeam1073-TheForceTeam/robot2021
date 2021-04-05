@@ -24,7 +24,6 @@ public class PurePursuit extends CommandBase {
       this.drivetrain = drivetrain;
       this.points = points;
       addRequirements(drivetrain);
-      drivetrain.resetRobotOdometry(new Pose2d(x, y, new Rotation2d(1, 0)));
     }
 
     public PurePursuit(Drivetrain drivetrain, WaypointPath points) {
