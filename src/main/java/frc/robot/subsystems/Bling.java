@@ -22,8 +22,11 @@ public class Bling extends SubsystemBase {
   MagazineControls magazine;
   PowerCellTracker portTracker;
 
-  private int counter_rainbow = 0;
-  private int move_rainbow = 0;
+  private int counter_rainbow_right = 0;
+  private int move_rainbow_right = 0;
+
+  private int counter_rainbow_left = 0;
+  private int move_rainbow_left = 0;
 
   private double brightness = 0.5;
 
@@ -84,7 +87,8 @@ public class Bling extends SubsystemBase {
       // // setColorRGBAll(0, 0, 0);
       // } else {
 
-      LEDRainbow(10, 30, 2000);
+      LEDRainbow(15, 25, 5000);
+      LEDRainbowReverse(40, 25, 5000);
 
       batteryBling(0, 10, 8.0, 12.5);
 
@@ -319,9 +323,9 @@ public class Bling extends SubsystemBase {
 
   public void LEDRainbow(int startLEDs, int numLEDs, int time) {
 
-    if (counter_rainbow < time) {
-      move_rainbow++;
-      counter_rainbow = 0;
+    if (counter_rainbow_right < time) {
+      move_rainbow_right++;
+      counter_rainbow_right = 0;
 
       // for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
       //   m_ledBuffer.setRGB(i, 0, 0, 0);
@@ -329,28 +333,66 @@ public class Bling extends SubsystemBase {
 
       for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
 
-        if (((i + move_rainbow) % 12) == 0 || ((i + move_rainbow) % 12) == 1) {
+        if (((i + move_rainbow_right) % 12) == 0 || ((i + move_rainbow_right) % 12) == 1) {
           // Sets first LED, then sets every 6 after it "red"
-          m_ledBuffer.setRGB(i + startLEDs, (int) (255 * brightness), 0, 0);
-        } else if (((i + 2 + move_rainbow) % 12) == 0 || ((i + 2 + move_rainbow) % 12) == 1) {
+          m_ledBuffer.setRGB(i, (int) (255 * brightness), 0, 0);
+        } else if (((i + 2 + move_rainbow_right) % 12) == 0 || ((i + 2 + move_rainbow_right) % 12) == 1) {
           // Sets second LED, then sets every 6 after it "orange"
-          m_ledBuffer.setRGB(i + startLEDs, (int) (255 * brightness), (int) (69 * brightness), 0);
-        } else if (((i + 4 + move_rainbow) % 12) == 0 || ((i + 4 + move_rainbow) % 12) == 1) {
+          m_ledBuffer.setRGB(i, (int) (255 * brightness), (int) (69 * brightness), 0);
+        } else if (((i + 4 + move_rainbow_right) % 12) == 0 || ((i + 4 + move_rainbow_right) % 12) == 1) {
           // Sets third LED, then sets every 6 after it "yellow"
-          m_ledBuffer.setRGB(i + startLEDs, (int) (252 * brightness), (int) (227 * brightness), 0);
-        } else if (((i + 6 + move_rainbow) % 12) == 0 || ((i + 6 + move_rainbow) % 12) == 1) {
+          m_ledBuffer.setRGB(i, (int) (252 * brightness), (int) (227 * brightness), 0);
+        } else if (((i + 6 + move_rainbow_right) % 12) == 0 || ((i + 6 + move_rainbow_right) % 12) == 1) {
           // Sets fourth LED, then sets every 6 after it "green"
-          m_ledBuffer.setRGB(i + startLEDs, 0, (int) (255 * brightness), 0);
-        } else if (((i + 8 + move_rainbow) % 12) == 0 || ((i + 8 + move_rainbow) % 12) == 1) {
+          m_ledBuffer.setRGB(i, 0, (int) (255 * brightness), 0);
+        } else if (((i + 8 + move_rainbow_right) % 12) == 0 || ((i + 8 + move_rainbow_right) % 12) == 1) {
           // Sets fifth LED, then sets every 6 after it "blue"
-          m_ledBuffer.setRGB(i + startLEDs, 0, 0, (int) (255 * brightness));
-        } else if (((i + 10 + move_rainbow) % 12) == 0 || ((i + 10 + move_rainbow) % 12) == 1) {
+          m_ledBuffer.setRGB(i, 0, 0, (int) (255 * brightness));
+        } else if (((i + 10 + move_rainbow_right) % 12) == 0 || ((i + 10 + move_rainbow_right) % 12) == 1) {
           // Sets sixth LED, then sets every 6 after it "purple"
-          m_ledBuffer.setRGB(i + startLEDs, (int) (128 * brightness), 0, (int) (128 * brightness));
+          m_ledBuffer.setRGB(i, (int) (128 * brightness), 0, (int) (128 * brightness));
         }
       }
     } else {
-      counter_rainbow++;
+      counter_rainbow_right++;
+    }
+      // m_led.setData(m_ledBuffer);
+  }
+
+  public void LEDRainbowReverse(int startLEDs, int numLEDs, int time) {
+
+    if (counter_rainbow_left < time) {
+      move_rainbow_left++;
+      counter_rainbow_left = 0;
+
+      // for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
+      //   m_ledBuffer.setRGB(i, 0, 0, 0);
+      // }
+
+      for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
+
+        if (((i - move_rainbow_left) % 12) == 0 || ((i - move_rainbow_left) % 12) == 1) {
+          // Sets first LED, then sets every 6 after it "red"
+          m_ledBuffer.setRGB(i, (int) (255 * brightness), 0, 0);
+        } else if (((i - 2 - move_rainbow_left) % 12) == 0 || ((i - 2 - move_rainbow_left) % 12) == 1) {
+          // Sets second LED, then sets every 6 after it "orange"
+          m_ledBuffer.setRGB(i, (int) (255 * brightness), (int) (69 * brightness), 0);
+        } else if (((i - 4 - move_rainbow_left) % 12) == 0 || ((i - 4 - move_rainbow_left) % 12) == 1) {
+          // Sets third LED, then sets every 6 after it "yellow"
+          m_ledBuffer.setRGB(i, (int) (252 * brightness), (int) (227 * brightness), 0);
+        } else if (((i - 6 - move_rainbow_left) % 12) == 0 || ((i - 6 - move_rainbow_left) % 12) == 1) {
+          // Sets fourth LED, then sets every 6 after it "green"
+          m_ledBuffer.setRGB(i, 0, (int) (255 * brightness), 0);
+        } else if (((i - 8 - move_rainbow_left) % 12) == 0 || ((i - 8 - move_rainbow_left) % 12) == 1) {
+          // Sets fifth LED, then sets every 6 after it "blue"
+          m_ledBuffer.setRGB(i, 0, 0, (int) (255 * brightness));
+        } else if (((i - 10 - move_rainbow_left) % 12) == 0 || ((i - 10 - move_rainbow_left) % 12) == 1) {
+          // Sets sixth LED, then sets every 6 after it "purple"
+          m_ledBuffer.setRGB(i, (int) (128 * brightness), 0, (int) (128 * brightness));
+        }
+      }
+    } else {
+      counter_rainbow_left++;
     }
       // m_led.setData(m_ledBuffer);
   }
