@@ -362,7 +362,8 @@ public class RobotContainer {
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
         return 
           new SequentialCommandGroup(
-            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0)//,
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0),
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0)
             //new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0)
 
           );
