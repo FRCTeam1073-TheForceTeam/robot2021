@@ -363,11 +363,9 @@ public class RobotContainer {
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
         return 
           new SequentialCommandGroup(
-            new InstantCommand(
-              ()->{drivetrain.resetRobotOdometry(new Pose2d(0.0, 0, new Rotation2d(1, 0)));},
-              drivetrain
-            ),
-            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0)
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0)//,
+            //new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0)
+
           );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
@@ -376,7 +374,7 @@ public class RobotContainer {
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
-    drivetrain.resetRobotOdometry();
+    //drivetrain.resetRobotOdometry();
     return null;
   }
 

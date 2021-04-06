@@ -25,7 +25,7 @@ public class Utility {
 
     static class PathBuilder {
         public enum PathIndex {
-            BARREL_1, BARREL_2, BARREL_3, SLALOM, BOUNCE, TEST
+            BARREL_1, BARREL_2, BARREL_3, BARREL_4, SLALOM, BOUNCE, TEST
         };
         public static void addPoints(WaypointPath path, Waypoint... points){
             for (Waypoint pt : points) {
@@ -51,6 +51,21 @@ public class Utility {
                         new Waypoint(2.114,-1.507,0.5,0.09)
                     );
                     break;
+                case BARREL_2:
+                    addPoints(path,
+                        new Waypoint(0.39, -0.05, 0.5, 0.09),
+                        new Waypoint(0.83, -0.49, 0.5, 0.09),
+                        new Waypoint(1.04, -7.34, 0.5, 0.09),
+                        new Waypoint(0.50, -1.83, 0.5, 0.09),
+                        new Waypoint(-0.15,-2.46, 0.5, 0.09),
+                        new Waypoint(-0.92, -3.14, 0.5, 0.09),
+                        new Waypoint(-1.33, -3.76, 0.5, 0.09),
+                        new Waypoint(-1.11, -4.45, 0.5, 0.09),
+                        new Waypoint(-0.30,-4.73, 0.5, 0.09),
+                        new Waypoint(0.46, -4.15, 0.5, 0.09),
+                        new Waypoint(0.61, -3.63, 0.5, 0.09)
+                    );
+                    break;
                 case TEST:
                     addPoints(path,
                         new Waypoint(0.0, 0.0, 0.5, 0.09),
@@ -70,9 +85,8 @@ public class Utility {
                         new Waypoint(0.4, 1.0, 0.5, 0.09),
                         new Waypoint(0.0, 1.0, 0.5, 0.09),
                         new Waypoint(0.0, 0.8, 0.5, 0.09),
-                        new Waypoint(0.0, 0.6, 0.5, 0.09),
-                        new Waypoint(0.0, 0.4, 0.5, 0.09),
-                        new Waypoint(0.0, 0.2, 0.5, 0.09)
+                        new Waypoint(0.0, 0.6, 0.5, 0.09)//,
+                        //new Waypoint(0.0, 0.4, 0.5, 0.09), new Waypoint(0.0, 0.2, 0.5, 0.09)
                     );
                     break;
             }
