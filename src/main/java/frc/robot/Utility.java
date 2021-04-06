@@ -43,13 +43,14 @@ public class Utility {
                         new Waypoint(3.276,0.145,0.5,0.09),
                         new Waypoint(3.793,-0.288,0.5,0.09),
                         new Waypoint(3.865,-0.530,0.5,0.09),
-                        new Waypoint(3.853,1.047,0.5,0.09),
+                        new Waypoint(3.853,-1.047,0.5,0.09),
                         new Waypoint(3.688,-1.444,0.5,0.09),
                         new Waypoint(3.390,-1.716,0.5,0.09),
                         new Waypoint(2.833,-1.810,0.5,0.09),
                         new Waypoint(2.455,-1.800,0.5,0.09),
                         new Waypoint(2.114,-1.507,0.5,0.09)
                     );
+                    break;
                 case TEST:
                     addPoints(path,
                         new Waypoint(0.0, 0.0, 0.5, 0.09),
@@ -73,6 +74,7 @@ public class Utility {
                         new Waypoint(0.0, 0.4, 0.5, 0.09),
                         new Waypoint(0.0, 0.2, 0.5, 0.09)
                     );
+                    break;
             }
             return path;
         }
