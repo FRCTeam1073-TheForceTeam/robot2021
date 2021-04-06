@@ -80,7 +80,7 @@ public class RobotContainer {
   // Subsystems: Add subsystems here
   public static Memory memory = new Memory();
   private static final Bling bling = new Bling();
-  private final Drivetrain drivetrain = new Drivetrain();
+  public final Drivetrain drivetrain = new Drivetrain();
   private final Collector collector = new Collector();
   private final Magazine magazine = new Magazine();
   private final Turret turret = new Turret();
@@ -183,7 +183,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    drivetrain.resetRobotOdometry();
     System.out.println("\n\n\n\n\n\n\n\n!!!!!!!!!!!!!! auto: " + ShuffleboardWidgets.auto);
     switch (ShuffleboardWidgets.auto) {
       case 0:

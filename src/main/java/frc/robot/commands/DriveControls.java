@@ -32,8 +32,7 @@ public class DriveControls extends CommandBase {
     }
 
     public void initialize() {
-        System.out.println("[Drivetrain: DriveControls] DriveControls online.");
-        drivetrain.engageDrivetrain();
+
     }
 
     private void arcadeCompute() {
