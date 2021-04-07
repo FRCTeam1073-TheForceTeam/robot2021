@@ -95,7 +95,7 @@ public class Utility {
                 case BARREL_4:
                     addPoints(path,
                         new Waypoint(7.3056,-0.244,0.5,0),
-                        new Waypoint(6.963,-0.816,0.5,0),
+                        new Waypoint(6.963,-0.0816,0.5,0),
                         new Waypoint(6.3991,-0.022,0.5,0)
                     );
                     break;
