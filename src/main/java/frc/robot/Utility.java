@@ -83,11 +83,13 @@ public class Utility {
                         new Waypoint(6.3,-1.05-K,0.5,0),
                         new Waypoint(6.53,-1.32-K,0.5,0),
                         new Waypoint(6.89,-1.413-K,0.5,0),
+                        new Waypoint(7.125,-1.475-K,0.5,0),
                         new Waypoint(7.42,-1.420-K,0.5,0),
                         new Waypoint(7.76,-1.156-K,0.5,0),
-                        new Waypoint(7.95,-0.836-K,0.5,0),
-                        new Waypoint(7.915,-0.608-K,0.5,0),
-                        new Waypoint(7.825,-0.440-K,0.5,0)
+                        new Waypoint(7.85,-0.836-K,0.5,0),
+                        new Waypoint(7.815,-0.608-K,0.5,0),
+                        new Waypoint(7.725,-0.440-K,0.5,0),
+                        new Waypoint(7.5,-0.25-K,0.5,0)
                     );
                     break;
                 case TEST:
