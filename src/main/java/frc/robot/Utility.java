@@ -25,7 +25,7 @@ public class Utility {
 
     static class PathBuilder {
         public enum PathIndex {
-            BARREL_1, BARREL_2, BARREL_3, BARREL_4, SLALOM, BOUNCE, TEST
+            BARREL_1, BARREL_2, BARREL_3, BARREL_4, SLALOM, BOUNCE, TEST, HOME
         };
         public static void addPoints(WaypointPath path, Waypoint... points){
             for (Waypoint pt : points) {
@@ -38,9 +38,9 @@ public class Utility {
             switch(index){
                 case BARREL_1:
                     addPoints(path,
-                        new Waypoint(1.407,0,0.5,0.09),
-                        new Waypoint(2.363,0.114,0.5,0.09),
-                        new Waypoint(3.276,0.145,0.5,0.09),
+                        new Waypoint(1.407,0,1.0,0.09),
+                        new Waypoint(2.363,0.114,1.0,0.09),
+                        new Waypoint(3.276,0.145,1.0,0.09),
                         new Waypoint(3.793,-0.288,0.5,0.09),
                         new Waypoint(3.865,-0.530,0.5,0.09),
                         new Waypoint(3.853,-1.047,0.5,0.09),
@@ -53,14 +53,14 @@ public class Utility {
                     break;
                 case BARREL_2:
                     addPoints(path,
-                        new Waypoint(2.064,-1.23,0.5,0),
-                        new Waypoint(2.04,-.487,0.5,0),
-                        new Waypoint(2.26,-.011,0.5,0),
-                        new Waypoint(3.18,.019,0.5,0),
-                        new Waypoint(3.65,.025,0.5,0),
-                        new Waypoint(4.037,.028,0.5,0),
-                        new Waypoint(4.63,.032,0.5,0),
-                        new Waypoint(5.2,.032,0.5,0),
+                        new Waypoint(2.064,-1.23,0.65,0),
+                        new Waypoint(2.04,-.487,0.65,0),
+                        new Waypoint(2.26,-.011,0.65,0),
+                        new Waypoint(3.18,.019,1.0,0),
+                        new Waypoint(3.65,.025,1.25,0),
+                        new Waypoint(4.037,.028,1.25,0),
+                        new Waypoint(4.63,.032,1.25,0),
+                        new Waypoint(5.2,.032,0.75,0),
                         new Waypoint(5.83,.185,0.5,0),
                         new Waypoint(6.138,.53,0.5,0),
                         new Waypoint(6.16,1.036,0.5,0),
@@ -78,26 +78,30 @@ public class Utility {
                         new Waypoint(4.508,1.16,0.5,0),
                         new Waypoint(4.459,0.69,0.5,0),
                         new Waypoint(4.53,0.329-K,0.5,0),
-                        new Waypoint(4.80,0.048-K,0.5,0),
-                        new Waypoint(5.28,-0.34-K,0.5,0),
-                        new Waypoint(5.63,-0.613-K,0.5,0),
-                        new Waypoint(5.94,-0.95-K,0.5,0),
-                        new Waypoint(6.53-G,-1.26-K,0.5,0),
+                        new Waypoint(4.80,0.048-K,0.75,0),
+                        new Waypoint(5.28,-0.34-K,0.75,0),
+                        new Waypoint(5.63,-0.613-K,0.75,0),
+                        new Waypoint(5.94,-0.95-K,0.75,0),
+                        new Waypoint(6.53-G,-1.26-K,0.7,0),
                         new Waypoint(6.89-G,-1.413-K,0.5,0),
                         new Waypoint(7.42-G,-1.420-K,0.5,0),
-                        new Waypoint(7.76-G,-1.156-0.5*Y-K,0.5,0),
+                        new Waypoint(7.76-G,-1.156-0.5*Y-K,1.5,0),
                         new Waypoint(7.85-G,-0.836-Y-K,0.5,0),
                         new Waypoint(7.815-G,-0.608-Y-K,0.5,0),
                         new Waypoint(7.725-G,-0.440-Y-K,0.5,0),
-                        new Waypoint(7.5-G,-0.25-Y-K,0.5,0)
-                    );
+                        new Waypoint(7.5-G,-0.25-Y-K,0.5,0)                  );
                     break;
                 case BARREL_4:
                     addPoints(path,
                         new Waypoint(7.3056,-0.244,0.5,0),
                         new Waypoint(6.963,-0.0816,0.5,0),
-                        new Waypoint(6.3991,-0.022,0.5,0)
+                        new Waypoint(6.3991,-0.022,0.5,0),
+                        new Waypoint(1.7, -0.075, 2.5, 0.09),
+                        new Waypoint(0.7, -0.15, 1.5, 0.09),
+                        new Waypoint(0, -0.15, 1.1, 0.09)
                     );
+                    break;
+                case HOME:
                     break;
                 case TEST:
                     addPoints(path,

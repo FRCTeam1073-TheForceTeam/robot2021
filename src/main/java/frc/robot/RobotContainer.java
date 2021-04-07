@@ -365,11 +365,7 @@ public class RobotContainer {
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0),
-            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0),
-            new TurnToHeading(drivetrain, bling, -Math.PI, 0.75),
-            new DriveForwardCommand(drivetrain, bling, 6.5, 3.5)
-            
-
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0)
           );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
