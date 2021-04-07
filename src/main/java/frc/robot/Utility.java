@@ -71,6 +71,8 @@ public class Utility {
                     break;
                 case BARREL_3:
                     double K = 0.2;
+                    double G = 0.2;
+                    double Y = -0.2;
                     addPoints(path,
                         new Waypoint(4.711,1.53,0.5,0),
                         new Waypoint(4.508,1.16,0.5,0),
@@ -79,15 +81,15 @@ public class Utility {
                         new Waypoint(4.80,0.048-K,0.5,0),
                         new Waypoint(5.28,-0.34-K,0.5,0),
                         new Waypoint(5.63,-0.613-K,0.5,0),
-                        new Waypoint(6.04,-0.95-K,0.5,0),
-                        new Waypoint(6.53,-1.26-K,0.5,0),
-                        new Waypoint(6.89,-1.413-K,0.5,0),
-                        new Waypoint(7.42,-1.420-K,0.5,0),
-                        new Waypoint(7.76,-1.156-K,0.5,0),
-                        new Waypoint(7.85,-0.836-K,0.5,0),
-                        new Waypoint(7.815,-0.608-K,0.5,0),
-                        new Waypoint(7.725,-0.440-K,0.5,0),
-                        new Waypoint(7.5,-0.25-K,0.5,0)
+                        new Waypoint(5.94,-0.95-K,0.5,0),
+                        new Waypoint(6.53-G,-1.26-K,0.5,0),
+                        new Waypoint(6.89-G,-1.413-K,0.5,0),
+                        new Waypoint(7.42-G,-1.420-K,0.5,0),
+                        new Waypoint(7.76-G,-1.156-0.5*Y-K,0.5,0),
+                        new Waypoint(7.85-G,-0.836-Y-K,0.5,0),
+                        new Waypoint(7.815-G,-0.608-Y-K,0.5,0),
+                        new Waypoint(7.725-G,-0.440-Y-K,0.5,0),
+                        new Waypoint(7.5-G,-0.25-Y-K,0.5,0)
                     );
                     break;
                 case TEST:
