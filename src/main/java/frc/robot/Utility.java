@@ -107,8 +107,9 @@ public class Utility {
                         new Waypoint(0.4, 1.0, 0.5, 0.09),
                         new Waypoint(0.0, 1.0, 0.5, 0.09),
                         new Waypoint(0.0, 0.8, 0.5, 0.09),
-                        new Waypoint(0.0, 0.6, 0.5, 0.09)//,
-                        //new Waypoint(0.0, 0.4, 0.5, 0.09), new Waypoint(0.0, 0.2, 0.5, 0.09)
+                        new Waypoint(0.0, 0.6, 0.5, 0.09),
+                        new Waypoint(0.0, 0.4, 0.5, 0.09), 
+                        new Waypoint(0.0, 0.2, 0.5, 0.09)
                     );
                     break;
             }
