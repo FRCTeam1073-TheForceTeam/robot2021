@@ -89,7 +89,14 @@ public class Utility {
                         new Waypoint(7.85-G,-0.836-Y-K,0.5,0),
                         new Waypoint(7.815-G,-0.608-Y-K,0.5,0),
                         new Waypoint(7.725-G,-0.440-Y-K,0.5,0),
-                        new Waypoint(7.5-G,-0.25-Y-K,0.5,0)
+                        new Waypoint(7.5-G,-0.25-Y-K,0.5,0),
+                    );
+                    break;
+                case BARREL_4:
+                    addPoints(path,
+                        new Waypoint(7.3056,-0.244,0.5,0),
+                        new Waypoint(6.963,-0.816,0.5,0),
+                        new Waypoint(6.3991,-0.022,0.5,0)
                     );
                     break;
                 case TEST:

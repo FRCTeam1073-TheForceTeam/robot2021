@@ -364,8 +364,11 @@ public class RobotContainer {
           new SequentialCommandGroup(
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0),
-            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0)
-            //new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0)
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0),
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0),
+            new TurnToHeading(drivetrain, bling, -Math.PI, 3.0),
+            new DriveForwardToXCoord(drivetrain, -0.1, 3.5, DriveDirection.FORWARD, bling)
+            //new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0)
 
           );
       default:
