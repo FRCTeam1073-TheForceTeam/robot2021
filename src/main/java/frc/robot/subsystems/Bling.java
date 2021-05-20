@@ -341,7 +341,7 @@ public class Bling extends SubsystemBase {
         counter_rainbow++;
       } else {
         move_rainbow++;
-        counter_rainbow = 1;
+        counter_rainbow = 0;
       }
       m_led.setData(m_ledBuffer);
     }
