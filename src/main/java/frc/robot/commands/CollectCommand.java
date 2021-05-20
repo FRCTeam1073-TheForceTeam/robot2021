@@ -82,7 +82,7 @@ public class CollectCommand extends CommandBase {
     public void initialize() {
         firstLoop = true;
         powerMultiplier = 1.0;
-        velocity = 0.35;
+        velocity = 0.95;
         shouldUnstall = false;
         isFinished = false;
         trueLoops = 0;
@@ -107,7 +107,7 @@ public class CollectCommand extends CommandBase {
         }
         time = System.currentTimeMillis();
         if (shouldUnstall) {
-            if (time - initialTime >= 3000) {
+            if (time - initialTime >= 3500) {
                 powerMultiplier = 0.0;
                 velocity = 0.0;
                 drivetrain.setVelocity(0.0, 0.0);
@@ -133,13 +133,13 @@ public class CollectCommand extends CommandBase {
         collector.setCollect(powerMultiplier * maxPower);
         drivetrain.setVelocity(velocity, 0.0);
         bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-        if (magazine.getSensor()) {
+        if (collector.getSensor()) {
             trueLoops++;
         } else {
             trueLoops = 0;
         }
-        if (trueLoops > 9) {
-            isFinished = magazine.getSensor();
+        if (trueLoops > 2) {
+            isFinished = true;
         }
     }
 

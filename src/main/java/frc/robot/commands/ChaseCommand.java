@@ -40,7 +40,6 @@ public class ChaseCommand extends CommandBase {
     private double scanRotationalSpeedMultiplier;
     private double velocityMultiplier;
     private double initialAngle;
-    private double angle;
     private long initialTime;
     private long time;
     private long timeToTurn;
@@ -74,7 +73,6 @@ public class ChaseCommand extends CommandBase {
         this.maxVelocity = maxVelocity;
         this.shouldScan = shouldScan;
         addRequirements(drivetrain);
-        addRequirements(bling);
     }
 
     // Called when the command is initially scheduled.
@@ -109,7 +107,6 @@ public class ChaseCommand extends CommandBase {
 
         } else if (isScanning) {
             bling.setArray("yellow");
-            angle = drivetrain.getRobotPose().getRotation().getRadians();
             time = System.currentTimeMillis();
             System.out.println("SCANNING FOR " + (time - initialTime));
 
@@ -119,19 +116,20 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            if (lastData.cx < 160) {
-                scanRotationalSpeedMultiplier = Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
-            } else {
-                scanRotationalSpeedMultiplier = -Math.max(Math.abs(-(powerCellData.cx - 159) / 160.0), 0.35);
-            }
-            timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity));
             initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
+            if (Math.signum(initialAngle) < 0) {
+                scanRotationalSpeedMultiplier = MathUtil.clamp(Math.abs(-(lastData.cx - 146) / 100.0), 0.35, 1);
+            } else {
+                scanRotationalSpeedMultiplier = -MathUtil.clamp(Math.abs(-(lastData.cx - 146) / 100.0), 0.35, 1);
+            }
+            // timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity));
+            timeToTurn = 8000;
             initialTime = System.currentTimeMillis();
         } else {
             bling.setArray("orange");
             loopsWithoutData++;
             System.out.println("2LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
-            if (loopsWithoutData > 5) {
+            if (loopsWithoutData > 7) {
                 bling.setArray("red");
                 rotationalSpeedMultiplier = 0.0;
                 velocityMultiplier = 0.0;
@@ -172,36 +170,12 @@ public class ChaseCommand extends CommandBase {
      */
     private void multipliers() {
         if (alignState == AlignState.LEFT || alignState == AlignState.RIGHT) {
-            rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 159) / 100.0, -1.0, 1.0);
+            rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 146) / 100.0, -1.0, 1.0);
             velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 140.0, 0.2, 1.0);
 
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
-                rotationalSpeedMultiplier = 0.35;
-
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
-                rotationalSpeedMultiplier = -0.35;
-
-            }
-
         } else if (alignState == AlignState.ALIGNED) {
-            rotationalSpeedMultiplier = -(powerCellData.cx - 159) / 160.0;
+            rotationalSpeedMultiplier = MathUtil.clamp(-(powerCellData.cx - 146) / 100.0, -1.0, 1.0);
             velocityMultiplier = MathUtil.clamp(-(powerCellData.cy - 239) / 120.0, 0.2, 1.0);
-
-            if (rotationalSpeedMultiplier > 0 && rotationalSpeedMultiplier < 0.35) {
-                rotationalSpeedMultiplier = 0.35;
-
-            } else if (rotationalSpeedMultiplier < 0 && rotationalSpeedMultiplier > -0.35) {
-                rotationalSpeedMultiplier = -0.35;
-
-            }
-
-            if (powerCellData.cy >= 180) {
-                System.out.println("DONEDONEDONE");
-                rotationalSpeedMultiplier = 0.0;
-                velocityMultiplier = 0.0;
-                drivetrain.setVelocity(0.0, 0.0);
-                isFinished = true;
-            }
 
         } else {
             if (loopsWithoutData > 5) {
@@ -211,6 +185,14 @@ public class ChaseCommand extends CommandBase {
             if (shouldScan) {
                 skipScan = false;
             }
+        }
+
+        if (powerCellData.cy >= 170) {
+            drivetrain.setVelocity(0.0, 0.0);
+            System.out.println("DONEDONEDONE");
+            rotationalSpeedMultiplier = 0.0;
+            velocityMultiplier = 0.0;
+            isFinished = true;
         }
     }
 
@@ -227,9 +209,7 @@ public class ChaseCommand extends CommandBase {
             rotationalSpeedMultiplier = scanRotationalSpeedMultiplier;
         }
 
-        if ((Math.signum(rotationalSpeedMultiplier) == 1.0 && time - initialTime >= timeToTurn
-                && MathUtil.angleModulus(angle - initialAngle) >= initialAngle)
-                || (time - initialTime >= timeToTurn && MathUtil.angleModulus(angle - initialAngle) <= initialAngle)) {
+        if ((time - initialTime >= timeToTurn)) {
             System.out.println("SCAN_DONE_SCAN_DONE");
             rotationalSpeedMultiplier = 0.0;
             velocityMultiplier = 0.0;

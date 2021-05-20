@@ -66,8 +66,8 @@ public class AimingCalibrationControls extends CommandBase {
     magazine.setVelocity(0);
     shooter.setFlywheelPower(0);
     shooter.lowerHood();
-    drivetrain.engageDrivetrain();
-    drivetrain.resetRobotOdometry();
+    // drivetrain.engageDrivetrain();
+    // drivetrain.resetRobotOdometry();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -100,7 +100,7 @@ public class AimingCalibrationControls extends CommandBase {
     drivetrain.setVelocity(forward, rotation);
     if ((OI.driverController.getStartButtonPressed() && OI.driverController.getBackButton())
         || (OI.driverController.getStartButton() && OI.driverController.getBackButtonPressed())) {
-      drivetrain.resetRobotOdometry();
+      // drivetrain.resetRobotOdometry();
     }
     
     if (OI.driverController.getAButtonPressed()) {

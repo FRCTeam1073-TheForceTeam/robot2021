@@ -31,7 +31,6 @@ public class AlignMagazineLoadCommand extends CommandBase {
     this.bling = bling;
     addRequirements(magazine);
     addRequirements(shooter);
-    addRequirements(bling);
   }
 
   // Called when the command is initially scheduled.

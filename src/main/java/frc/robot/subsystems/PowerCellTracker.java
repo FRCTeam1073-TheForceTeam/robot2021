@@ -67,7 +67,9 @@ public class PowerCellTracker extends OpenMVSubsystem {
     private long lastDataUpdate = 0;
     private long failedReadCount = 0;
     private ArrayList<PowerCellData> m_cellData;
-
+    private int m_lastCellDataSize = 0;
+    private int m_lastLastCellDataSize = 0;
+    private int m_lastLastLastCellDataSize = 0;
     
     private double m_range = -1.0;
     private double m_rangeSignalStrength = 0.0;
@@ -121,6 +123,11 @@ public class PowerCellTracker extends OpenMVSubsystem {
       }
     }
 
+  //If there is a cell in the list, we "have data" and will return true 
+  public boolean hasData() {
+    return (m_cellData.size() > 0) || (m_lastCellDataSize > 0) || (m_lastLastCellDataSize > 0) || (m_lastLastLastCellDataSize > 0);
+  }
+
     // Returns range sent by range sensor or -1.0 if there is an error.
     public double getRange() {
       if (m_rangeSignalStrength < 10)
@@ -135,26 +142,31 @@ public class PowerCellTracker extends OpenMVSubsystem {
 
     // Updates our config and mode:
     private boolean readAdvancedTracking() {
+      m_lastLastLastCellDataSize = m_lastLastCellDataSize;
+      m_lastLastCellDataSize = m_lastCellDataSize;
+      m_lastCellDataSize = m_cellData.size();
       m_cellData.clear();
-      for (int index = 1; index <= 3; index++) {
+      //Used to be 3 instead of 1
+      for (int index = 1; index <= 1; index++) {
         if (read(apiIndex(5, index), targetData) == true && targetData.length == 8) {
-          PowerCellData tempCellData = new PowerCellData();
-          int cxhi = targetData.data[0] & 0xFF;
-          int cxlo = targetData.data[1] & 0xF0;
-          tempCellData.cx = (cxhi << 4) | (cxlo >> 4);
-          int cyhi = targetData.data[1] & 0x0F;
-          int cylo = targetData.data[2] & 0xFF;
-          tempCellData.cy = (cyhi << 8) | cylo;
-          int areahi = targetData.data[3] & 0xFF;
-          int arealo = targetData.data[4] & 0xFF;
-          tempCellData.area = (areahi << 8) | arealo;
-          tempCellData.targetType = targetData.data[5];
-          tempCellData.quality = targetData.data[6];
-          tempCellData.timestamp = targetData.timestamp; // Assign the CANBus message timestamp
-          lastDataUpdate = targetData.timestamp;
-          m_cellData.add(tempCellData);
-        }
-        else {
+          if (targetData.data[6]!=0) {
+            PowerCellData tempCellData = new PowerCellData();
+            int cxhi = targetData.data[0] & 0xFF;
+            int cxlo = targetData.data[1] & 0xF0;
+            tempCellData.cx = (cxhi << 4) | (cxlo >> 4);
+            int cyhi = targetData.data[1] & 0x0F;
+            int cylo = targetData.data[2] & 0xFF;
+            tempCellData.cy = (cyhi << 8) | cylo;
+            int areahi = targetData.data[3] & 0xFF;
+            int arealo = targetData.data[4] & 0xFF;
+            tempCellData.area = (areahi << 8) | arealo;
+            tempCellData.targetType = targetData.data[5];
+            tempCellData.quality = targetData.data[6];
+            tempCellData.timestamp = targetData.timestamp; // Assign the CANBus message timestamp
+            lastDataUpdate = targetData.timestamp;
+            m_cellData.add(tempCellData);              
+          }
+        } else {
           // 10 Failures is ~ 0.5 seconds with 50Hz loop.
           failedReadCount++;
         }
@@ -209,6 +221,8 @@ public class PowerCellTracker extends OpenMVSubsystem {
           SmartDashboard.putNumber(String.format("PowerCell[%d].Area", index), 0);
         }
       }
+
+      SmartDashboard.putBoolean("[PowerCell.HasData", hasData());
 
       readRange();
       SmartDashboard.putNumber("PowerCell.Range", m_range);

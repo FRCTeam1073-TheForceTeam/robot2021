@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.LinearFilter;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,10 +16,12 @@ public class Collector extends SubsystemBase {
   private boolean isRelaxed = false;
   private WPI_TalonSRX collectorMotor;
   private Solenoid collectorWithdrawPneumatic, collectorDeployPneumatic;
+  private final DigitalInput collectorSensor = new DigitalInput(1);
   private LinearFilter filter;
   private double power;
   private double rawCurrent;
   private double filteredCurrent;
+  private boolean isIntaking;
 
   public Collector() {
     this.collectorWithdrawPneumatic = new Solenoid(1, 6);
@@ -28,9 +31,10 @@ public class Collector extends SubsystemBase {
     this.collectorMotor.setNeutralMode(NeutralMode.Coast);
 
     this.collectorMotor.enableCurrentLimit(true);
-    this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 30.0, 0.25), 500);
+    // this.collectorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15.0, 27.5, 0.25), 500);
     this.collectorMotor.configPeakCurrentLimit(28, 500);
     this.collectorMotor.configPeakCurrentDuration(750, 500);
+    this.collectorMotor.configContinuousCurrentLimit(15, 500);
 
     this.filter = LinearFilter.singlePoleIIR(0.75, 0.02);
   }
@@ -38,6 +42,10 @@ public class Collector extends SubsystemBase {
   // Is the collector motor stalled?
   public boolean isStalled() {
     return 27.85 < Math.abs(getfilteredCurrent());
+  }
+
+  public boolean getSensor() {
+    return isIntaking;
   }
 
   /**
@@ -50,7 +58,6 @@ public class Collector extends SubsystemBase {
   public void setCollect(double power) {
     this.power = power;
     collectorMotor.set(ControlMode.PercentOutput, power);
-
   }
 
   /**
@@ -85,13 +92,13 @@ public class Collector extends SubsystemBase {
 
   /// Is the collector deployed?
   public void raise() {
-    collectorDeployPneumatic.set(true);
-    collectorWithdrawPneumatic.set(false);
+    collectorDeployPneumatic.set(false);
+    collectorWithdrawPneumatic.set(true);
   }
 
   public void lower() {
-    collectorDeployPneumatic.set(false);
-    collectorWithdrawPneumatic.set(true);
+    collectorDeployPneumatic.set(true);
+    collectorWithdrawPneumatic.set(false);
   }
 
   /**
@@ -146,9 +153,15 @@ public class Collector extends SubsystemBase {
 
   @Override
   public void periodic() {
+    isIntaking = !collectorSensor.get();
     // This method will be called once per scheduler run
     rawCurrent = collectorMotor.getStatorCurrent();
     filteredCurrent = filter.calculate(rawCurrent);
-    SmartDashboard.putNumber("[collector] filteredOutputCurrent", filteredCurrent);
+    SmartDashboard.putNumber("[Collector] Filtered Output Current", filteredCurrent);
+    SmartDashboard.putBoolean("[Collector] Sensor", collectorSensor.get());
+    SmartDashboard.putNumber("[Collector] Immediate Output Current", collectorMotor.getStatorCurrent());
+    SmartDashboard.putBoolean("[Collector] Is alive?", collectorMotor.isAlive());
+    SmartDashboard.putBoolean("[Collector] Is stalled?", isStalled());
+    SmartDashboard.putNumber("[Collector] Output percent", collectorMotor.getMotorOutputPercent());
   }
 }
