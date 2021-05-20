@@ -71,6 +71,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.drivetrain.resetRobotOdometry();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command if available.
     if (m_autonomousCommand != null) {

@@ -8,6 +8,8 @@ import java.time.Instant;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
@@ -37,6 +39,7 @@ import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DeployCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.MagazineControls;
+import frc.robot.commands.PurePursuit;
 import frc.robot.commands.RetractCommand;
 import frc.robot.commands.ShooterControls;
 import frc.robot.commands.ShooterSetCommand;
@@ -45,6 +48,7 @@ import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
+import frc.robot.Utility.PathBuilder.PathIndex;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
 import frc.robot.commands.AimingCalibrationControls;
@@ -78,7 +82,7 @@ public class RobotContainer {
   // Subsystems: Add subsystems here
   public static Memory memory = new Memory();
   private static final Bling bling = new Bling();
-  private final Drivetrain drivetrain = new Drivetrain();
+  public final Drivetrain drivetrain = new Drivetrain();
   private final Collector collector = new Collector();
   private final Magazine magazine = new Magazine();
   private final Turret turret = new Turret();
@@ -184,7 +188,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    drivetrain.resetRobotOdometry();
+    System.out.println("\n\n\n\n\n\n\n\n!!!!!!!!!!!!!! auto: " + ShuffleboardWidgets.auto);
     switch (ShuffleboardWidgets.auto) {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
@@ -359,6 +363,15 @@ public class RobotContainer {
         new TurnToHeading(drivetrain, bling, 0, 3.0),
         new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling)
       );
+      case 18:
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
+        return 
+          new SequentialCommandGroup(
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0),
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0),
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0),
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0)
+          );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
@@ -366,7 +379,7 @@ public class RobotContainer {
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
-    drivetrain.resetRobotOdometry();
+    //drivetrain.resetRobotOdometry();
     return null;
     // return new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, aimingDataRecorder, 0);
   }

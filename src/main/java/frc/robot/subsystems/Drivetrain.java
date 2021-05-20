@@ -1,28 +1,23 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
-
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
-
-import javax.annotation.PropertyKey;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 /*
 
@@ -124,7 +119,7 @@ public class Drivetrain extends SubsystemBase  {
      */
     public double getAngleDegrees() {
         // Rotrwation?
-        return gyroAngle;
+        return Units.radiansToDegrees(MathUtil.angleModulus(Units.degreesToRadians(gyroAngle)));
     }
 
     /**
@@ -132,7 +127,7 @@ public class Drivetrain extends SubsystemBase  {
      */
     public Rotation2d getAngleRadians() {
         // Rotrwation?
-        return Rotation2d.fromDegrees(gyroAngle);
+        return new Rotation2d(MathUtil.angleModulus(Units.degreesToRadians(gyroAngle)));
     }
 
     @Override
@@ -219,6 +214,18 @@ public class Drivetrain extends SubsystemBase  {
         lastGyroValue = 0;
     }
 
+    public void resetRobotOdometry(Pose2d newPose) {
+        robotPose = new Pose2d(newPose.getTranslation(), newPose.getRotation());
+        odometry.resetPosition(robotPose,robotPose.getRotation());//robotPose.getRotation());
+        leftMotorLeader.setSelectedSensorPosition(0);
+        rightMotorLeader.setSelectedSensorPosition(0);
+        gyro.setYaw(newPose.getRotation().getDegrees());
+        gyroAngle = newPose.getRotation().getRadians();
+        gyroDriftValue = 0;
+        totalGyroDrift = 0;
+        lastGyroValue = gyroAngle;
+    }
+
     /**
      * Sets motor rotational speeds in radians/second.
      * @param left The left motor speed in radians/second.
@@ -251,6 +258,23 @@ public class Drivetrain extends SubsystemBase  {
         rightMotorLeader.set(ControlMode.Velocity, rightVelocity);
         //System.out.println("x");
     }
+
+    public void curvatureDrive(double radius, double velocity) {
+        if (Math.abs(radius) < 0.01) {
+            // Driving straight
+            leftVelocity = rightVelocity = velocity * ticksPerMeter * 0.1;
+        } else {
+            // Driving on a curve
+            leftVelocity = (radius - 0.5 * 0.9) * velocity / radius * ticksPerMeter * 0.1;
+            rightVelocity = (radius + 0.5 * 0.9) * velocity / radius * ticksPerMeter * 0.1;
+        }
+        leftMotorLeader.set(ControlMode.Velocity, leftVelocity);
+        rightMotorLeader.set(ControlMode.Velocity, rightVelocity);
+    }
+
+    //public void xydv(double x, double y, double degrees, double velocity) {
+    //
+    //}
 
     public void setPower(double left, double right) {
         leftMotorLeader.set(ControlMode.PercentOutput, left);
