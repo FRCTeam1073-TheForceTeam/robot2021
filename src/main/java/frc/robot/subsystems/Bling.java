@@ -85,6 +85,11 @@ public class Bling extends SubsystemBase {
       // } else {
       batteryBling(0, 10, 8.0, 12.5);
 
+<<<<<<< Updated upstream
+=======
+      LEDRainbow(10, m_ledBuffer.getLength() - 10, 1000);
+
+>>>>>>> Stashed changes
       // dashing(20, 10, 255, 192, 203);
 
       // if (collector.isDeployed()) {
@@ -312,10 +317,15 @@ public class Bling extends SubsystemBase {
     return m_ledBuffer;
   }
 
+<<<<<<< Updated upstream
   public void LEDRainbow() {
     int numLEDs = m_ledBuffer.getLength();
 
     for (int i = 0; i < numLEDs; i++) {
+=======
+  public void LEDRainbow(int startLEDs, int numLEDs, int time) {
+    for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
+>>>>>>> Stashed changes
 
       if (((i + move_rainbow) % 12) == 0 || ((i + move_rainbow) % 12) == 1) {
         // Sets first LED, then sets every 6 after it "red"
@@ -337,11 +347,17 @@ public class Bling extends SubsystemBase {
         m_ledBuffer.setRGB(i, (int) (128 * brightness), 0, (int) (128 * brightness));
       }
 
+<<<<<<< Updated upstream
       if (counter_rainbow < 100) {
         counter_rainbow++;
       } else {
+=======
+      if (counter_rainbow < time) {
+>>>>>>> Stashed changes
         move_rainbow++;
-        counter_rainbow = 1;
+        counter_rainbow = 0;
+      } else {
+        counter_rainbow++;
       }
       m_led.setData(m_ledBuffer);
     }
