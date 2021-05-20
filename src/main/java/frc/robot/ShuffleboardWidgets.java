@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Collector;
@@ -33,6 +34,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardLayout shooting;
         private static ShuffleboardLayout cellTracking;
         private static ShuffleboardLayout portTracking;
+        private static ShuffleboardLayout shootingReadout;
 
         private Drivetrain drivetrain;
         private Collector collector;
@@ -106,6 +108,11 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private NetworkTableEntry portXE;
         private NetworkTableEntry portYE;
 
+        private NetworkTableEntry shooterFlywheelSpeed;
+        private NetworkTableEntry shooterHoodAngle;
+        private NetworkTableEntry sensorRange;
+        private NetworkTableEntry portTrackerHasData;
+
         public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
                         Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) {
                 this.drivetrain = drivetrain;
@@ -131,6 +138,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 2);
                 cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
+                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 2).withPosition(5, 0);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
@@ -183,6 +191,11 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 hoodMinE.setDouble(hoodMin);
                 hoodMaxE.setDouble(hoodMax);
+
+                portTrackerHasData = shootingReadout.add("Can see port?", portTracker.getPortData(new PowerPortData())).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+                sensorRange = shootingReadout.add("Range sensor distance (meters)", portTracker.getRange()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", 0, "max", Constants.MAXIMUM_DETECTABLE_RANGE)).getEntry();
+                shooterHoodAngle = shootingReadout.add("Hood angle (radians)", hoodAngle).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", shooter.hoodAngleLow*180.0/Math.PI, "max", shooter.hoodAngleHigh*180.0/Math.PI)).getEntry();
+                shooterFlywheelSpeed = shootingReadout.add("Flywheel speed (radians/s)", flywheelVelocity).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", 0, "max", Constants.MAX_FLYWHEEL_SPEED)).getEntry();
         }
 
         private void updateWidgets() {
@@ -246,8 +259,16 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 portXE.setNumber(portX);
                 portYE.setNumber(portY);
+
+                portTrackerHasData.setBoolean(portTracker.getPortData(new PowerPortData()));
+                sensorRange.setDouble(portTracker.getRange());
+                shooterHoodAngle.setDouble(hoodAngle);
+                shooterFlywheelSpeed.setDouble(flywheelVelocity);
+
         }
 
+        
+        boolean a = false;
         private double mirrorAngle(double raw) {
                 raw *= -1;
                 if (raw < -90) {

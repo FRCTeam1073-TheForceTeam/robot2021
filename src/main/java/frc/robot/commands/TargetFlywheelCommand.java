@@ -47,11 +47,29 @@ public class TargetFlywheelCommand extends CommandBase {
     portTracker = portTracker_;
     rangeUpdatePeriod = rangeUpdatePeriod_;
     flywheelTable = new InterpolatorTable(
-        new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
-        new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
-        new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
-        new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
-        new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51, 468.75));
+      new InterpolatorTableEntry(1.6, 332.0),
+      new InterpolatorTableEntry(1.8, 348.0),
+      new InterpolatorTableEntry(3.48, 410.1),
+      new InterpolatorTableEntry(4.86, 509.8),
+     // new InterpolatorTableEntry(4.80, 494.2),
+     // new InterpolatorTableEntry(4.60, 449.4),
+      new InterpolatorTableEntry(6.18, 527.15)
+
+      // new InterpolatorTableEntry(1.5,343.75),
+      // new InterpolatorTableEntry(1.759,343.75),
+      // new InterpolatorTableEntry(2.609,375),
+      // new InterpolatorTableEntry(3.34,360.1),
+      // new InterpolatorTableEntry(4.76,430),
+      // new InterpolatorTableEntry(5.019,467.8),
+      // new InterpolatorTableEntry(6.52,503.5),
+      // new InterpolatorTableEntry(8.25,531.25),
+      // new InterpolatorTableEntry(8.7,562.5)
+    );
+    // new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
+        // new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
+        // new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
+        // new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
+        // new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51, 468.75));
     shooter = shooter_;
     currentFlywheelVelocity = 0;
     flywheelVelocity = 0;
@@ -84,14 +102,14 @@ public class TargetFlywheelCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setFlywheelVelocity(0);
+    // shooter.setFlywheelVelocity(0);
   }
 
   public void execute() {
     //Only check every (rangeUpdatePeriod) loops
     if (numLoops % rangeUpdatePeriod == 0) {
       double currentRange = portTracker.getRange();
-      if (currentRange != -1 && (currentRange >= 1 && currentRange <= 6.5)) {
+      if (currentRange != -1 && (currentRange >= 1 && currentRange <= Constants.MAXIMUM_DETECTABLE_RANGE)) {
         hasValidRangeData = true;
         range = currentRange;
       }        

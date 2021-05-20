@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.time.Instant;
+import java.util.Map;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -27,7 +29,6 @@ import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Map;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.subsystems.PowerPortTracker;
@@ -65,8 +66,9 @@ import frc.robot.commands.TargetFlywheelCommand;
 import frc.robot.commands.TargetHoodCommand;
 import frc.robot.commands.TurnCommand;
 import frc.robot.commands.TurnToHeading;
-// Import components: add software components (ex. InterpolatorTable, ErrorToOutput) here
+// Import components: add software components (ex. InterpolatorTable, ErrorToOutput, DataRecorder) here
 import frc.robot.memory.Memory;
+import frc.robot.components.DataRecorder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -85,7 +87,7 @@ public class RobotContainer {
   private final Magazine magazine = new Magazine();
   private final Turret turret = new Turret();
   private final Shooter shooter = new Shooter();
-  private final Map map = new Map();
+  private final frc.robot.subsystems.Map map = new frc.robot.subsystems.Map();
   // private final Localizer localizer = new Localizer(drivetrain);
   private final PowerPortTracker portTracker = new PowerPortTracker();
   private final PowerCellTracker cellTracker = new PowerCellTracker();
@@ -98,6 +100,8 @@ public class RobotContainer {
   private final ShooterControls teleShooter = new ShooterControls(shooter);
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
+
+  public static final DataRecorder aimingDataRecorder = new DataRecorder("/tmp/AimingDataFile.txt");
 
   // private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
@@ -131,15 +135,11 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
-      .whenPressed(
-        new DriveToLocationCommand(drivetrain, new Translation2d(0,0), bling)
-      );
     (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
       .whenPressed(
         new SequentialCommandGroup(
           // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-          new InstantCommand(shooter::stop, shooter),
+          // new InstantCommand(shooter::stop, shooter),
           new InstantCommand(shooter::lowerHood, shooter),
           new ParallelDeadlineGroup(
             new SequentialCommandGroup(
@@ -167,13 +167,18 @@ public class RobotContainer {
       );
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value))
         .whenPressed(
-          new SequentialCommandGroup(
-            new AdvanceMagazineCommand(magazine, 1.25, 4)
-          )
+          new TurretPortAlignCommand(turret, portTracker)
+          // new SequentialCommandGroup(
+          //   new AdvanceMagazineCommand(magazine, 1.25, 4)
+          // )
         );
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
       .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperRight.value))
+      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+    (new JoystickButton(OI.driverController, XboxController.Button.kY.value))
+      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+    (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
       .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
   }
 
@@ -376,6 +381,7 @@ public class RobotContainer {
   public Command getTeleopCommand() {
     //drivetrain.resetRobotOdometry();
     return null;
+    // return new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, aimingDataRecorder, 0);
   }
 
   public Command getTestCommand() {

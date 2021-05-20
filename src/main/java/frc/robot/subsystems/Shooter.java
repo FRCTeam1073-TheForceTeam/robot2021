@@ -93,9 +93,9 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(4000);
+    rateLimiter = new SlewRateLimiter(4750);
     
-    hood = new CANSparkMax(25, MotorType.kBrushless);
+    hood = new CANSparkMax(28, MotorType.kBrushless);
     hood.clearFaults();
     hood.restoreFactoryDefaults();
     hood.setIdleMode(IdleMode.kBrake);
@@ -171,7 +171,7 @@ public class Shooter extends SubsystemBase {
    * Also, if there isn't currently a command requiring the shooter, nothing should happen.
    */
   public void interruptCurrentCommand() {
-    Command currentCommand=getCurrentCommand();
+    Command currentCommand = getCurrentCommand();
     if (currentCommand != null) {
       getCurrentCommand().cancel();      
     }
@@ -257,13 +257,16 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
-    SmartDashboard.putNumber("[S-HD] Hood position @#@#@#@#@#@#@#",
+    SmartDashboard.putNumber("[S-HD] Raw hood position @#@#@#@#@#@#@#",
     hoodEncoder.getPosition()
+    );
+    SmartDashboard.putNumber("[S-HD] Hood angle (radians) ~`~`~`~`~`~",
+    getHoodAngle()
     );
     SmartDashboard.putNumber("[Shooter] Flywheel current (A)",
     shooterFlywheel1.getSupplyCurrent()
     );
-    SmartDashboard.putNumber("[Shooter] Flywheel velocity (radians/sec)",
+    SmartDashboard.putNumber("[Shooter] Flywheel velocity (radians/sec) @`@`@`@`@`@",
       getFlywheelVelocity()
     );
     SmartDashboard.putNumber("[Shooter] Flywheel target velocity (radians/sec)",

@@ -45,5 +45,9 @@ public final class Constants {
 
     public static final double MAX_FLYWHEEL_SPEED = 0.8;
 
+    /**
+     * The farthest distance from the power port (in meters) before the results are unreliable.
+     */
+    public static final double MAXIMUM_DETECTABLE_RANGE = 9.5;
     public static final double DRIVETRAIN_WIDTH = 0.647;
 }

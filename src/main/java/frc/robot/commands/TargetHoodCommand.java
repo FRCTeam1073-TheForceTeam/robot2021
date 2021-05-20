@@ -46,12 +46,31 @@ public class TargetHoodCommand extends CommandBase {
     requiredValidRangeCount = requiredValidRangeCount_;
 
     hoodTable = new InterpolatorTable(
-      new InterpolatorTableEntry(1.79, 0.658353), new InterpolatorTableEntry(2.35, 0.483353),
-      new InterpolatorTableEntry(3.05, 0.483353), new InterpolatorTableEntry(3.54, 0.483353),
-      new InterpolatorTableEntry(3.97, 0.408353), new InterpolatorTableEntry(4.56, 0.363353),
-      new InterpolatorTableEntry(5.02, 0.358353), new InterpolatorTableEntry(5.51, 0.367783),
-      new InterpolatorTableEntry(6.03, 0.367783), new InterpolatorTableEntry(6.51, 0.34278)
+        new InterpolatorTableEntry(1.6, 0.675),
+       new InterpolatorTableEntry(1.8, 0.644),
+        new InterpolatorTableEntry(3.48, 0.515),
+        new InterpolatorTableEntry(4.86, 0.373),
+      //new InterpolatorTableEntry(1.65, 0.661),
+      //new InterpolatorTableEntry(3.26, 0.557),
+      //new InterpolatorTableEntry(4.80, 0.355),
+      // new InterpolatorTableEntry(4.60, 0.447),
+      new InterpolatorTableEntry(6.18, 0.355)
+
+      // new InterpolatorTableEntry(1.5,0.732),
+      // new InterpolatorTableEntry(1.759,0.708),
+      // new InterpolatorTableEntry(2.609,0.583),
+      // new InterpolatorTableEntry(3.34,0.583),
+      // new InterpolatorTableEntry(4.76,0.504),
+      // new InterpolatorTableEntry(5.02,0.41),
+      // new InterpolatorTableEntry(6.52,0.394),
+      // new InterpolatorTableEntry(8.25,0.408),
+      // new InterpolatorTableEntry(8.7,0.408)
     );
+      // new InterpolatorTableEntry(1.79, 0.658353), new InterpolatorTableEntry(2.35, 0.483353),
+      // new InterpolatorTableEntry(3.05, 0.483353), new InterpolatorTableEntry(3.54, 0.483353),
+      // new InterpolatorTableEntry(3.97, 0.408353), new InterpolatorTableEntry(4.56, 0.363353),
+      // new InterpolatorTableEntry(5.02, 0.358353), new InterpolatorTableEntry(5.51, 0.367783),
+      // new InterpolatorTableEntry(6.03, 0.367783), new InterpolatorTableEntry(6.51, 0.34278)
 
     validRangeCounter = 0;
     readyToFire = false;
@@ -78,7 +97,7 @@ public class TargetHoodCommand extends CommandBase {
   public void execute() {
     if (!readyToFire && (validRangeCounter < requiredValidRangeCount)) {
       double currentRange = portTracker.getRange();
-      if (currentRange != -1 && (currentRange >= 1.0 && currentRange <= 6.5)) {
+      if (currentRange != -1 && (currentRange >= 1.0 && currentRange <= Constants.MAXIMUM_DETECTABLE_RANGE)) {
         validRangeCounter++;
         if (validRangeCounter == requiredValidRangeCount) {
           readyToFire = true;
