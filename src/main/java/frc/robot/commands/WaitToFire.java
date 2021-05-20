@@ -25,7 +25,7 @@ public class WaitToFire extends CommandBase {
 
   int frameCounter;
 
-  double initialFlywheelVelocity;
+  double initFlywheelTargetVelocity = 0;
 
   public WaitToFire(Shooter shooter_, PowerPortTracker portTracker_) {
     shooter = shooter_;
@@ -36,7 +36,11 @@ public class WaitToFire extends CommandBase {
     coordinateSeparation = 0;
     frameCounter = 0;
     hasData = false;
-    initialFlywheelVelocity = shooter.getFlywheelTargetVelocity();
+  }
+
+  @Override
+  public void initialize() {
+    initFlywheelTargetVelocity = shooter.getFlywheelTargetVelocity();
   }
 
   // Returns true when the command should end.
@@ -50,9 +54,10 @@ public class WaitToFire extends CommandBase {
 
     isPortTrackerAligned = hasData && (Math.abs(coordinateSeparation) <= Constants.ACCEPTABLE_PORT_TRACKER_ALIGNMENT);
     isShooterReady =
-      // No matter what the difference between target and actual velocities says, there is no way the flywheel is ready to fire if isn't trying to move.
-      (shooter.flywheelIdleCounter <= 1)
-      // And same with the actual velocity (though in this case the flywheel might actually be moving for some reason so a interval centered around zero is necessary).
+      // Checks to see if flywheel target velocity is any different (even if we line up perfectly, the chances of the shooter deciding on literally the
+      // exact same flywheel velocity are very low.)
+      (Math.abs(shooter.getFlywheelTargetVelocity()) != initFlywheelTargetVelocity) && (Math.abs(shooter.getFlywheelTargetVelocity()) != 0)
+      // Checks to see if the shooter is doing reasonable things (that it isn't crazy slow and that it's close enough to the target velocity)
       && (Math.abs(shooter.getFlywheelVelocity()) > Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE)
       && (Math.abs(shooter.getFlywheelVelocity() - shooter.getFlywheelTargetVelocity()) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE);
 

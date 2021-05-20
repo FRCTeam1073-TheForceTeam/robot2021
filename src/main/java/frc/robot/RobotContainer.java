@@ -97,7 +97,7 @@ public class RobotContainer {
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
 
-  static final DataRecorder aimingDataRecorder = new DataRecorder("/tmp/AimingDataFile.txt");
+  public static final DataRecorder aimingDataRecorder = new DataRecorder("/tmp/AimingDataFile.txt");
 
   // private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
 
@@ -135,9 +135,6 @@ public class RobotContainer {
       .whenPressed(
         new SequentialCommandGroup(
           // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-          new ParallelDeadlineGroup(
-            new SequentialCommandGroup(
-              new WaitToFire(shooter, portTracker),
               new TargetHoodCommand(shooter, portTracker)
             ),
             new SequentialCommandGroup(
