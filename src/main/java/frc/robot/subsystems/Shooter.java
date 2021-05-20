@@ -47,8 +47,6 @@ public class Shooter extends SubsystemBase {
 
   double[] flywheelTemperatures;
 
-  public double flywheelIdleCounter = 0;
-
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
   public final double minHoodPosition = 0;
@@ -138,7 +136,6 @@ public class Shooter extends SubsystemBase {
    * Sets the flywheel velocity in radians/second.
    */
   public void setFlywheelVelocity(double velocity) {
-    flywheelIdleCounter = 0;
     //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
     flywheelTargetVelocity = Math.max(0, velocity);
     double rawFlywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
@@ -258,9 +255,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (flywheelIdleCounter < 3) {
-      flywheelIdleCounter++;
-    }
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
     SmartDashboard.putNumber("[S-HD] Raw hood position @#@#@#@#@#@#@#",
@@ -274,9 +268,6 @@ public class Shooter extends SubsystemBase {
     );
     SmartDashboard.putNumber("[Shooter] Flywheel velocity (radians/sec) @`@`@`@`@`@",
       getFlywheelVelocity()
-    );
-    SmartDashboard.putNumber("[Shooter] idleCounter",
-      flywheelIdleCounter
     );
     SmartDashboard.putNumber("[Shooter] Flywheel target velocity (radians/sec)",
       flywheelTargetVelocity
