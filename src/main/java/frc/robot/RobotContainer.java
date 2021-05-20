@@ -135,6 +135,11 @@ public class RobotContainer {
       .whenPressed(
         new SequentialCommandGroup(
           // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+          // new InstantCommand(shooter::stop, shooter),
+          new InstantCommand(shooter::lowerHood, shooter),
+          new ParallelDeadlineGroup(
+            new SequentialCommandGroup(
+              new WaitToFire(shooter, portTracker),
               new TargetHoodCommand(shooter, portTracker)
             ),
             new SequentialCommandGroup(
