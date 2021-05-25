@@ -107,9 +107,6 @@ public class TargetHoodCommand extends CommandBase {
     }
     if (readyToFire) {
       hoodAngle = hoodTable.getValue(range);
-      SmartDashboard.putNumber("[TargetHood] Hood target angle", hoodAngle);
-      SmartDashboard.putNumber("[TargetHood] Actual hood angle", shooter.getHoodAngle());
-      SmartDashboard.putNumber("[TargetHood] Range", range);
       shooter.setHoodAngle(hoodAngle);      
     }
   }

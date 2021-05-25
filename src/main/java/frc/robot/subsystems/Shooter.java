@@ -45,7 +45,7 @@ public class Shooter extends SubsystemBase {
 
   private double flywheelTargetVelocity = 0;
 
-  double[] flywheelTemperatures;
+  public double[] flywheelTemperatures;
 
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
@@ -223,12 +223,6 @@ public class Shooter extends SubsystemBase {
    * @param position The target position of the hood motor in radians
    */
   public void setHoodPosition(double position) {
-    if (position > maxHoodPosition) {
-      SmartDashboard.putString("Message", "Max:  Hood pos: " + position + ", Max hood pos: " + maxHoodPosition);
-    }
-    if (position < minHoodPosition) {
-      SmartDashboard.putString("Message", "Min:  Hood pos: " + position + ", Min hood pos: " + minHoodPosition);
-    }
     hoodController.setReference(MathUtil.clamp(position, minHoodPosition, maxHoodPosition) / (2.0 * Math.PI),
         ControlType.kPosition);
   }
@@ -257,27 +251,9 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
-    SmartDashboard.putNumber("[S-HD] Raw hood position @#@#@#@#@#@#@#",
-    hoodEncoder.getPosition()
-    );
-    SmartDashboard.putNumber("[S-HD] Hood angle (radians) ~`~`~`~`~`~",
-    getHoodAngle()
-    );
-    SmartDashboard.putNumber("[Shooter] Flywheel current (A)",
-    shooterFlywheel1.getSupplyCurrent()
-    );
-    SmartDashboard.putNumber("[Shooter] Flywheel velocity (radians/sec) @`@`@`@`@`@",
-      getFlywheelVelocity()
-    );
-    SmartDashboard.putNumber("[Shooter] Flywheel target velocity (radians/sec)",
-      flywheelTargetVelocity
-    );
-    SmartDashboard.putNumber("[Shooter] Flywheel error",
-    shooterFlywheel1.getClosedLoopError()
-    );
-    SmartDashboard.putString("Flywheel temperature (degs C)",
-        "[" + flywheelTemperatures[0] + "," + flywheelTemperatures[1] + "]");
-    SmartDashboard.putNumber("Raw hood position (motor radians) [S-HD]", getHoodPosition());
-    SmartDashboard.putNumber("Hood angle (degs) [S-HD]", getHoodAngle() * 180.0 / Math.PI);
+  }
+  
+  public double[] getFlywheelTemperature() {
+    return flywheelTemperatures;
   }
 }

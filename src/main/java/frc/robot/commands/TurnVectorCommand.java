@@ -57,7 +57,6 @@ public class TurnVectorCommand extends CommandBase {
     endVector = new Vector2d(Math.cos(endAngle), Math.sin(endAngle));
     sign = Math.signum(angleToTurn);
     endVector90off = new Vector2d(Math.cos(endAngle + sign * 0.5 * Math.PI), Math.sin(endAngle + sign * 0.5 * Math.PI));
-    SmartDashboard.putNumber("[TurnVector] endAngle", endAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -72,9 +71,6 @@ public class TurnVectorCommand extends CommandBase {
     }
     speedMultiplier = sign * Math.abs((angleToTurn + initAngle - angle) / angleToTurn);
     drivetrain.setVelocity(0.0, speedMultiplier * maxSpeed);
-    SmartDashboard.putNumber("[TurnVector] dot", dot);
-    SmartDashboard.putNumber("[TurnVector] angle", angle);
-    SmartDashboard.putNumber("[TurnVector] sign", sign);
   }
 
   // Called once the command ends or is interrupted.

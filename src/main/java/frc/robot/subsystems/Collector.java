@@ -157,11 +157,5 @@ public class Collector extends SubsystemBase {
     // This method will be called once per scheduler run
     rawCurrent = collectorMotor.getStatorCurrent();
     filteredCurrent = filter.calculate(rawCurrent);
-    SmartDashboard.putNumber("[Collector] Filtered Output Current", filteredCurrent);
-    SmartDashboard.putBoolean("[Collector] Sensor", collectorSensor.get());
-    SmartDashboard.putNumber("[Collector] Immediate Output Current", collectorMotor.getStatorCurrent());
-    SmartDashboard.putBoolean("[Collector] Is alive?", collectorMotor.isAlive());
-    SmartDashboard.putBoolean("[Collector] Is stalled?", isStalled());
-    SmartDashboard.putNumber("[Collector] Output percent", collectorMotor.getMotorOutputPercent());
   }
 }

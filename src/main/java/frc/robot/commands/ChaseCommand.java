@@ -108,11 +108,9 @@ public class ChaseCommand extends CommandBase {
         } else if (isScanning) {
             bling.setArray("yellow");
             time = System.currentTimeMillis();
-            System.out.println("SCANNING FOR " + (time - initialTime));
 
         } else if (!skipScan && shouldScan) {
             loopsWithoutData++;
-            System.out.println("LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
             alignState();
             skipScan = true;
             isScanning = true;
@@ -128,7 +126,6 @@ public class ChaseCommand extends CommandBase {
         } else {
             bling.setArray("orange");
             loopsWithoutData++;
-            System.out.println("2LOST TRACK FOR THE " + loopsWithoutData + "TH TIME");
             if (loopsWithoutData > 7) {
                 bling.setArray("red");
                 rotationalSpeedMultiplier = 0.0;
@@ -189,7 +186,6 @@ public class ChaseCommand extends CommandBase {
 
         if (powerCellData.cy >= 170) {
             drivetrain.setVelocity(0.0, 0.0);
-            System.out.println("DONEDONEDONE");
             rotationalSpeedMultiplier = 0.0;
             velocityMultiplier = 0.0;
             isFinished = true;
@@ -210,7 +206,6 @@ public class ChaseCommand extends CommandBase {
         }
 
         if ((time - initialTime >= timeToTurn)) {
-            System.out.println("SCAN_DONE_SCAN_DONE");
             rotationalSpeedMultiplier = 0.0;
             velocityMultiplier = 0.0;
             // hasFinishedNormally = false;
@@ -227,7 +222,6 @@ public class ChaseCommand extends CommandBase {
         } else if (shouldScan && (isScanning || !skipScan)) {
             scan360();
         }
-        System.out.println("vmultiplier " + velocityMultiplier + " rmultiplier " + rotationalSpeedMultiplier);
         drivetrain.setVelocity(velocityMultiplier * maxVelocity, rotationalSpeedMultiplier * maxRotationalSpeed);
         bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
     }
