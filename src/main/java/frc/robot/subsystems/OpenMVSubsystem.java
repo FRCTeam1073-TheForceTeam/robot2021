@@ -252,7 +252,8 @@ public class OpenMVSubsystem extends SubsystemBase {
 
       // If we miss too many complain about it.
       if (missedHeartbeats > 100) {
-        System.out.format("OpenMV Missing heartbeat. Device ID: %d\n", deviceId);
+        // TODO: Do something more reasonable using Shuffleboard to tell which cameras are working.
+        // System.out.format("OpenMV Missing heartbeat. Device ID: %d\n", deviceId);
         missedHeartbeats = 0;
       }
 

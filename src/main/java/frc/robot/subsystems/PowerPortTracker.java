@@ -157,13 +157,13 @@ public class PowerPortTracker extends OpenMVSubsystem {
 
       // Now do PowerPortTracker specific things.
       readAdvancedTracking();
-      SmartDashboard.putNumber("PowerPort.CX", m_portData.cx);
-      SmartDashboard.putNumber("PowerPort.CY", m_portData.cy);
-      SmartDashboard.putNumber("PowerPort.Qual", m_portData.quality);
-      SmartDashboard.putNumber("PowerPort.Area", m_portData.area);
+      // SmartDashboard.putNumber("PowerPort.CX", m_portData.cx);
+      // SmartDashboard.putNumber("PowerPort.CY", m_portData.cy);
+      // SmartDashboard.putNumber("PowerPort.Qual", m_portData.quality);
+      // SmartDashboard.putNumber("PowerPort.Area", m_portData.area);
 
       readRange();
-      SmartDashboard.putNumber("PowerPort.Range", m_range);
-      SmartDashboard.putNumber("PowerPort.RangeSignal", m_rangeSignalStrength);
+      // SmartDashboard.putNumber("PowerPort.Range", m_range);
+      // SmartDashboard.putNumber("PowerPort.RangeSignal", m_rangeSignalStrength);
     }
 }

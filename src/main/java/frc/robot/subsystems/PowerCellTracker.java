@@ -208,24 +208,24 @@ public class PowerCellTracker extends OpenMVSubsystem {
 
       // Now do PowerPortTracker specific things.
       readAdvancedTracking();
-      for (int index = 0; index < 3; index++) {
-        if (m_cellData.size() > index) {
-          SmartDashboard.putNumber(String.format("PowerCell[%d].CX", index), m_cellData.get(index).cx);
-          SmartDashboard.putNumber(String.format("PowerCell[%d].CY", index), m_cellData.get(index).cy);
-          SmartDashboard.putNumber(String.format("PowerCell[%d].Qual", index), m_cellData.get(index).quality);
-          SmartDashboard.putNumber(String.format("PowerCell[%d].Area", index), m_cellData.get(index).area);
-        } else {
-          SmartDashboard.putNumber(String.format("PowerCell[%d].CX", index), 0);
-          SmartDashboard.putNumber(String.format("PowerCell[%d].CY", index), 0);
-          SmartDashboard.putNumber(String.format("PowerCell[%d].Qual", index), 0);
-          SmartDashboard.putNumber(String.format("PowerCell[%d].Area", index), 0);
-        }
-      }
+      // for (int index = 0; index < 3; index++) {
+      //   if (m_cellData.size() > index) {
+      //     SmartDashboard.putNumber(String.format("PowerCell[%d].CX", index), m_cellData.get(index).cx);
+      //     SmartDashboard.putNumber(String.format("PowerCell[%d].CY", index), m_cellData.get(index).cy);
+      //     SmartDashboard.putNumber(String.format("PowerCell[%d].Qual", index), m_cellData.get(index).quality);
+      //     SmartDashboard.putNumber(String.format("PowerCell[%d].Area", index), m_cellData.get(index).area);
+      //   } else {
+      //     SmartDashboard.putNumber(String.format("PowerCell[%d].CX", index), 0);
+      //     SmartDashboard.putNumber(String.format("PowerCell[%d].CY", index), 0);
+      //     SmartDashboard.putNumber(String.format("PowerCell[%d].Qual", index), 0);
+      //     SmartDashboard.putNumber(String.format("PowerCell[%d].Area", index), 0);
+      //   }
+      // }
 
-      SmartDashboard.putBoolean("[PowerCell.HasData", hasData());
+      // SmartDashboard.putBoolean("[PowerCell.HasData", hasData());
 
+      // SmartDashboard.putNumber("PowerCell.Range", m_range);
+      // SmartDashboard.putNumber("PowerCell.RangeSignal", m_rangeSignalStrength);
       readRange();
-      SmartDashboard.putNumber("PowerCell.Range", m_range);
-      SmartDashboard.putNumber("PowerCell.RangeSignal", m_rangeSignalStrength);
     }
 }

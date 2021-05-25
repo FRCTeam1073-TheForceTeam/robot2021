@@ -118,10 +118,7 @@ public class TargetFlywheelCommand extends CommandBase {
     if (hasValidRangeData) {
       flywheelVelocity = flywheelTable.getValue(range);
       shooter.setFlywheelVelocity(flywheelVelocity);
-      SmartDashboard.putNumber("[TargetFlywheel] Flywheel target vel", flywheelVelocity);
-      SmartDashboard.putNumber("[TargetFlywheel] Flywheel range", range);
       currentFlywheelVelocity = shooter.getFlywheelVelocity();
-      SmartDashboard.putNumber("[TargetFlywheel] Flywheel actual vel", currentFlywheelVelocity);
     }
   }
 

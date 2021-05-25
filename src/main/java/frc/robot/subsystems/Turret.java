@@ -99,22 +99,6 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-      SmartDashboard.putNumber("Raw Turret Velocity [TURRET]",
-      turretRotator.getSelectedSensorVelocity());
-      SmartDashboard.putNumber("Turret Target Velocity [TURRET]", turretVelocity);
-      SmartDashboard.putNumber("Turret Position (raw) [TURRET]", turretRotator.getSelectedSensorPosition());
-      SmartDashboard.putNumber("Turret Power (raw) [TURRET]", turretRotator.getMotorOutputPercent());
-      SmartDashboard.putNumber("Turret Error (raw) [TURRET]", turretRotator.getClosedLoopError());
-      SmartDashboard.putNumber("Turret Position (radians) [TURRET]",
-          turretRotator.getSelectedSensorPosition(0) / turretTicksPerRadian);
-      SmartDashboard.putNumber("Turret Velocity (radians/s) [TURRET]",
-          turretRotator.getSelectedSensorVelocity(0) * 10.0 / turretTicksPerRadian);
-      SmartDashboard.putNumber("Raw Turret Velocity (ticks/0.1) [TURRET]",
-          turretRotator.getSelectedSensorVelocity(0));
-      SmartDashboard.putNumber("Turret current load (amperes) [TURRET]",
-          turretRotator.getSupplyCurrent());
-      SmartDashboard.putNumber("Turret temperature (degs C) [TURRET]",
-          turretRotator.getTemperature());
     }
 
     public void setPIDF() {
