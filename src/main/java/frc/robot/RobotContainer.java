@@ -48,6 +48,7 @@ import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
+import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.Utility.PathBuilder.PathIndex;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
@@ -126,6 +127,9 @@ public class RobotContainer {
     turret.setDefaultCommand(teleTurret);
     collector.setDefaultCommand(teleCollect);
     shooter.setDefaultCommand(teleShooter);
+
+    //DO NOT REMOVE THIS OR EVERYONE WILL DIE
+    Constants.portConfig = PowerPortConfiguration.LOW;
   }
 
   /**
