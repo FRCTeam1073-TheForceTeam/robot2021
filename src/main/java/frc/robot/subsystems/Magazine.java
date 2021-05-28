@@ -27,7 +27,6 @@ public class Magazine extends SubsystemBase {
       / Units.inchesToMeters(25.0);
 
   public Magazine() {
-    SmartDashboard.putNumber("AAAAA", magazineTicksPerMeter);
     magazineMotor = new WPI_TalonSRX(26);
     cellCount = 0;
     // cellCheck = false;
@@ -111,12 +110,5 @@ public class Magazine extends SubsystemBase {
     // magazineMotor.setSelectedSensorPosition(0);
     // }
     isInTaking = !inTakeSensor.get();
-    SmartDashboard.putBoolean("inTakeSensor.get() [MAG]", isInTaking);
-    SmartDashboard.putNumber("Magazine Velocity [MAG]", magazineMotor.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Magazine Target Velocity [MAG]", magazineVelocity);
-    SmartDashboard.putNumber("Magazine Position [MAG]", magazineMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Magazine Power [MAG]", magazineMotor.getMotorOutputPercent());
-    SmartDashboard.putNumber("Magazine Error [MAG]", magazineMotor.getClosedLoopError());
-    SmartDashboard.putBoolean("[Magazine] Sensor", inTakeSensor.get());
   }
 }

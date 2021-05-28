@@ -77,30 +77,31 @@ public class TurretPortAlignCommand extends CommandBase {
       framesWithoutSignal++;
     }
 
-    if (hasData) {
-      SmartDashboard.putString("[T-AGN] Camera signal", "[CONNECTED]");
-    } else {
-      SmartDashboard.putString("[T-AGN] Camera signal", "[NO DATA]");
-    }
+    // if (hasData) {
+    //   SmartDashboard.putString("[T-AGN] Camera signal", "[CONNECTED]");
+    // } else {
+    //   SmartDashboard.putString("[T-AGN] Camera signal", "[NO DATA]");
+    // }
 
     if (hasData || (framesWithoutSignal < maxFramesWithoutSignal)) {
-      if (hasData) {
-        SmartDashboard.putString("[T-AGN] Scan status", "[CONNECTED]");
-      } else {
-        SmartDashboard.putString("[T-AGN] Scan status", "[DISCONNECTED; USING LAST DATA]");
-      }
+      // if (hasData) {
+      //   SmartDashboard.putString("[T-AGN] Scan status", "[CONNECTED]");
+      // } else {
+      //   SmartDashboard.putString("[T-AGN] Scan status", "[DISCONNECTED; USING LAST DATA]");
+      // }
+
       //I know that it shouldn't need clamping, but I want to make sure
       double input = MathUtil.clamp(coordinateSeparation, -1, 1);
       double output = 1.25 * curve(input);
       turret.setVelocity(output);
-      SmartDashboard.putNumber("[T-AGN] Intended velocity", output);
-      SmartDashboard.putNumber("[T-AGN] Camera coordinate separation", coordinateSeparation);
+      // SmartDashboard.putNumber("[T-AGN] Intended velocity", output);
+      // SmartDashboard.putNumber("[T-AGN] Camera coordinate separation", coordinateSeparation);
     } else {
-      SmartDashboard.putString("[T-AGN] Scan status", "[TOO LONG WITHOUT DATA, STOPPING]");
+      // SmartDashboard.putString("[T-AGN] Scan status", "[TOO LONG WITHOUT DATA, STOPPING]");
       turret.setVelocity(actualOutput);
     }
-    SmartDashboard.putNumber("[T-AGN] Frames without signal", framesWithoutSignal);
-    SmartDashboard.putNumber("[T-AGN] Actual velocity", actualOutput);
+    // SmartDashboard.putNumber("[T-AGN] Frames without signal", framesWithoutSignal);
+    // SmartDashboard.putNumber("[T-AGN] Actual velocity", actualOutput);
   }
 
   // Called once the command ends or is interrupted.

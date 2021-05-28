@@ -62,9 +62,6 @@ public class TurretPositionCommand extends CommandBase {
     double output = 2 * curve(input);
     double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
     turret.setVelocity(output);
-    SmartDashboard.putNumber("[T-POS] Actual velocity", actualOutput);
-    SmartDashboard.putNumber("[T-POS] Intended velocity", output);
-    SmartDashboard.putNumber("[T-POS] Angular separation", angSeparation);
   }
 
   // Called once the command ends or is interrupted.

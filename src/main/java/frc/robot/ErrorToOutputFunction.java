@@ -280,7 +280,6 @@ public class ErrorToOutputFunction {
                         + function[5];
             }
         }
-        System.out.println("!!!Error inputted was out of the domain!!!");
         return 0.0;
     }
 
@@ -303,7 +302,6 @@ public class ErrorToOutputFunction {
                 return output;
             }
         }
-        System.out.println("!!!Error inputted was out of the domain!!!");
         return output;
     }
 
@@ -324,7 +322,6 @@ public class ErrorToOutputFunction {
                 return output;
             }
         }
-        System.out.println("!!!Error inputted was out of the domain!!!");
         return output;
     }
 

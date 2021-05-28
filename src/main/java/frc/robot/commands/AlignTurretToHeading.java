@@ -68,9 +68,6 @@ public class AlignTurretToHeading extends CommandBase {
     double output = 2 * curve(input);
     double actualOutput = 1.5 * OI.operatorController.getRawAxis(4);
     turret.setVelocity(output);
-    SmartDashboard.putNumber("[T-THC] Actual velocity", actualOutput);
-    SmartDashboard.putNumber("[T-THC] Intended velocity", output);
-    SmartDashboard.putNumber("[T-THC] Angular separation", angSeparation);
   }
 
   // Called once the command ends or is interrupted.

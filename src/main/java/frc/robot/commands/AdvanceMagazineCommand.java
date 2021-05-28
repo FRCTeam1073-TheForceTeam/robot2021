@@ -67,7 +67,6 @@ public class AdvanceMagazineCommand extends CommandBase {
   @Override
   public void execute() {
     distanceTraveled = (magazine.getPosition() - initPosition);
-    SmartDashboard.putNumber("y [MAGCTL]", distanceTraveled);
     magazine.setVelocity(magVelocity);
     isFinished = (Math.signum(numPowerCells) * distanceTraveled >= Math.signum(numPowerCells) * Constants.POWER_CELL_DIAMETER * numPowerCells);
   }
@@ -81,8 +80,6 @@ public class AdvanceMagazineCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    System.out.println(distanceTraveled + " [MAGCTL] distance traveled vs distance to travel "
-        + Constants.POWER_CELL_DIAMETER * numPowerCells);
     return isFinished;
   }
 }
