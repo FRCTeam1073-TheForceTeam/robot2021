@@ -373,6 +373,34 @@ public class RobotContainer {
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0)
           );
+      case 12:
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
+        return 
+        new SequentialCommandGroup(
+          new SequentialCommandGroup(
+            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+            // new InstantCommand(shooter::stop, shooter),
+            new InstantCommand(shooter::lowerHood, shooter),
+            new ParallelDeadlineGroup(
+              new SequentialCommandGroup(
+                new WaitToFire(shooter, portTracker),
+                new TargetHoodCommand(shooter, portTracker)
+              ),
+              new SequentialCommandGroup(
+                new WaitForTarget(portTracker),
+                new TargetFlywheelCommand(shooter, portTracker)
+              ),
+              new TurretPortAlignCommand(turret, portTracker)
+            )
+          ),
+          new AdvanceMagazineCommand(magazine, 1.25, 3),
+          new WaitCommand(1.0),
+          new AdvanceMagazineCommand(magazine, 1.25, 3),
+          new SequentialCommandGroup(
+            new TurretPositionCommand(turret, 0),
+            new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+          )
+        );  
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

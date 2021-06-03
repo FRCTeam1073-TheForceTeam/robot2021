@@ -27,9 +27,21 @@ public class ShuffleboardWidgets extends SubsystemBase {
         public static int auto = 100;
         private byte autoNum = 12;
         private byte place = -1;
-        private String[] autoNames = { "1CellScan&Collect", "2CellScan&Collect", "3CellScan&Collect", "Squaretest",
-                        "DriveTPoint", "AutoFire", "GalaxySearchSlow", "ConditionalCommandTest", "Drove&TurnToHeading",
-                        "AutonomousAwardAwfulness", "GalaxySearchFast", "PurePursuitBarrel"};
+        private String[] autoNames = {
+                "1CellScan&Collect",
+                "2CellScan&Collect",
+                "3CellScan&Collect",
+                "Squaretest",
+                "DriveTPoint",
+                "AutoFire",
+                "GalaxySearchSlow",
+                "ConditionalCommandTest",
+                "Drove&TurnToHeading",
+                "AutonomousAwardAwfulness",
+                "GalaxySearchFast",
+                "PurePursuitBarrel",
+                "FireTwoPowerCells"
+        };
 
         private static ShuffleboardLayout autoChooser;
         private static ShuffleboardLayout driving;
@@ -49,7 +61,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private PowerCellTracker cellTracker;
         private PowerPortTracker portTracker;
 
-        private boolean[] autos = new boolean[autoNum];
+        private boolean[] autos;
 
         private ChassisSpeeds chassis = new ChassisSpeeds();
         private Pose2d pose = new Pose2d();
@@ -85,7 +97,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private int portX = 0;
         private int portY = 0;
 
-        private NetworkTableEntry[] autosE = new NetworkTableEntry[autoNum];
+        private NetworkTableEntry[] autosE;
 
         private NetworkTableEntry robotAngE;
         private NetworkTableEntry robotAngleE;
@@ -131,7 +143,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 this.shooter = shooter;
                 this.cellTracker = cellTracker;
                 this.portTracker = portTracker;
-
+                autoNum = (byte) autoNames.length;
+                autos = new boolean[autoNum];
+                autosE = new NetworkTableEntry[autoNum];
         }
 
         public void initialize() {
@@ -149,8 +163,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(4, 2);
                 cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
-                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,
-                                0);
+                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,0);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
@@ -167,6 +180,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private void createWidgets() {
                 for (byte i = 0; i < autoNum; i++) {
+                        System.out.println(i + "," + autoNum);
                         autosE[i] = autoChooser.add(autoNames[i], autos[i]).withWidget(BuiltInWidgets.kToggleSwitch)
                                         .getEntry();
                 }
