@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Collector;
@@ -24,9 +23,15 @@ import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 
 public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardTab tab;
-        private static NetworkTableEntry chooseAuto;
+        // private static NetworkTableEntry chooseAuto;
         public static int auto = 100;
+        private byte autoNum = 12;
+        private byte place = -1;
+        private String[] autoNames = { "1CellScan&Collect", "2CellScan&Collect", "3CellScan&Collect", "Squaretest",
+                        "DriveTPoint", "AutoFire", "GalaxySearchSlow", "ConditionalCommandTest", "Drove&TurnToHeading",
+                        "AutonomousAwardAwfulness", "GalaxySearchFast", "PurePursuitBarrel"};
 
+        private static ShuffleboardLayout autoChooser;
         private static ShuffleboardLayout driving;
         private static ShuffleboardLayout collecting;
         private static ShuffleboardLayout magazining;
@@ -43,6 +48,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private Shooter shooter;
         private PowerCellTracker cellTracker;
         private PowerPortTracker portTracker;
+
+        private boolean[] autos = new boolean[autoNum];
 
         private ChassisSpeeds chassis = new ChassisSpeeds();
         private Pose2d pose = new Pose2d();
@@ -77,6 +84,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private PowerPortData portData = new PowerPortData();
         private int portX = 0;
         private int portY = 0;
+
+        private NetworkTableEntry[] autosE = new NetworkTableEntry[autoNum];
 
         private NetworkTableEntry robotAngE;
         private NetworkTableEntry robotAngleE;
@@ -128,17 +137,20 @@ public class ShuffleboardWidgets extends SubsystemBase {
         public void initialize() {
                 tab = Shuffleboard.getTab("Robot 2021");
 
-                chooseAuto = tab.add("Choose Auto", 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 2)
-                                .withPosition(0, 0).getEntry();
+                // chooseAuto = tab.add("Choose Auto",
+                // 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 2)
+                // .withPosition(0, 0).getEntry();
 
+                autoChooser = tab.getLayout("Auto-Chooser", BuiltInLayouts.kList).withSize(1, 2).withPosition(0, 0);
                 driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 3).withPosition(0, 2);
                 collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(1, 2).withPosition(1, 0);
                 magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(1, 2).withPosition(2, 0);
-                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(1, 3).withPosition(2, 2);
-                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(3, 2);
+                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(2, 3).withPosition(2, 2);
+                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(4, 2);
                 cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
-                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 2).withPosition(5, 0);
+                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,
+                                0);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
@@ -150,10 +162,15 @@ public class ShuffleboardWidgets extends SubsystemBase {
         public void periodic() {
                 updateWidgets();
                 Shuffleboard.update();
-                auto = (int) chooseAuto.getDouble(100.0);
+                updateAutoChooser();
         }
 
         private void createWidgets() {
+                for (byte i = 0; i < autoNum; i++) {
+                        autosE[i] = autoChooser.add(autoNames[i], autos[i]).withWidget(BuiltInWidgets.kToggleSwitch)
+                                        .getEntry();
+                }
+
                 robotAngE = driving.add("Angle mirrored", robotAng).withWidget(BuiltInWidgets.kDial)
                                 .withProperties(Map.of("min", -90, "max", 90)).getEntry();
                 robotAngleE = driving.add("Angle", robotAngle).getEntry();
@@ -192,10 +209,19 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 hoodMinE.setDouble(hoodMin);
                 hoodMaxE.setDouble(hoodMax);
 
-                portTrackerHasData = shootingReadout.add("Can see port?", portTracker.getPortData(new PowerPortData())).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-                sensorRange = shootingReadout.add("Range sensor distance (meters)", portTracker.getRange()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", 0, "max", Constants.MAXIMUM_DETECTABLE_RANGE)).getEntry();
-                shooterHoodAngle = shootingReadout.add("Hood angle (radians)", hoodAngle).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", shooter.hoodAngleLow*180.0/Math.PI, "max", shooter.hoodAngleHigh*180.0/Math.PI)).getEntry();
-                shooterFlywheelSpeed = shootingReadout.add("Flywheel speed (radians/s)", flywheelVelocity).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", 0, "max", Constants.MAX_FLYWHEEL_SPEED)).getEntry();
+                portTrackerHasData = shootingReadout.add("Can see port?", portTracker.getPortData(new PowerPortData()))
+                                .withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+                sensorRange = shootingReadout.add("Range sensor distance (meters)", portTracker.getRange())
+                                .withWidget(BuiltInWidgets.kNumberBar)
+                                .withProperties(Map.of("min", 0, "max", Constants.MAXIMUM_DETECTABLE_RANGE)).getEntry();
+                shooterHoodAngle = shootingReadout.add("Hood angle (radians)", hoodAngle)
+                                .withWidget(BuiltInWidgets.kNumberBar)
+                                .withProperties(Map.of("min", shooter.hoodAngleLow * 180.0 / Math.PI, "max",
+                                                shooter.hoodAngleHigh * 180.0 / Math.PI))
+                                .getEntry();
+                shooterFlywheelSpeed = shootingReadout.add("Flywheel speed (radians/s)", flywheelVelocity)
+                                .withWidget(BuiltInWidgets.kNumberBar)
+                                .withProperties(Map.of("min", 0, "max", Constants.MAX_FLYWHEEL_SPEED)).getEntry();
         }
 
         private void updateWidgets() {
@@ -267,8 +293,29 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         }
 
-        
+        private void updateAutoChooser() {
+                for (byte i = 0; i < autoNum; i++) {
+                        autos[i] = autosE[i].getBoolean(false);
+                        if (autos[i] && place == -1) {
+                                place = i;
+                        } else if (autos[i] && place != i) {
+                                autos[place] = false;
+                                autosE[place].setBoolean(false);
+                                place = i;
+                        } else if (i == place && !autos[i]) {
+                                autos[place] = true;
+                                autosE[place].setBoolean(true);
+                        }
+                }
+
+                if (place > -1) {
+                        auto = place;
+                }
+                // auto = (int) chooseAuto.getDouble(100.0);
+        }
+
         boolean a = false;
+
         private double mirrorAngle(double raw) {
                 raw *= -1;
                 if (raw < -90) {

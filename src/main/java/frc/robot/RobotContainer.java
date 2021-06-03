@@ -276,14 +276,14 @@ public class RobotContainer {
             new InstantCommand(() -> {bling.setColorRGBAll(0,0,255);},bling).andThen(new WaitCommand(1)),
             cellTracker::hasData
         );
-      case 10:
+      case 8:
         return new SequentialCommandGroup(
           new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
           new WaitCommand(2),
           new TurnToHeading(drivetrain, bling, 0),
           new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling)
         );
-      case 12:
+      case 9:
 
         return new SequentialCommandGroup(
           //[[EMERGENCY BACKUP AUTONOMOUS]]
@@ -321,7 +321,7 @@ public class RobotContainer {
           new TurnToHeading(drivetrain, bling, 0),
           new TurretPositionCommand(turret, 0)
         );
-      case 16:
+      case 10:
       return new SequentialCommandGroup(
         new DeployCommand(collector),
         new WaitCommand(0.3),
@@ -364,7 +364,7 @@ public class RobotContainer {
         new TurnToHeading(drivetrain, bling, 0, 3.0),
         new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling)
       );
-      case 18:
+      case 11:
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
         return 
           new SequentialCommandGroup(
