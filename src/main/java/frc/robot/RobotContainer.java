@@ -127,9 +127,6 @@ public class RobotContainer {
     turret.setDefaultCommand(teleTurret);
     collector.setDefaultCommand(teleCollect);
     shooter.setDefaultCommand(teleShooter);
-
-    //DO NOT REMOVE THIS OR EVERYONE WILL DIE
-    Constants.portConfig = PowerPortConfiguration.LOW;
   }
 
   /**
