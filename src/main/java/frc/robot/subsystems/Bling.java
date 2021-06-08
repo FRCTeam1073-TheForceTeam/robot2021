@@ -27,7 +27,7 @@ public class Bling extends SubsystemBase {
   private boolean first_rainbow_right = true;
 
   private int counter_rainbow_left = 0;
-  private int move_rainbow_left = 0;
+  private int move_rainbow_left = 6;
   private boolean first_rainbow_left = true;
 
   private double brightness = 0.5;
@@ -80,6 +80,7 @@ public class Bling extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
     if (!cleared) {
 
       // gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -89,11 +90,14 @@ public class Bling extends SubsystemBase {
       // // setColorRGBAll(0, 0, 0);
       // } else {
 
-      LEDRainbow(15, 25, 5000);
+      LEDRainbow(15, 25, 20000);
 
-      LEDRainbowReverse(40, 25, 5000);
+      LEDRainbowReverse(40, 25, 20000);
 
-      // batteryBling(0, 10, 8.0, 12.5);
+      batteryBling(0, 10, 8.0, 12.5);
+
+      reverseBatteryBling(79, 10, 8.0, 12.5);
+
       // setLED(1, 0, 255, 0);
       // setLED(3, 0, 255, 0);
       // setLED(5, 0, 255, 0);
@@ -332,7 +336,7 @@ public class Bling extends SubsystemBase {
   }
 
   public void LEDRainbow(int startLEDs, int numLEDs, int time) {
-
+    
     // if (first_rainbow_right) {
     //   move_rainbow_right = startLEDs + num;
     //   first_rainbow_right = false;
@@ -347,7 +351,7 @@ public class Bling extends SubsystemBase {
       // for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
       //   m_ledBuffer.setRGB(i, 0, 0, 0);
       // }
-
+      System.out.println(startLEDs);
       for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
 
         if (((i + move_rainbow_right) % 12) == 0 || ((i + move_rainbow_right) % 12) == 1) {
@@ -525,6 +529,32 @@ public class Bling extends SubsystemBase {
       rangeRGB(minLEDsVolts, num, 255, 255, 0);
     } else if (num > (2 * (numberLEDsVolts / 3))) {
       rangeRGB(minLEDsVolts, num, 0, 255, 0);
+    }
+  }
+
+  public void reverseBatteryBling(int maxLEDsVolts, int numberLEDsVolts, double min_volts, double max_volts) {
+    for (int i = maxLEDsVolts; i > (maxLEDsVolts - numberLEDsVolts); i--) {
+      m_ledBuffer.setRGB(i, 0, 0, 0);
+    }
+
+    setLED(maxLEDsVolts, 0, 0, 255);
+    
+    double volts = RobotController.getBatteryVoltage();
+
+    // First, it calculates the percentage of leds that will turn on.
+    // amount above the minimum voltage / range of volts
+    // the -1 and +1 account for the one that is always on.
+    int num = (int) (Math.round(((volts - min_volts) / (max_volts - min_volts)) * (numberLEDsVolts - 1)) + 1);
+
+    // If less than 1/3 of the leds are lit up, the light is red.
+    // If between 1/3 and 2/3 of the leds are lit up, the light is yellow.
+    // If more than 2/3 of the leds are lit up, the light is green.
+    if (num <= (numberLEDsVolts / 3)) {
+      rangeRGB(maxLEDsVolts - num, num, 255, 0, 0);
+    } else if (num > (numberLEDsVolts / 3) && num <= (2 * (numberLEDsVolts / 3))) {
+      rangeRGB(maxLEDsVolts - num, num, 255, 255, 0);
+    } else if (num > (2 * (numberLEDsVolts / 3))) {
+      rangeRGB(maxLEDsVolts - num, num, 0, 255, 0);
     }
   }
 

@@ -122,6 +122,9 @@ public class RobotContainer {
     // start shuffleboard
     shuffle.initialize();
 
+    // start bling
+    bling.initialize();
+
     drivetrain.setDefaultCommand(teleDrive);
     turret.setDefaultCommand(teleTurret);
     collector.setDefaultCommand(teleCollect);
