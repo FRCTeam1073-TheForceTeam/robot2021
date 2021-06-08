@@ -46,6 +46,7 @@ import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.TurretControls;
 import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurretPositionCommand;
+import frc.robot.commands.WaitForShooterCurrentSpike;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
 import frc.robot.Constants.PowerPortConfiguration;
@@ -393,16 +394,39 @@ public class RobotContainer {
               new TurretPortAlignCommand(turret, portTracker)
             )
           ),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+          (new WaitForShooterCurrentSpike(shooter)).deadlineWith(new AdvanceMagazineCommand(magazine, 0.9, 1.85)),
           new WaitCommand(1.0),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.4),
+          (new WaitForShooterCurrentSpike(shooter)).deadlineWith(new AdvanceMagazineCommand(magazine, 0.9, 1.4)),
           new WaitCommand(1.0),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+          (new WaitForShooterCurrentSpike(shooter)).deadlineWith(new AdvanceMagazineCommand(magazine, 0.9, 1.85)),
           new SequentialCommandGroup(
             new TurretPositionCommand(turret, 0),
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
-          )
-        );  
+          )       
+        );
+      case 13:
+      return new SequentialCommandGroup(
+          new SequentialCommandGroup(
+          new InstantCommand(shooter::lowerHood, shooter),
+            new ParallelDeadlineGroup(
+              new SequentialCommandGroup(
+                new WaitToFire(shooter, portTracker),
+                new TargetHoodCommand(shooter, portTracker)
+              ),
+              new SequentialCommandGroup(
+                new WaitForTarget(portTracker),
+                new TargetFlywheelCommand(shooter, portTracker)
+              ),
+              new TurretPortAlignCommand(turret, portTracker)
+            )
+          ),
+          new ParallelDeadlineGroup(
+            new WaitForShooterCurrentSpike(shooter),
+            new AdvanceMagazineCommand(magazine, 2.9, 1.85)
+          ),
+          new TurretPositionCommand(turret, 0),
+          new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+        );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

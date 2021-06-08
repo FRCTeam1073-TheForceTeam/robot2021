@@ -267,10 +267,15 @@ public class Shooter extends SubsystemBase {
     setHoodPosition(position);
   }
 
+  public double getFlywheelCurrent() {
+    return (shooterFlywheel1.getSupplyCurrent() + shooterFlywheel2.getSupplyCurrent()) * 0.5;
+  }
+
   @Override
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
     hoodMotorCurrent = hood.getOutputCurrent();
+    SmartDashboard.putNumber(":", getFlywheelCurrent());
   }
 }
