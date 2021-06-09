@@ -272,6 +272,5 @@ public class Shooter extends SubsystemBase {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
     hoodMotorCurrent = hood.getOutputCurrent();
-    System.out.println("Flwheel current: " + shooterFlywheel1.getStatorCurrent());
   }
 }
