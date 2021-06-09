@@ -45,7 +45,9 @@ public class Shooter extends SubsystemBase {
 
   private double flywheelTargetVelocity = 0;
 
-  public double[] flywheelTemperatures;
+  private double[] flywheelTemperatures;
+
+  private double hoodMotorCurrent;
 
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
@@ -152,6 +154,24 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
+   * Gets the flywheel temperatures in Celsius
+   * 
+   * @return both flywheel motor's temperatures in Celsius
+   */
+  public double[] getFlywheelTemperatures() {
+    return flywheelTemperatures;
+  }
+
+  /**
+   * Gets the hood's motor's current in amperage
+   * 
+   * @return hood's current in amperage
+   */
+  public double getHoodMotorCurrent() {
+    return hoodMotorCurrent;
+  }
+
+  /**
    * Instantly stops the flywheel motor. Due to the PIDF loop
    * being tuned for high velocities, this may cause some oscillation.
    */
@@ -251,9 +271,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
-  }
-  
-  public double[] getFlywheelTemperature() {
-    return flywheelTemperatures;
+    hoodMotorCurrent = hood.getOutputCurrent();
+    System.out.println("Flwheel current: " + shooterFlywheel1.getStatorCurrent());
   }
 }
