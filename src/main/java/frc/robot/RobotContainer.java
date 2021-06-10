@@ -285,7 +285,6 @@ public class RobotContainer {
           new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling)
         );
       case 9:
-
         return new SequentialCommandGroup(
           //[[EMERGENCY BACKUP AUTONOMOUS]]
           //[[IN CASE OF COLLECTOR DOING WEIRD THINGS BREAK GLASS]]
@@ -402,8 +401,8 @@ public class RobotContainer {
           new SequentialCommandGroup(
             new TurretPositionCommand(turret, 0),
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
-          )       
-        );
+          )
+      );
       case 13:
       return new SequentialCommandGroup(
           new SequentialCommandGroup(
@@ -421,11 +420,16 @@ public class RobotContainer {
             )
           ),
           new ParallelDeadlineGroup(
-            new WaitForShooterCurrentSpike(shooter),
-            new AdvanceMagazineCommand(magazine, 2.9, 1.85)
+            new WaitForShooterCurrentSpike(shooter, true),
+            new AdvanceMagazineCommand(magazine, 2.9, 10.85).andThen(new WaitCommand(0.125))
           ),
           new TurretPositionCommand(turret, 0),
           new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+        );
+      case 14:
+        return new ParallelCommandGroup(
+          new AdvanceMagazineCommand(magazine, 2.9, 3.85),
+          new WaitForShooterCurrentSpike(shooter, false)
         );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
@@ -434,8 +438,10 @@ public class RobotContainer {
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
-    //drivetrain.resetRobotOdometry();
     return null;
+    // return new MagazineControls(magazine);
+
+    //drivetrain.resetRobotOdometry();
     // return new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, aimingDataRecorder, 0);
   }
 
