@@ -394,11 +394,11 @@ public class RobotContainer {
               new TurretPortAlignCommand(turret, portTracker)
             )
           ),
-          (new WaitForShooterCurrentSpike(shooter)).deadlineWith(new AdvanceMagazineCommand(magazine, 0.9, 1.85)),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
           new WaitCommand(1.0),
-          (new WaitForShooterCurrentSpike(shooter)).deadlineWith(new AdvanceMagazineCommand(magazine, 0.9, 1.4)),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.4),
           new WaitCommand(1.0),
-          (new WaitForShooterCurrentSpike(shooter)).deadlineWith(new AdvanceMagazineCommand(magazine, 0.9, 1.85)),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
           new SequentialCommandGroup(
             new TurretPositionCommand(turret, 0),
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
