@@ -10,6 +10,7 @@ import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 import frc.robot.Constants;
+import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
 
@@ -33,6 +34,24 @@ public class TargetHoodCommand extends CommandBase {
 
   boolean readyToFire;
 
+  /**Table for shooting in the gym, or anywhere else with the full-size power port.**/
+  InterpolatorTable hoodTableHigh = new InterpolatorTable(
+    new InterpolatorTableEntry(1.6, 0.675),
+    new InterpolatorTableEntry(1.8, 0.644),
+    new InterpolatorTableEntry(3.48, 0.515),
+    new InterpolatorTableEntry(4.86, 0.373),
+    new InterpolatorTableEntry(6.18, 0.355)
+  );
+
+  /**Table for shooting in 107, or anywhere else with the small power port.**/
+  InterpolatorTable hoodTableLow = new InterpolatorTable(
+    new InterpolatorTableEntry(1.79, 0.658353), new InterpolatorTableEntry(2.35, 0.483353),
+    new InterpolatorTableEntry(3.05, 0.483353), new InterpolatorTableEntry(3.54, 0.483353),
+    new InterpolatorTableEntry(3.97, 0.408353), new InterpolatorTableEntry(4.56, 0.363353),
+    new InterpolatorTableEntry(5.02, 0.358353), new InterpolatorTableEntry(5.51, 0.367783),
+    new InterpolatorTableEntry(6.03, 0.367783), new InterpolatorTableEntry(6.51, 0.34278)
+  );
+
   /**
    * Moves the hood to a position based on the range sensor.
    * @param shooter_ The shooter subsystem
@@ -45,27 +64,27 @@ public class TargetHoodCommand extends CommandBase {
 
     requiredValidRangeCount = requiredValidRangeCount_;
 
-    hoodTable = new InterpolatorTable(
-        new InterpolatorTableEntry(1.6, 0.675),
-       new InterpolatorTableEntry(1.8, 0.644),
-        new InterpolatorTableEntry(3.48, 0.515),
-        new InterpolatorTableEntry(4.86, 0.373),
-      //new InterpolatorTableEntry(1.65, 0.661),
-      //new InterpolatorTableEntry(3.26, 0.557),
-      //new InterpolatorTableEntry(4.80, 0.355),
-      // new InterpolatorTableEntry(4.60, 0.447),
-      new InterpolatorTableEntry(6.18, 0.355)
+    if (Constants.portConfig == PowerPortConfiguration.LOW) {
+      hoodTable = hoodTableLow;
+    } else if (Constants.portConfig == PowerPortConfiguration.HIGH) {
+      hoodTable = hoodTableHigh;
+    }
 
-      // new InterpolatorTableEntry(1.5,0.732),
-      // new InterpolatorTableEntry(1.759,0.708),
-      // new InterpolatorTableEntry(2.609,0.583),
-      // new InterpolatorTableEntry(3.34,0.583),
-      // new InterpolatorTableEntry(4.76,0.504),
-      // new InterpolatorTableEntry(5.02,0.41),
-      // new InterpolatorTableEntry(6.52,0.394),
-      // new InterpolatorTableEntry(8.25,0.408),
-      // new InterpolatorTableEntry(8.7,0.408)
-    );
+      //new InterpolatorTableEntry(1.65, 0.661),
+    //new InterpolatorTableEntry(3.26, 0.557),
+    //new InterpolatorTableEntry(4.80, 0.355),
+    // new InterpolatorTableEntry(4.60, 0.447),
+
+    // new InterpolatorTableEntry(1.5,0.732),
+    // new InterpolatorTableEntry(1.759,0.708),
+    // new InterpolatorTableEntry(2.609,0.583),
+    // new InterpolatorTableEntry(3.34,0.583),
+    // new InterpolatorTableEntry(4.76,0.504),
+    // new InterpolatorTableEntry(5.02,0.41),
+    // new InterpolatorTableEntry(6.52,0.394),
+    // new InterpolatorTableEntry(8.25,0.408),
+    // new InterpolatorTableEntry(8.7,0.408)
+      
       // new InterpolatorTableEntry(1.79, 0.658353), new InterpolatorTableEntry(2.35, 0.483353),
       // new InterpolatorTableEntry(3.05, 0.483353), new InterpolatorTableEntry(3.54, 0.483353),
       // new InterpolatorTableEntry(3.97, 0.408353), new InterpolatorTableEntry(4.56, 0.363353),

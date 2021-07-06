@@ -48,6 +48,7 @@ import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
+import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.Utility.PathBuilder.PathIndex;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
@@ -372,6 +373,36 @@ public class RobotContainer {
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0)
           );
+      case 12:
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
+        return 
+        new SequentialCommandGroup(
+          new SequentialCommandGroup(
+            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+            // new InstantCommand(shooter::stop, shooter),
+            new InstantCommand(shooter::lowerHood, shooter),
+            new ParallelDeadlineGroup(
+              new SequentialCommandGroup(
+                new WaitToFire(shooter, portTracker),
+                new TargetHoodCommand(shooter, portTracker)
+              ),
+              new SequentialCommandGroup(
+                new WaitForTarget(portTracker),
+                new TargetFlywheelCommand(shooter, portTracker)
+              ),
+              new TurretPortAlignCommand(turret, portTracker)
+            )
+          ),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+          new WaitCommand(1.0),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.4),
+          new WaitCommand(1.0),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+          new SequentialCommandGroup(
+            new TurretPositionCommand(turret, 0),
+            new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+          )
+        );  
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
