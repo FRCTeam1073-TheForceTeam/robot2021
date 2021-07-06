@@ -61,11 +61,7 @@ public class WaitToFire extends CommandBase {
       && (Math.abs(shooter.getFlywheelVelocity()) > Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE)
       && (Math.abs(shooter.getFlywheelVelocity() - shooter.getFlywheelTargetVelocity()) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE);
 
-    SmartDashboard.putNumber("[WaitToFire] Get", shooter.getFlywheelVelocity());
-    SmartDashboard.putNumber("[WaitToFire] Target", shooter.getFlywheelTargetVelocity());
-    SmartDashboard.putNumber("[WaitToFire] CSep", coordinateSeparation);
-    SmartDashboard.putBoolean("[WaitToFire] iPTA", isPortTrackerAligned);
-    SmartDashboard.putBoolean("[WaitToFire] iSR", isShooterReady);
+    // SmartDashboard.putNumber("[WaitToFire] Get", shooter.getFlywheelVelocity());
     return (isPortTrackerAligned && isShooterReady);
   }
 }

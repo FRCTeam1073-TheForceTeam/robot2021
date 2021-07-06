@@ -15,8 +15,15 @@ package frc.robot;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
     public static final double CONTROLLER_DEADZONE = 0.06;
     public static final double THROTTLE_FALLOFF = 0.7;
+
+    public enum PowerPortConfiguration {
+        LOW,HIGH
+    };
+
+    public static final PowerPortConfiguration portConfig = PowerPortConfiguration.LOW;
 
     /**Power cell diameter in meters.**/
     public static final double POWER_CELL_DIAMETER = 0.18;

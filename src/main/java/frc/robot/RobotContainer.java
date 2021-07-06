@@ -48,6 +48,7 @@ import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
+import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.Utility.PathBuilder.PathIndex;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
@@ -278,14 +279,14 @@ public class RobotContainer {
             new InstantCommand(() -> {bling.setColorRGBAll(0,0,255);},bling).andThen(new WaitCommand(1)),
             cellTracker::hasData
         );
-      case 10:
+      case 8:
         return new SequentialCommandGroup(
           new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
           new WaitCommand(2),
           new TurnToHeading(drivetrain, bling, 0),
           new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling)
         );
-      case 12:
+      case 9:
 
         return new SequentialCommandGroup(
           //[[EMERGENCY BACKUP AUTONOMOUS]]
@@ -323,7 +324,7 @@ public class RobotContainer {
           new TurnToHeading(drivetrain, bling, 0),
           new TurretPositionCommand(turret, 0)
         );
-      case 16:
+      case 10:
       return new SequentialCommandGroup(
         new DeployCommand(collector),
         new WaitCommand(0.3),
@@ -366,7 +367,7 @@ public class RobotContainer {
         new TurnToHeading(drivetrain, bling, 0, 3.0),
         new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling)
       );
-      case 18:
+      case 11:
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
         return 
           new SequentialCommandGroup(
@@ -375,6 +376,36 @@ public class RobotContainer {
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0)
           );
+      case 12:
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
+        return 
+        new SequentialCommandGroup(
+          new SequentialCommandGroup(
+            // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+            // new InstantCommand(shooter::stop, shooter),
+            new InstantCommand(shooter::lowerHood, shooter),
+            new ParallelDeadlineGroup(
+              new SequentialCommandGroup(
+                new WaitToFire(shooter, portTracker),
+                new TargetHoodCommand(shooter, portTracker)
+              ),
+              new SequentialCommandGroup(
+                new WaitForTarget(portTracker),
+                new TargetFlywheelCommand(shooter, portTracker)
+              ),
+              new TurretPortAlignCommand(turret, portTracker)
+            )
+          ),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+          new WaitCommand(1.0),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.4),
+          new WaitCommand(1.0),
+          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+          new SequentialCommandGroup(
+            new TurretPositionCommand(turret, 0),
+            new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+          )
+        );  
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

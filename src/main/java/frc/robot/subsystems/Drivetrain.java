@@ -141,51 +141,7 @@ public class Drivetrain extends SubsystemBase  {
 //        DifferentialDriveWheelSpeeds wheelSpeeds = getWheelSpeeds();
 
         robotPose = odometry.update(getAngleRadians(), leftMotorLeader.getSelectedSensorPosition() / ticksPerMeter,
-        rightMotorLeader.getSelectedSensorPosition() / ticksPerMeter);
-        
-        if (isDebugOutputActive) {
-            SmartDashboard.putNumber("[Drivetrain] Left Velocity (raw)",
-                    leftMotorLeader.getSelectedSensorVelocity());//  / 2048.0 * 10.0 * (2.0 * Math.PI)
-            SmartDashboard.putNumber("[Drivetrain] Right Velocity (raw)",
-                    rightMotorLeader.getSelectedSensorVelocity());
-        
-            SmartDashboard.putNumber("[Drivetrain] Left Target Velocity (raw)", leftVelocity);
-            SmartDashboard.putNumber("[Drivetrain] Right Target Velocity (raw)", rightVelocity);
-    
-            SmartDashboard.putNumber("[Drivetrain] Left Velocity Difference (m/s)",
-                    (leftMotorLeader.getSelectedSensorVelocity() - leftVelocity) * 10.0 / ticksPerMeter);
-            SmartDashboard.putNumber("[Drivetrain] Right Velocity Difference (m/s)",
-                    (rightMotorLeader.getSelectedSensorVelocity() - rightVelocity) * 10.0 / ticksPerMeter);//  / 2048.0 * 10.0 * (2.0 * Math.PI)
-            
-            SmartDashboard.putNumber("[Drivetrain] Left Error (raw)", leftMotorLeader.getClosedLoopError());
-            SmartDashboard.putNumber("[Drivetrain] Right Error (raw)", rightMotorLeader.getClosedLoopError());
-
-            double[] xyz_dps = new double[3];
-            gyro.getRawGyro(xyz_dps);
-            SmartDashboard.putNumber("[IMU] Actual Rotational Speed (radians/s)", xyz_dps[0] * Math.PI / 180.0);
-
-            // *shudder* converting to feet/s
-            SmartDashboard.putNumber("[Drivetrain] Drivetrain (forward) velocity (feet/s)",
-                    Units.metersToFeet(getDrivetrainVelocity().vxMetersPerSecond));
-
-                    SmartDashboard.putNumber("[Drivetrain] Left Output Power", leftMotorLeader.getMotorOutputPercent());
-            SmartDashboard.putNumber("[Drivetrain] Right Output Power", rightMotorLeader.getMotorOutputPercent());
-
-            SmartDashboard.putNumber("[Drivetrain] Raw Left Position (ticks)", leftMotorLeader.getSelectedSensorPosition());
-            SmartDashboard.putNumber("[Drivetrain] Raw Right Position (ticks)", rightMotorLeader.getSelectedSensorPosition());
-
-            SmartDashboard.putNumber("[Drivetrain] Left Wheel Position (meters)",
-                    leftMotorLeader.getSelectedSensorPosition() / ticksPerMeter);
-            SmartDashboard.putNumber("[Drivetrain] Right Wheel Position (meters)",
-                    rightMotorLeader.getSelectedSensorPosition() / ticksPerMeter);
-
-            SmartDashboard.putString("[Drivetrain] Odometry coordinates",
-                    "(" + Math.round(
-                            (getRobotPose().getTranslation().getX()
-            )*1000.0)*0.001 + ","
-                            + Math.round(getRobotPose().getTranslation().getY() * 1000.0) * 0.001 + ") @ "
-                            + Math.round(getRobotPose().getRotation().getRadians() * 1000.0) * 0.001 + " radians");
-        }
+        rightMotorLeader.getSelectedSensorPosition() / ticksPerMeter);        
     }
 
     /**
@@ -245,14 +201,6 @@ public class Drivetrain extends SubsystemBase  {
         DifferentialDriveWheelSpeeds diffSpeeds = kinematics.toWheelSpeeds(new ChassisSpeeds(forward, 0, rotation));
         leftVelocity = diffSpeeds.leftMetersPerSecond * ticksPerMeter * 0.1;
         rightVelocity = diffSpeeds.rightMetersPerSecond * ticksPerMeter * 0.1;
-        if (isDebugOutputActive) {
-            SmartDashboard.putNumber("SetVelocity Forward", forward);
-            SmartDashboard.putNumber("diffSpeeds.left", diffSpeeds.leftMetersPerSecond);
-            SmartDashboard.putNumber("diffSpeeds.right", diffSpeeds.rightMetersPerSecond);
-            SmartDashboard.putNumber("leftRotationalSpeed", leftVelocity);
-            SmartDashboard.putNumber("rightRotationalSpeed", rightVelocity);
-            SmartDashboard.putNumber("wheelDiameter", wheelDiameter);
-        }
 
         leftMotorLeader.set(ControlMode.Velocity, leftVelocity);
         rightMotorLeader.set(ControlMode.Velocity, rightVelocity);

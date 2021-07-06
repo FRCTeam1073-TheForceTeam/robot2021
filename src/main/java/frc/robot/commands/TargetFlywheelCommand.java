@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.Constants;
+import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
 
@@ -24,6 +25,25 @@ public class TargetFlywheelCommand extends CommandBase {
   double currentFlywheelVelocity;
   double range;
 
+  /**Table for shooting in the gym, or anywhere else with the full-size power port.**/
+  InterpolatorTable flywheelTableHigh = new InterpolatorTable(
+    new InterpolatorTableEntry(1.6, 332.0),
+    new InterpolatorTableEntry(1.8, 348.0),
+    new InterpolatorTableEntry(3.48, 410.1),
+    new InterpolatorTableEntry(4.86, 509.8),
+    new InterpolatorTableEntry(6.18,527.15)
+  );
+
+  /**Table for shooting in 107, or anywhere else with the small power port.**/
+  InterpolatorTable flywheelTableLow = new InterpolatorTable(
+    new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
+    new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
+    new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
+    new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
+    new InterpolatorTableEntry(6.03,468.75),new InterpolatorTableEntry(6.51,468.75)
+  );
+  
+
   boolean hasValidRangeData;
 
   int numLoops;
@@ -35,7 +55,7 @@ public class TargetFlywheelCommand extends CommandBase {
   public static final double acceptableVelocityDifference = Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
   
   InterpolatorTable flywheelTable;
-  
+
   /**
    * Uses the range sensor to set the flywheel speed.
    * @param shooter_ The shooter subsystem
@@ -44,33 +64,31 @@ public class TargetFlywheelCommand extends CommandBase {
    * @param acceptableVelocityDifference_ How close (in radians/sec difference) the flywheel velocity should be to the target flyhweel velocity before the command ends (defaults to 1 radian/sec).
    */
   public TargetFlywheelCommand(Shooter shooter_, PowerPortTracker portTracker_, int rangeUpdatePeriod_, double acceptableVelocityDifference_) {
-    portTracker = portTracker_;
     rangeUpdatePeriod = rangeUpdatePeriod_;
-    flywheelTable = new InterpolatorTable(
-      new InterpolatorTableEntry(1.6, 332.0),
-      new InterpolatorTableEntry(1.8, 348.0),
-      new InterpolatorTableEntry(3.48, 410.1),
-      new InterpolatorTableEntry(4.86, 509.8),
-     // new InterpolatorTableEntry(4.80, 494.2),
-     // new InterpolatorTableEntry(4.60, 449.4),
-      new InterpolatorTableEntry(6.18, 527.15)
 
-      // new InterpolatorTableEntry(1.5,343.75),
-      // new InterpolatorTableEntry(1.759,343.75),
-      // new InterpolatorTableEntry(2.609,375),
-      // new InterpolatorTableEntry(3.34,360.1),
-      // new InterpolatorTableEntry(4.76,430),
-      // new InterpolatorTableEntry(5.019,467.8),
-      // new InterpolatorTableEntry(6.52,503.5),
-      // new InterpolatorTableEntry(8.25,531.25),
-      // new InterpolatorTableEntry(8.7,562.5)
-    );
+    if (Constants.portConfig == PowerPortConfiguration.LOW) {
+      flywheelTable = flywheelTableLow;
+    } else if (Constants.portConfig == PowerPortConfiguration.HIGH) {
+      flywheelTable = flywheelTableHigh;
+    }
+
+    
+    // new InterpolatorTableEntry(1.5,343.75),
+    // new InterpolatorTableEntry(1.759,343.75),
+    // new InterpolatorTableEntry(2.609,375),
+    // new InterpolatorTableEntry(3.34,360.1),
+    // new InterpolatorTableEntry(4.76,430),
+    // new InterpolatorTableEntry(5.019,467.8),
+    // new InterpolatorTableEntry(6.52,503.5),
+    // new InterpolatorTableEntry(8.25,531.25),
+    // new InterpolatorTableEntry(8.7,562.5)
     // new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
-        // new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
-        // new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
-        // new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
-        // new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51, 468.75));
+    // new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
+    // new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
+    // new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
+    // new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51, 468.75));
     shooter = shooter_;
+    portTracker = portTracker_;
     currentFlywheelVelocity = 0;
     flywheelVelocity = 0;
     range = 0;
@@ -118,10 +136,7 @@ public class TargetFlywheelCommand extends CommandBase {
     if (hasValidRangeData) {
       flywheelVelocity = flywheelTable.getValue(range);
       shooter.setFlywheelVelocity(flywheelVelocity);
-      SmartDashboard.putNumber("[TargetFlywheel] Flywheel target vel", flywheelVelocity);
-      SmartDashboard.putNumber("[TargetFlywheel] Flywheel range", range);
       currentFlywheelVelocity = shooter.getFlywheelVelocity();
-      SmartDashboard.putNumber("[TargetFlywheel] Flywheel actual vel", currentFlywheelVelocity);
     }
   }
 
