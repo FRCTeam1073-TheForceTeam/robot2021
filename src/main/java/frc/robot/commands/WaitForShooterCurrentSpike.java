@@ -45,10 +45,7 @@ public class WaitForShooterCurrentSpike extends CommandBase {
     if (timer <= 15) {
       timer++;
     }
-    SmartDashboard.putNumber("[WFSCS] Differential", diff);
-    SmartDashboard.putNumber("[WFSCS] Hood diff", hoodDiff);
     if (hoodDiff >= 4.5 && timer >= 15) {
-      SmartDashboard.putBoolean("[WFSCS] Done", true);
       return finish;
     }
     return false;

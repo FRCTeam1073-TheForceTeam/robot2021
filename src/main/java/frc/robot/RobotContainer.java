@@ -62,6 +62,7 @@ import frc.robot.commands.DriveForwardToXCoord;
 import frc.robot.commands.DriveForwardToXCoord.DriveDirection;
 import frc.robot.commands.DriveToLocationCommand;
 import frc.robot.commands.DriveToPointCommand;
+import frc.robot.commands.LowerMagazineWithCutoff;
 import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TargetFlywheelCommand;
@@ -393,11 +394,21 @@ public class RobotContainer {
               new TurretPortAlignCommand(turret, portTracker)
             )
           ),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-          new WaitCommand(1.0),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.4),
-          new WaitCommand(1.0),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+          new SequentialCommandGroup(
+            (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+            new WaitCommand(1.0),
+            new LowerMagazineWithCutoff(magazine)
+          ),
+          new SequentialCommandGroup(
+            (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+            new WaitCommand(1.0),
+            new LowerMagazineWithCutoff(magazine)
+          ),
+          new SequentialCommandGroup(
+            (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+            new WaitCommand(1.0),
+            new LowerMagazineWithCutoff(magazine)
+          ),
           new SequentialCommandGroup(
             new TurretPositionCommand(turret, 0),
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
@@ -418,11 +429,8 @@ public class RobotContainer {
               ),
               new TurretPortAlignCommand(turret, portTracker)
             )
-          ),
-          new ParallelDeadlineGroup(
-            new WaitForShooterCurrentSpike(shooter, true),
-            new AdvanceMagazineCommand(magazine, 2.9, 10.85).andThen(new WaitCommand(0.125))
-          ),
+          ),          
+new WaitForShooterCurrentSpike(shooter, true), new AdvanceMagazineCommand(magazine, 2.9, 10.85).andThen(new WaitCommand(0.125))
           new TurretPositionCommand(turret, 0),
           new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
         );
@@ -431,6 +439,8 @@ public class RobotContainer {
           new AdvanceMagazineCommand(magazine, 2.9, 3.85),
           new WaitForShooterCurrentSpike(shooter, false)
         );
+      case 15:
+        return new LowerMagazineWithCutoff(magazine);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

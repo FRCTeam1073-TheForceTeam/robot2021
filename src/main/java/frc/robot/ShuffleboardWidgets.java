@@ -42,7 +42,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 "PurePursuitBarrel",            // 11
                 "FireThreePowerCells",          // 12
                 "FireOnePowerCell",             // 13
-                "TestWFSCS"                     // 14
+                "TestWFSCS",                    // 14
+                "LowerMagazineCutoffTest",      // 15
         };
 
         private static ShuffleboardLayout autoChooser;

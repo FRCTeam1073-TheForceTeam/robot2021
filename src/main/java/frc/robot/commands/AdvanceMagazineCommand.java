@@ -25,7 +25,7 @@ public class AdvanceMagazineCommand extends CommandBase {
    * If the number of diameters is negative, it will run backwards.
    * 
    * @param magazine_      Magazine subsystem
-   * @param magVelocity_   Magazine velocity (m/s) (defaults to 1 m/s)
+   * @param magVelocity_   (Absolute value of) magazine velocity (m/s) (defaults to 1 m/s)
    * @param numPowerCells_ Number of power cells (defaults to 1)
    */
   public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_, double numPowerCells_,

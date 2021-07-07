@@ -85,6 +85,10 @@ public class Magazine extends SubsystemBase {
     return cellCount;
   }
 
+  /**
+   * Gets output from the intake sensor inside the magazine.
+   * @return Returns true if the beam is broken due to a power cell being in the intake and false if there's nothing in the way.
+   */
   public boolean getSensor() {
     return isInTaking;
   }
