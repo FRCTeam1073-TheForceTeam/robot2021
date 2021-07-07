@@ -25,11 +25,23 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardTab tab;
         // private static NetworkTableEntry chooseAuto;
         public static int auto = 100;
-        private byte autoNum = 12;
+        private byte autoNum = 13;
         private byte place = -1;
-        private String[] autoNames = { "1CellScan&Collect", "2CellScan&Collect", "3CellScan&Collect", "Squaretest",
-                        "DriveTPoint", "AutoFire", "GalaxySearchSlow", "ConditionalCommandTest", "Drove&TurnToHeading",
-                        "AutonomousAwardAwfulness", "GalaxySearchFast", "PurePursuitBarrel"};
+        private String[] autoNames = {
+                "1CellScan&Collect",
+                "2CellScan&Collect",
+                "3CellScan&Collect",
+                "Squaretest",
+                "DriveTPoint",
+                "AutoFire",
+                "GalaxySearchSlow",
+                "ConditionalCommandTest",
+                "Drove&TurnToHeading",
+                "AutonomousAwardAwfulness",
+                "GalaxySearchFast",
+                "PurePursuitBarrel",
+                "FireThreePowerCells"
+        };
 
         private static ShuffleboardLayout autoChooser;
         private static ShuffleboardLayout driving;
@@ -75,6 +87,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private double hoodPosition = 0.0;
         private double hoodMin = 0.0;
         private double hoodMax = 0.0;
+        private double flywheelTemp1 = 0.0;
+        private double flywheelTemp2 = 0.0;
+        private double hoodMotorCurrent = 0.0;
 
         private PowerCellData cellData = new PowerCellData();
         private int cellX = 0;
@@ -109,6 +124,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private NetworkTableEntry hoodPositionE;
         private NetworkTableEntry hoodMinE;
         private NetworkTableEntry hoodMaxE;
+        private NetworkTableEntry flywheelTemp1E;
+        private NetworkTableEntry flywheelTemp2E;
+        private NetworkTableEntry hoodMotorCurrentE;
 
         private NetworkTableEntry cellXE;
         private NetworkTableEntry cellYE;
@@ -131,7 +149,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 this.shooter = shooter;
                 this.cellTracker = cellTracker;
                 this.portTracker = portTracker;
-
+                autoNum = (byte) autoNames.length;
+                autos = new boolean[autoNum];
+                autosE = new NetworkTableEntry[autoNum];
         }
 
         public void initialize() {
@@ -149,8 +169,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(4, 2);
                 cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
-                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,
-                                0);
+                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,0);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
@@ -167,6 +186,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private void createWidgets() {
                 for (byte i = 0; i < autoNum; i++) {
+                        //System.out.println(i + "," + autoNum);
                         autosE[i] = autoChooser.add(autoNames[i], autos[i]).withWidget(BuiltInWidgets.kToggleSwitch)
                                         .getEntry();
                 }
@@ -198,6 +218,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 hoodPositionE = shooting.add("Position", hoodPosition).getEntry();
                 hoodMinE = shooting.add("Min P", hoodMin).getEntry();
                 hoodMaxE = shooting.add("Max P", hoodMax).getEntry();
+                flywheelTemp1E = shooting.add("Flyw. Temp 1", flywheelTemp1).getEntry();
+                flywheelTemp2E = shooting.add("Flyw. Temp 2", flywheelTemp2).getEntry();
+                hoodMotorCurrentE = shooting.add("Hood Mtr Current", hoodMotorCurrent).getEntry();
 
                 cellXE = cellTracking.add("X", cellX).getEntry();
                 cellYE = cellTracking.add("Y", cellY).getEntry();
@@ -248,6 +271,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 flywheelVelocity = shooter.getFlywheelVelocity();
                 hoodAngle = Units.radiansToDegrees(shooter.getHoodAngle());
                 hoodPosition = shooter.getHoodPosition();
+                flywheelTemp1 = shooter.getFlywheelTemperatures()[0];
+                flywheelTemp2 = shooter.getFlywheelTemperatures()[1];
+                hoodMotorCurrent = shooter.getHoodMotorCurrent();
 
                 cellTracker.getCellData(cellData);
                 cellX = cellData.cx;
@@ -278,6 +304,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 flywheelVelocityE.setDouble(flywheelVelocity);
                 hoodAngleE.setDouble(hoodAngle);
                 hoodPositionE.setDouble(hoodPosition);
+                flywheelTemp1E.setDouble(flywheelTemp1);
+                flywheelTemp2E.setDouble(flywheelTemp2);
+                hoodMotorCurrentE.setDouble(hoodMotorCurrent);
 
                 cellXE.setNumber(cellX);
                 cellYE.setNumber(cellY);
