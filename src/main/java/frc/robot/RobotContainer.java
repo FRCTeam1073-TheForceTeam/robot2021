@@ -328,7 +328,7 @@ public class RobotContainer {
             new TurnToHeading(drivetrain, bling, 0, 3.0),
             new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling));
       case 11:
-        new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, portTracker, bling);
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, portTracker, bling);
         /*System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
         return new SequentialCommandGroup(
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0),
