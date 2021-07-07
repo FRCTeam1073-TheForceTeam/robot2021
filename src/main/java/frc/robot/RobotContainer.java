@@ -36,6 +36,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 // Import controls: Add controls here.
 import frc.robot.commands.CollectorControls;
+import frc.robot.commands.CompetitionAutonomous;
 import frc.robot.commands.DeployCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.MagazineControls;
@@ -103,7 +104,8 @@ public class RobotContainer {
 
   public static final DataRecorder aimingDataRecorder = new DataRecorder("/tmp/AimingDataFile.txt");
 
-  // private final ParallelCommandGroup teleopCommand = teleDrive.alongWith(teleCollect);
+  // private final ParallelCommandGroup teleopCommand =
+  // teleDrive.alongWith(teleCollect);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -135,51 +137,33 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
-      .whenPressed(
-        new SequentialCommandGroup(
-          // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-          // new InstantCommand(shooter::stop, shooter),
-          new InstantCommand(shooter::lowerHood, shooter),
-          new ParallelDeadlineGroup(
-            new SequentialCommandGroup(
-              new WaitToFire(shooter, portTracker),
-              new TargetHoodCommand(shooter, portTracker)
-            ),
-            new SequentialCommandGroup(
-              new WaitForTarget(portTracker),
-              new TargetFlywheelCommand(shooter, portTracker)
-            ),
-            new TurretPortAlignCommand(turret, portTracker)
-          )
-        )
-      );
-    (new JoystickButton(OI.operatorController, XboxController.Button.kB.value))
-        .whenPressed(
-          new ParallelCommandGroup(
-            new TurretPositionCommand(turret, 0),
-            new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
-          )
-        );
+    (new JoystickButton(OI.operatorController, XboxController.Button.kX.value)).whenPressed(new SequentialCommandGroup(
+        // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+        // new InstantCommand(shooter::stop, shooter),
+        new InstantCommand(shooter::lowerHood, shooter),
+        new ParallelDeadlineGroup(
+            new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
+                new TargetHoodCommand(shooter, portTracker)),
+            new SequentialCommandGroup(new WaitForTarget(portTracker), new TargetFlywheelCommand(shooter, portTracker)),
+            new TurretPortAlignCommand(turret, portTracker))));
+    (new JoystickButton(OI.operatorController, XboxController.Button.kB.value)).whenPressed(new ParallelCommandGroup(
+        new TurretPositionCommand(turret, 0), new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
     (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
-      .whenPressed(
-        new TurretPositionCommand(turret, 0)
-      );
+        .whenPressed(new TurretPositionCommand(turret, 0));
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value))
-        .whenPressed(
-          new TurretPortAlignCommand(turret, portTracker)
-          // new SequentialCommandGroup(
-          //   new AdvanceMagazineCommand(magazine, 1.25, 4)
-          // )
+        .whenPressed(new TurretPortAlignCommand(turret, portTracker)
+        // new SequentialCommandGroup(
+        // new AdvanceMagazineCommand(magazine, 1.25, 4)
+        // )
         );
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
-      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperRight.value))
-      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
     (new JoystickButton(OI.driverController, XboxController.Button.kY.value))
-      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
     (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
-      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
   }
 
   /**
@@ -192,9 +176,9 @@ public class RobotContainer {
     switch (ShuffleboardWidgets.auto) {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
@@ -206,27 +190,24 @@ public class RobotContainer {
             new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
       case 2:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
-            
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
-            
-          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
-            
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
-            
-          new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
 
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3)
-        );
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
-          // new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          // new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          // new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
+            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+
+            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2),
+            new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
+
+      // new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+      // new MagazineCommand(collector, magazine, bling, 0.35, 2),
+      // new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
 
       case 3:
         return new SquareTestCommand(drivetrain, bling, 1.0, 2.0, 1.25, 1.25);
@@ -235,143 +216,125 @@ public class RobotContainer {
       case 5:
         return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
       case 6:
-        return new SequentialCommandGroup(
-          new DeployCommand(collector),
-          new WaitCommand(0.3),
+        return new SequentialCommandGroup(new DeployCommand(collector), new WaitCommand(0.3),
 
-          /*Condition 1: If there is a powercell (if PC data is accessible) then chase and move directly into collect.
-          / Condition 2: If there is not a powercell, then drive and then chase before moving into collect
-          */
-          new ConditionalCommand(
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true), 
-            new SequentialCommandGroup(
-              new DriveForwardCommand(drivetrain, bling, 1.7, 2.3), 
-              new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true)),
-            cellTracker::hasData),
-          //Deploy collector from upright starting state to extend outside of the frame perimeter
+            /*
+             * Condition 1: If there is a powercell (if PC data is accessible) then chase
+             * and move directly into collect. / Condition 2: If there is not a powercell,
+             * then drive and then chase before moving into collect
+             */
+            new ConditionalCommand(new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
+                new SequentialCommandGroup(new DriveForwardCommand(drivetrain, bling, 1.7, 2.3),
+                    new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true)),
+                cellTracker::hasData),
+            // Deploy collector from upright starting state to extend outside of the frame
+            // perimeter
 
-          //Collect PC one
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.35, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+            // Collect PC one
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
-          //Collect PC two
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-          new MagazineCommand(collector, magazine, bling, 0.5, 2),
-          new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+            // Collect PC two
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new MagazineCommand(collector, magazine, bling, 0.5, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
-          //Collect PC three
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
-          new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            // Collect PC three
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
 
-          //Turn to original pointing position and drive to cross the #11 line (Galactic Search)
-          new TurnToHeading(drivetrain, bling, 0, 3.0),
-          new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling)
-      );
+            // Turn to original pointing position and drive to cross the #11 line (Galactic
+            // Search)
+            new TurnToHeading(drivetrain, bling, 0, 3.0),
+            new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling));
       case 7:
-        return new ConditionalCommand(
-            new InstantCommand(() -> {bling.setColorRGBAll(255,0,0);},bling).andThen(new WaitCommand(1)),
-            new InstantCommand(() -> {bling.setColorRGBAll(0,0,255);},bling).andThen(new WaitCommand(1)),
-            cellTracker::hasData
-        );
+        return new ConditionalCommand(new InstantCommand(() -> {
+          bling.setColorRGBAll(255, 0, 0);
+        }, bling).andThen(new WaitCommand(1)), new InstantCommand(() -> {
+          bling.setColorRGBAll(0, 0, 255);
+        }, bling).andThen(new WaitCommand(1)), cellTracker::hasData);
       case 8:
-        return new SequentialCommandGroup(
-          new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
-          new WaitCommand(2),
-          new TurnToHeading(drivetrain, bling, 0),
-          new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling)
-        );
+        return new SequentialCommandGroup(new DriveForwardCommand(drivetrain, bling, 2.0, 1.25), new WaitCommand(2),
+            new TurnToHeading(drivetrain, bling, 0),
+            new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling));
       case 9:
 
         return new SequentialCommandGroup(
-          //[[EMERGENCY BACKUP AUTONOMOUS]]
-          //[[IN CASE OF COLLECTOR DOING WEIRD THINGS BREAK GLASS]]
-          new PrintCommand("[BackupAutonomousRoutine] INITIALIZED!!!\n.\n.\n.\n."),
-    
-          //Drive forward 2 meters
-          new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
-    
-          //Shoot
-          new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
-          new InstantCommand(shooter::stop, shooter),
-          new TurretPositionCommand(turret, 0),
-    
-          //Drive forward 1.5 more meters, going a bit faster.
-          new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
-    
-          //Shoot
-          new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
-          new InstantCommand(shooter::stop, shooter),
-          new TurretPositionCommand(turret, 0),
-    
-          // Rotate 90 degrees to the left (positive rotation on flyhweel, negative rotation on turret).
-          new TurnToHeading(drivetrain, bling, Math.PI * 0.5),
-          new TurretPositionCommand(turret, -Math.PI * 0.5),
-    
-          //Drive forward 2.5 more meters at the same speed (I'd make it go faster but I want this to work every time).
-          new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
-    
-          //Shoot
-          new AutomaticFireCommand(turret, shooter, portTracker, magazine, 5),
-          new InstantCommand(shooter::stop, shooter),
-          new TurretPositionCommand(turret, 0),
-    
-          new TurnToHeading(drivetrain, bling, 0),
-          new TurretPositionCommand(turret, 0)
-        );
+            // [[EMERGENCY BACKUP AUTONOMOUS]]
+            // [[IN CASE OF COLLECTOR DOING WEIRD THINGS BREAK GLASS]]
+            new PrintCommand("[BackupAutonomousRoutine] INITIALIZED!!!\n.\n.\n.\n."),
+
+            // Drive forward 2 meters
+            new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
+
+            // Shoot
+            new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
+            new InstantCommand(shooter::stop, shooter), new TurretPositionCommand(turret, 0),
+
+            // Drive forward 1.5 more meters, going a bit faster.
+            new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
+
+            // Shoot
+            new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
+            new InstantCommand(shooter::stop, shooter), new TurretPositionCommand(turret, 0),
+
+            // Rotate 90 degrees to the left (positive rotation on flyhweel, negative
+            // rotation on turret).
+            new TurnToHeading(drivetrain, bling, Math.PI * 0.5), new TurretPositionCommand(turret, -Math.PI * 0.5),
+
+            // Drive forward 2.5 more meters at the same speed (I'd make it go faster but I
+            // want this to work every time).
+            new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
+
+            // Shoot
+            new AutomaticFireCommand(turret, shooter, portTracker, magazine, 5),
+            new InstantCommand(shooter::stop, shooter), new TurretPositionCommand(turret, 0),
+
+            new TurnToHeading(drivetrain, bling, 0), new TurretPositionCommand(turret, 0));
       case 10:
-      return new SequentialCommandGroup(
-        new DeployCommand(collector),
-        new WaitCommand(0.3),
+        return new SequentialCommandGroup(new DeployCommand(collector), new WaitCommand(0.3),
 
-        /*Condition 1: If there is a powercell (if PC data is accessible) then chase and move directly into collect.
-        / Condition 2: If there is not a powercell, then drive and then chase before moving into collect
-        */
-        new ConditionalCommand(
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true),
-          new SequentialCommandGroup(
-            new DriveForwardCommand(drivetrain, bling, 1.7, 3.3), 
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)),
-          cellTracker::hasData),
-        //Deploy collector from upright starting state to extend outside of the frame perimeter
+            /*
+             * Condition 1: If there is a powercell (if PC data is accessible) then chase
+             * and move directly into collect. / Condition 2: If there is not a powercell,
+             * then drive and then chase before moving into collect
+             */
+            new ConditionalCommand(new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true),
+                new SequentialCommandGroup(new DriveForwardCommand(drivetrain, bling, 1.7, 3.3),
+                    new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)),
+                cellTracker::hasData),
+            // Deploy collector from upright starting state to extend outside of the frame
+            // perimeter
 
-        //Collect PC one
-        new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-        new ParallelCommandGroup(
-          new SequentialCommandGroup(
-            new MagazineCommand(collector, magazine, bling, 0.55, 2),
-            new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)
-          ),
-          //Collect PC two
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)
-        ),
+            // Collect PC one
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
+                    new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)),
+                // Collect PC two
+                new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)),
 
-        new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-        new ParallelCommandGroup(
-          new SequentialCommandGroup(
-            new MagazineCommand(collector, magazine, bling, 0.55, 2),
-            new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)
-          ),
-          //Collect PC three
-          new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)
-        ),
-        
-        new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
+                    new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)),
+                // Collect PC three
+                new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)),
 
-        //Turn to original pointing position and drive to cross the #11 line (Galactic Search)
-        new TurnToHeading(drivetrain, bling, 0, 3.0),
-        new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling)
-      );
+            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+
+            // Turn to original pointing position and drive to cross the #11 line (Galactic
+            // Search)
+            new TurnToHeading(drivetrain, bling, 0, 3.0),
+            new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling));
       case 11:
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
-        return 
-          new SequentialCommandGroup(
+        new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, portTracker, bling);
+        /*System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
+        return new SequentialCommandGroup(
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0),
-            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0)
-          );
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0));*/
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
@@ -379,9 +342,10 @@ public class RobotContainer {
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
-    //drivetrain.resetRobotOdometry();
+    // drivetrain.resetRobotOdometry();
     return null;
-    // return new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, aimingDataRecorder, 0);
+    // return new AimingCalibrationControls(shooter, magazine, portTracker,
+    // drivetrain, aimingDataRecorder, 0);
   }
 
   public Command getTestCommand() {
