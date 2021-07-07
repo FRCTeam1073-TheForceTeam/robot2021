@@ -82,7 +82,7 @@ public class CollectCommand extends CommandBase {
     public void initialize() {
         firstLoop = true;
         powerMultiplier = 1.0;
-        velocity = 0.95;
+        velocity = 0.8;
         shouldUnstall = false;
         isFinished = false;
         trueLoops = 0;
@@ -122,7 +122,7 @@ public class CollectCommand extends CommandBase {
                 velocity = 0.0;
                 powerMultiplier *= -1;
                 hasFinishedNormally = false;
-            } else if (time - initialTime >= 1600) {
+            } else if (time - initialTime >= 900) {
                 velocity = 0.0;
                 bling.setArray("purple");
             } else {
