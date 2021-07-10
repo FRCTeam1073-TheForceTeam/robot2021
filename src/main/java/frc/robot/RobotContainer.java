@@ -331,13 +331,12 @@ public class RobotContainer {
             new TurnToHeading(drivetrain, bling, 0, 3.0),
             new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 3.3, DriveDirection.FORWARD, bling));
       case 11:
-        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker, bling);
-        /*System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
         return new SequentialCommandGroup(
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_1), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_2), 0, 0),
             new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_3), 0, 0),
-            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0));*/
+            new PurePursuit(drivetrain, Utility.PathBuilder.getPath(PathIndex.BARREL_4), 0, 0));
       case 12:
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n!!!!!!!!");
         return 
@@ -367,7 +366,9 @@ public class RobotContainer {
             new TurretPositionCommand(turret, 0),
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
           )
-        );  
+        );
+      case 13:
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker, bling);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
