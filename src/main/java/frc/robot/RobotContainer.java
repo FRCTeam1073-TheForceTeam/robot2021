@@ -417,7 +417,7 @@ public class RobotContainer {
       case 13:
       return new SequentialCommandGroup(
           new SequentialCommandGroup(
-          new InstantCommand(shooter::lowerHood, shooter),
+            new InstantCommand(shooter::lowerHood, shooter),
             new ParallelDeadlineGroup(
               new SequentialCommandGroup(
                 new WaitToFire(shooter, portTracker),
@@ -429,10 +429,17 @@ public class RobotContainer {
               ),
               new TurretPortAlignCommand(turret, portTracker)
             )
-          ),          
-new WaitForShooterCurrentSpike(shooter, true), new AdvanceMagazineCommand(magazine, 2.9, 10.85).andThen(new WaitCommand(0.125))
-          new TurretPositionCommand(turret, 0),
-          new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+          ),
+          new ParallelDeadlineGroup(
+            new WaitForShooterCurrentSpike(shooter, true),
+            new AdvanceMagazineCommand(magazine, 0.9, 5.85)
+          ),
+          new PrintCommand("#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$"),
+          new WaitCommand(0.125),
+          new ParallelCommandGroup(
+            new TurretPositionCommand(turret, 0),
+            new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)  
+          )
         );
       case 14:
         return new ParallelCommandGroup(
@@ -440,7 +447,22 @@ new WaitForShooterCurrentSpike(shooter, true), new AdvanceMagazineCommand(magazi
           new WaitForShooterCurrentSpike(shooter, false)
         );
       case 15:
-        return new LowerMagazineWithCutoff(magazine);
+        return new SequentialCommandGroup(
+          new ShooterSetCommand(shooter, 0.5 * (shooter.hoodAngleHigh + shooter.hoodAngleLow), 0),
+          new WaitCommand(0.8),
+          new ParallelDeadlineGroup(
+            new WaitForShooterCurrentSpike(shooter, true),
+            new AdvanceMagazineCommand(magazine, 0.5, 50.85)
+          ),
+          new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+        );
+          // return new LowerMagazineWithCutoff(magazine);
+      case 16:
+        return new SequentialCommandGroup(
+          new InstantCommand(shooter::lowerHood, shooter),
+          new WaitForTarget(portTracker),
+          new TargetFlywheelCommand(shooter, portTracker)
+        );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

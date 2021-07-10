@@ -15,11 +15,11 @@ public class LowerMagazineWithCutoff extends ParallelDeadlineGroup {
   double magazineVelocity;
 
   public LowerMagazineWithCutoff(Magazine magazine) {
-    this(magazine, 0.5, 0.075);
+    this(magazine, 0.5, 0.03);
   }
 
   public LowerMagazineWithCutoff(Magazine magazine, double powerCellDiameters) {
-    this(magazine, powerCellDiameters, 0.075);
+    this(magazine, powerCellDiameters, 0.03);
   }
 
   public LowerMagazineWithCutoff(Magazine magazine, double powerCellDiameters, double magazineVelocity) {

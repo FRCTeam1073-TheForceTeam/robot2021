@@ -27,6 +27,7 @@ public class ShooterControls extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooter.setFlywheelVelocity(0);
     flywheelVelocity = shooter.getFlywheelTargetVelocity();
     hoodAngle = shooter.getHoodAngle();
     // shooter.setHoodPower(0);

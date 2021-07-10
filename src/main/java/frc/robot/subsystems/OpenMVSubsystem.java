@@ -243,7 +243,8 @@ public class OpenMVSubsystem extends SubsystemBase {
 
       // Only log hearbeat updates once in a while.
       if (loopCounter % 50 == 0) {
-        System.out.format("OpenMV Heartbeat. Device ID: %d  Frame: %d  Heartbeat: %d\n", deviceId, frameCounter, lastHeartbeat);
+        System.out.format("OpenMV Heartbeat. Device ID: %d  Frame: %d  Heartbeat: %d\n", deviceId, frameCounter,
+            lastHeartbeat);
       }
 
       missedHeartbeats = 0;

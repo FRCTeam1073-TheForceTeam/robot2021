@@ -120,6 +120,7 @@ public class TargetFlywheelCommand extends CommandBase {
 
   @Override
   public void initialize() {
+    SmartDashboard.putNumber("key", 258);
     // shooter.setFlywheelVelocity(0);
   }
 
@@ -130,13 +131,16 @@ public class TargetFlywheelCommand extends CommandBase {
       if (currentRange != -1 && (currentRange >= 1 && currentRange <= Constants.MAXIMUM_DETECTABLE_RANGE)) {
         hasValidRangeData = true;
         range = currentRange;
-      }        
+      }
     }
     numLoops++;
     if (hasValidRangeData) {
       flywheelVelocity = flywheelTable.getValue(range);
       shooter.setFlywheelVelocity(flywheelVelocity);
       currentFlywheelVelocity = shooter.getFlywheelVelocity();
+      SmartDashboard.putNumber("[TGTF] Range [0]", range);
+      SmartDashboard.putNumber("[TGTF] Target flywheel vel [1]", flywheelVelocity);
+      SmartDashboard.putNumber("[TGTF] Actual flywheel vel [2]", currentFlywheelVelocity);
     }
   }
 

@@ -30,8 +30,11 @@ public class WaitForShooterCurrentSpike extends CommandBase {
     nearFilter = LinearFilter.singlePoleIIR(0.1, Robot.kDefaultPeriod);
     farFilter = LinearFilter.singlePoleIIR(0.8, Robot.kDefaultPeriod);
     hoodPositionFilter = LinearFilter.singlePoleIIR(1.5, Robot.kDefaultPeriod);
-    timer = 0;
     finish = finish_;
+  }
+
+  public void initialize() {
+    timer = 0;
   }
 
   @Override
@@ -40,14 +43,20 @@ public class WaitForShooterCurrentSpike extends CommandBase {
     double nearVal = nearFilter.calculate(current);
     double farVal = farFilter.calculate(current);
     double smoothHoodPos = hoodPositionFilter.calculate(shooter.getHoodPosition());
+    double hoodVelocity = shooter.getHoodVelocity();
+    SmartDashboard.putNumber("[ShotDetection] Hood velocity (rads/s) [0]", hoodVelocity);
     double diff = (nearVal - farVal);
     double hoodDiff = shooter.getHoodPosition() - smoothHoodPos;
+
     if (timer <= 15) {
       timer++;
+      return false;
     }
-    if (hoodDiff >= 4.5 && timer >= 15) {
-      return finish;
-    }
-    return false;
+    return (Math.abs(hoodVelocity) >= 5.0);
+
+    // if (hoodDiff >= 4.5 && timer >= 15) {
+    //   return finish;
+    // }
+    // return false;
   }
 }

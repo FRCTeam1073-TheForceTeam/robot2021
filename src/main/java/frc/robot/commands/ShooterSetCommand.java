@@ -28,6 +28,7 @@ public class ShooterSetCommand extends CommandBase {
   
   @Override
   public void initialize() {
+    shooter.setHoodAngle(hoodAngle);
   }
 
   public void execute() {
