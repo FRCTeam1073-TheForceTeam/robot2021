@@ -51,26 +51,26 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                                 new WaitForTarget(portTracker),
                                                                                 new TargetFlywheelCommand(shooter,
                                                                                                 portTracker)),
-                                                                new TurretPortAlignCommand(turret, portTracker))), new WaitCommand(0.5),
-                                                new AdvanceMagazineCommand(magazine, 0.9, 1.85), new WaitCommand(1.0),
-                                                new AdvanceMagazineCommand(magazine, 0.9, 1.4), new WaitCommand(1.0),
-                                                new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+                                                                new TurretPortAlignCommand(turret, portTracker))),
+                                                new WaitCommand(0.5), new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+                                                new WaitCommand(1.0), new AdvanceMagazineCommand(magazine, 0.9, 1.4),
+                                                new WaitCommand(1.0), new AdvanceMagazineCommand(magazine, 0.9, 1.85),
                                                 new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                                                                 new ShooterSetCommand(shooter, shooter.hoodAngleHigh,
                                                                                 0))),
-                                new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
+                                new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, false).andThen(
 
                                                 new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
                                                 new MagazineCommand(collector, magazine, bling, 0.35, 2),
                                                 new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
-                                                new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+                                                new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
                                                 new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
                                                 new MagazineCommand(collector, magazine, bling, 0.35, 2),
                                                 new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
-                                                new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+                                                new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
                                                 new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
                                                 new MagazineCommand(collector, magazine, bling, 0.35, 2),

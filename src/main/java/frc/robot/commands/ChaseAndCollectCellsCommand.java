@@ -207,11 +207,11 @@ public class ChaseAndCollectCellsCommand extends CommandBase {
             isScanning = true;
             initRotation = drivetrain.getRobotPose().getRotation();
             initTime = System.currentTimeMillis();
-            //if (powerCellData.vx < 0) {
-            //    rotationalSpeedMultiplier = -0.5;
-            //} else {
+            if (powerCellData.vx < 0) {
+                rotationalSpeedMultiplier = 0.5;
+            } else {
                 rotationalSpeedMultiplier = -0.5;
-            //}
+            }
             velocityMultiplier = 0.0;
             alignState();
             loopsWithoutData++;

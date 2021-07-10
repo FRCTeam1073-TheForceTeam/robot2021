@@ -7,6 +7,8 @@ package frc.robot;
 import java.time.Instant;
 import java.util.Map;
 
+import javax.swing.plaf.TreeUI;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -176,31 +178,31 @@ public class RobotContainer {
     System.out.println("\n\n\n\n\n\n\n\n!!!!!!!!!!!!!! auto: " + ShuffleboardWidgets.auto);
     switch (ShuffleboardWidgets.auto) {
       case 0:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
+        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
             new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
       case 1:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
+        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
             new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3),
-            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.5, 2),
             new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
       case 2:
-        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true).andThen(
+        return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
-            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
-            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true),
+            new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
@@ -224,9 +226,9 @@ public class RobotContainer {
              * and move directly into collect. / Condition 2: If there is not a powercell,
              * then drive and then chase before moving into collect
              */
-            new ConditionalCommand(new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
+            new ConditionalCommand(new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
                 new SequentialCommandGroup(new DriveForwardCommand(drivetrain, bling, 1.7, 2.3),
-                    new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true)),
+                    new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true)),
                 cellTracker::hasData),
             // Deploy collector from upright starting state to extend outside of the frame
             // perimeter
@@ -236,12 +238,12 @@ public class RobotContainer {
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
             // Collect PC two
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.5, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
             // Collect PC three
-            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true),
+            new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
 
             // Turn to original pointing position and drive to cross the #11 line (Galactic
@@ -300,9 +302,9 @@ public class RobotContainer {
              * and move directly into collect. / Condition 2: If there is not a powercell,
              * then drive and then chase before moving into collect
              */
-            new ConditionalCommand(new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true),
+            new ConditionalCommand(new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true),
                 new SequentialCommandGroup(new DriveForwardCommand(drivetrain, bling, 1.7, 3.3),
-                    new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)),
+                    new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
                 cellTracker::hasData),
             // Deploy collector from upright starting state to extend outside of the frame
             // perimeter
@@ -313,14 +315,14 @@ public class RobotContainer {
                 new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
                     new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)),
                 // Collect PC two
-                new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)),
+                new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
                     new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)),
                 // Collect PC three
-                new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true)),
+                new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
 
