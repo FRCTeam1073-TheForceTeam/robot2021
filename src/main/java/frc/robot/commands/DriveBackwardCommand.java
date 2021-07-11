@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class DriveForwardCommand extends CommandBase {
+public class DriveBackwardCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final Drivetrain drivetrain;
   private final Bling bling;
@@ -30,7 +30,7 @@ public class DriveForwardCommand extends CommandBase {
    * @param velocity   The velocity the robot's drivetrain motors run at for this
    *                   command.
    */
-  public DriveForwardCommand(Drivetrain drivetrain, Bling bling, double distance, double velocity) {
+  public DriveBackwardCommand(Drivetrain drivetrain, Bling bling, double distance, double velocity) {
     this.drivetrain = drivetrain;
     this.bling = bling;
     this.distance = distance;
@@ -46,7 +46,7 @@ public class DriveForwardCommand extends CommandBase {
    * @param bling      The bling used by this command.
    * @param distance   The distance this command should move the robot by.
    */
-  public DriveForwardCommand(Drivetrain drivetrain, Bling bling, double distance) {
+  public DriveBackwardCommand(Drivetrain drivetrain, Bling bling, double distance) {
     this(drivetrain, bling, distance, 0.5);
   }
 
@@ -62,8 +62,8 @@ public class DriveForwardCommand extends CommandBase {
   @Override
   public void execute() {
     currentPose = drivetrain.getRobotPose();
-    drivetrain.setVelocity(velocity, 0.0);
-    currentDistance = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());
+    drivetrain.setVelocity(-velocity, 0.0);
+    currentDistance = -Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());
   }
 
   // Called once the command ends or is interrupted.
