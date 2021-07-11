@@ -132,6 +132,8 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                                                                         new ShooterSetCommand(shooter,
                                                                                         shooter.hoodAngleHigh, 0))));
+                } else if (compAutoNum == 1) {
+                        return new SequentialCommandGroup();
                 }
                 return new SequentialCommandGroup();
         }
