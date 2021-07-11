@@ -70,19 +70,19 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                                                         portTracker)),
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
-                                                        new WaitCommand(0.5),
+                                                        //new WaitCommand(0.3),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-                                                        new WaitCommand(1.0),
+                                                        //new WaitCommand(0.3),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.4),
-                                                        new WaitCommand(1.0),
+                                                        //new WaitCommand(0.3),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-                                                        new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
-                                                                        new ShooterSetCommand(shooter,
-                                                                                        shooter.hoodAngleHigh, 0))),
+                                                        new SequentialCommandGroup(new TurretPositionCommand(turret, 0)
+                                                                        //,new ShooterSetCommand(shooter,shooter.hoodAngleHigh, 0))
+                                                                        )),
                                         // deploying the collector while shooting
                                         new DeployCommand(collector)),
                                         // driving off the initiation line, further into the field
-                                        new DriveForwardCommand(drivetrain, bling, 1.4, 1.5),
+                                        new DriveForwardCommand(drivetrain, bling, 1.4, 3.0),
                                         // Chasing and collecting three Powercells
                                         new SequentialCommandGroup(
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true,
@@ -99,17 +99,19 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.35, 2),
-                                                        new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
-
-                                                        new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true,
-                                                                        true),
-
-                                                        new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
-                                                                        1),
-                                                        new MagazineCommand(collector, magazine, bling, 0.35, 2),
                                                         new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3)),
+
+                                                        //new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true,
+                                                        //                true),
+
+                                                        //new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
+                                                        //                1),
+                                                        //new MagazineCommand(collector, magazine, bling, 0.35, 2),
+                                                        //new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3)),
+                                        // turning to heading
+                                        new TurnToHeading(drivetrain, bling, 0, 3.5),
                                         // driving back to the initiation line
-                                        new DriveBackwardCommand(drivetrain, bling, 1.4, 1.5),
+                                        new DriveBackwardCommand(drivetrain, bling, 1.4, 3.5),
                                         // Shooting three collected Powercells
                                         new SequentialCommandGroup(new SequentialCommandGroup(
                                                         new InstantCommand(shooter::lowerHood, shooter),
@@ -123,12 +125,12 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                                                         portTracker)),
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
-                                                        new WaitCommand(0.5),
+                                                        //new WaitCommand(1.0),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-                                                        new WaitCommand(1.0),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.4),
-                                                        new WaitCommand(1.0),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+                                                        //new WaitCommand(1.0),
+                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.9),
+                                                        //new WaitCommand(1.0),
+                                                        //new AdvanceMagazineCommand(magazine, 0.9, 1.85),
                                                         new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                                                                         new ShooterSetCommand(shooter,
                                                                                         shooter.hoodAngleHigh, 0))));
@@ -147,7 +149,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                                                         portTracker)),
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
-                                                        new WaitCommand(0.5),
+                                                        new WaitCommand(1.0),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.85),
                                                         new WaitCommand(1.0),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.4),

@@ -368,7 +368,7 @@ public class RobotContainer {
           )
         );
       case 13:
-        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker, bling, 1);
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker, bling, 0);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

@@ -63,7 +63,7 @@ public class DriveBackwardCommand extends CommandBase {
   public void execute() {
     currentPose = drivetrain.getRobotPose();
     drivetrain.setVelocity(-velocity, 0.0);
-    currentDistance = -Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());
+    currentDistance = Math.hypot(currentPose.getX() - initPose.getX(), currentPose.getY() - initPose.getY());
   }
 
   // Called once the command ends or is interrupted.

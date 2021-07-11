@@ -87,7 +87,7 @@ public class Shooter extends SubsystemBase {
 
     shooterFlywheel1.setSelectedSensorPosition(0);
     shooterFlywheel1.setIntegralAccumulator(0);
-    shooterFlywheel1.configClosedloopRamp(0.25);
+    //shooterFlywheel1.configClosedloopRamp(0.25);
 
     shooterFlywheel1.config_kP(0, flywheelP);
     shooterFlywheel1.config_kI(0, flywheelI);
@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(4750);
+    rateLimiter = new SlewRateLimiter(3000);
     
     hood = new CANSparkMax(28, MotorType.kBrushless);
     hood.clearFaults();
