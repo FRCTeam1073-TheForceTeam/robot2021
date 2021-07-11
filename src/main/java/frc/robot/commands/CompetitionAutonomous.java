@@ -82,7 +82,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                         // deploying the collector while shooting
                                         new DeployCommand(collector)),
                                         // driving off the initiation line, further into the field
-                                        new DriveForwardCommand(drivetrain, bling, 1.4, 3.0),
+                                        new DriveForwardCommand(drivetrain, bling, 1.4, 2.5),
                                         // Chasing and collecting three Powercells
                                         new SequentialCommandGroup(
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true,
@@ -94,7 +94,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true,
-                                                                        true),
+                                                                        false),
 
                                                         new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
                                                                         1),
