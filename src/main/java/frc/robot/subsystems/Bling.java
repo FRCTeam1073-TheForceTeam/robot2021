@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * Allow the commands running in the robot to express themselves visually.
@@ -87,10 +86,14 @@ public class Bling extends SubsystemBase {
       // } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
       // blinkyLights(0, m_ledBuffer.getLength(), 252, 227, 0);
 
+
+
       // if (burst_done == 0) {
       // burst(m_ledBuffer.getLength(), 0, 0, 255);
       // // setColorRGBAll(0, 0, 0);
       // } else {
+
+
 
       LEDRainbow(15, 25, 20000);
 
@@ -281,6 +284,10 @@ public class Bling extends SubsystemBase {
     
     double volts = RobotController.getBatteryVoltage();
 
+    if (volts > max_volts) {
+      volts = max_volts;
+    }
+
     // First, it calculates the percentage of leds that will turn on.
     // amount above the minimum voltage / range of volts
     // the -1 and +1 account for the one that is always on.
@@ -289,13 +296,12 @@ public class Bling extends SubsystemBase {
     // If less than 1/3 of the leds are lit up, the light is red.
     // If between 1/3 and 2/3 of the leds are lit up, the light is yellow.
     // If more than 2/3 of the leds are lit up, the light is green.
-    if (num <= (numberLEDsVolts / 3)) {
-      rangeRGB(minLEDsVolts, num, 255, 0, 0);
-    } else if (num > (numberLEDsVolts / 3) && num <= (2 * (numberLEDsVolts / 3))) {
-      rangeRGB(minLEDsVolts, num, 255, 255, 0);
-    } else if (num > (2 * (numberLEDsVolts / 3))) {
+    if (num > (2 * (numberLEDsVolts / 3))) {
       rangeRGB(minLEDsVolts, num, 0, 255, 0);
-    }
+    } else if (num > (numberLEDsVolts / 3)) {
+      rangeRGB(minLEDsVolts, num, 255, 255, 0);
+    } else {
+      rangeRGB(minLEDsVolts, num, 255, 0, 0);
   }
 
 
@@ -425,7 +431,7 @@ public class Bling extends SubsystemBase {
 
 
   // blinkyLights() flashes lights on and off in one color for a range of LEDs
-  public void blinkyLights(int minLEDsBlink, int numberLEDsBlink, int r, int g, int b, boolean gameData) {
+  public void blinkyLights(int minLEDsBlink, int numberLEDsBlink, int r, int g, int b) {
     if (time_blinkyLEDs < 30) {
       // Sets the LEDs to the specified color
       rangeRGB(minLEDsBlink, numberLEDsBlink, r, g, b);
@@ -437,9 +443,7 @@ public class Bling extends SubsystemBase {
     } else {
       // Resets the time counter
       time_blinkyLEDs = 0;
-      if (gameData) {
-        gameDataBlinkCount = gameDataBlinkCount + 1;
-      }
+      gameDataBlinkCount = gameDataBlinkCount + 1;
     }
   }
 
