@@ -27,8 +27,7 @@ public class ShooterControls extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setFlywheelVelocity(0);
-    flywheelVelocity = shooter.getFlywheelTargetVelocity();
+    // flywheelVelocity = shooter.getFlywheelTargetVelocity();
     hoodAngle = shooter.getHoodAngle();
     // shooter.setHoodPower(0);
   }
@@ -37,6 +36,8 @@ public class ShooterControls extends CommandBase {
   @Override
   public void execute() {
     currDPadState = OI.operatorController.getPOV();
+
+    flywheelVelocity = shooter.getFlywheelTargetVelocity();
 
     if (prevDPadState == -1) {
       if (currDPadState == 90) {
@@ -50,15 +51,9 @@ public class ShooterControls extends CommandBase {
       }
       if (currDPadState == 0) {
         hoodAngle -= 0.025 * 0.5;
-      }        
+      }
     }
 
-    if (OI.operatorController.getBButtonPressed()) {
-      flywheelVelocity = 0;
-      hoodAngle = shooter.hoodAngleHigh;
-    }
-
-    
     prevDPadState = currDPadState;
 
     flywheelVelocity = Math.max(0, flywheelVelocity);
@@ -70,6 +65,10 @@ public class ShooterControls extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    if (interrupted) {
+      flywheelVelocity = shooter.getFlywheelVelocity();
+      hoodAngle = shooter.getHoodAngle();
+    }
   }
 
   // Returns true when the command should end.

@@ -17,6 +17,7 @@ public class ShooterSetCommand extends CommandBase {
   double hoodAngle;
   double flywheelVelocity;
   double currentFlywheelVelocity;
+  int ctr;
 
   public ShooterSetCommand(Shooter shooter_, double hoodAngle_, double flywheelVelocity_) {
     shooter = shooter_;
@@ -29,6 +30,7 @@ public class ShooterSetCommand extends CommandBase {
   @Override
   public void initialize() {
     shooter.setHoodAngle(hoodAngle);
+    ctr = 0;
   }
 
   public void execute() {
@@ -38,9 +40,12 @@ public class ShooterSetCommand extends CommandBase {
   }
 
   public void end(boolean interrupted) {
+    shooter.setHoodAngle(hoodAngle);
+    SmartDashboard.putString("SSC", "Ended");
   }
   
   public boolean isFinished() {
-    return Math.abs(currentFlywheelVelocity - flywheelVelocity) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE;
+    ctr++;
+    return (ctr>2)&&(Math.abs(shooter.getHoodAngle()-hoodAngle)<0.05)&&(Math.abs(currentFlywheelVelocity - flywheelVelocity) <= Constants.ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE);
   }
 }
