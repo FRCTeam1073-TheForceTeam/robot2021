@@ -191,14 +191,14 @@ public class RobotContainer {
           //   new AdvanceMagazineCommand(magazine, 1.25, 4)
           // )
         );
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
-    //   .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kBumperRight.value))
-    //   .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
-    // (new JoystickButton(OI.driverController, XboxController.Button.kY.value))
-    //   .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
-    // (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
-    //   .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+    (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
+      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+    (new JoystickButton(OI.operatorController, XboxController.Button.kBumperRight.value))
+      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+    (new JoystickButton(OI.driverController, XboxController.Button.kY.value))
+      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+    (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
+      .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
   }
 
   /**
