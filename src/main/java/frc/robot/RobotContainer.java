@@ -458,11 +458,6 @@ public class RobotContainer {
           )
         );
       case 14:
-        return new ParallelCommandGroup(
-          new AdvanceMagazineCommand(magazine, 2.9, 3.85),
-          new WaitForShooterCurrentSpike(shooter, false)
-        );
-      case 15:
         return new SequentialCommandGroup(
           new ShooterSetCommand(shooter, shooter.hoodAngleLow + 0.25 * (shooter.hoodAngleHigh - shooter.hoodAngleLow), 300),
           new ParallelDeadlineGroup(
@@ -479,12 +474,6 @@ public class RobotContainer {
           // new PrintCommand("###########################################\n###############      BEFORE       ###############\n###########################################"),
           // new PrintCommand("###########################################\n###############      AFTER       ###############\n###########################################")
           // return new LowerMagazineWithCutoff(magazine);
-      case 16:
-        return new SequentialCommandGroup(
-          new InstantCommand(shooter::lowerHood, shooter),
-          new WaitForTarget(portTracker),
-          new TargetFlywheelCommand(shooter, portTracker)
-        );
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
