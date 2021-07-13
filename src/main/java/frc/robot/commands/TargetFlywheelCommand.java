@@ -67,6 +67,9 @@ public class TargetFlywheelCommand extends CommandBase {
 
   boolean hasValidRangeData;
 
+  boolean overrideDistanceMeasurement;
+  double preMeasuredDistance;
+
   int numLoops;
   int rangeUpdatePeriod;
 
@@ -95,8 +98,10 @@ public class TargetFlywheelCommand extends CommandBase {
    *                                      command ends (defaults to 1 radian/sec).
    */
   public TargetFlywheelCommand(Shooter shooter_, PowerPortTracker portTracker_, int rangeUpdatePeriod_,
-      double acceptableVelocityDifference_) {
+      double acceptableVelocityDifference_, boolean overrideDistanceMeasurement_, double preMeasuredDistance_) {
     rangeUpdatePeriod = rangeUpdatePeriod_;
+    overrideDistanceMeasurement = overrideDistanceMeasurement_;
+    preMeasuredDistance = preMeasuredDistance_;
 
     if (Constants.portConfig == PowerPortConfiguration.LOW) {
       flywheelTable = flywheelTableLow;
@@ -133,6 +138,11 @@ public class TargetFlywheelCommand extends CommandBase {
     // addRequirements(shooter);
   }
 
+  public TargetFlywheelCommand(Shooter shooter_, PowerPortTracker portTracker_, int rangeUpdatePeriod_,
+      double acceptableVelocityDifference_) {
+    this(shooter_, portTracker_, rangeUpdatePeriod_, acceptableVelocityDifference_, false, 0);
+  }
+
   /**
    * Uses the range sensor to set the flywheel speed.
    * 
@@ -160,6 +170,10 @@ public class TargetFlywheelCommand extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putNumber("key", 258);
+    if (overrideDistanceMeasurement) {
+      hasValidRangeData = true;
+      range = preMeasuredDistance;
+    }
     // shooter.setFlywheelVelocity(0);
   }
 
