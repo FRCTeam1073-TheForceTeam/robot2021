@@ -1,9 +1,8 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
@@ -56,10 +55,11 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 
         private SequentialCommandGroup CompAuto() {
                 if (compAutoNum <= 0) {
-                        return new SequentialCommandGroup(new ParallelDeadlineGroup(
-                                        // Shooting three preloaded Powercells
+                        return new SequentialCommandGroup(
+                                        // Drive off the Initiation Line
+                                        new DriveForwardCommand(drivetrain, bling, distOffInitiationLine, 1.5),
                                         new SequentialCommandGroup(new SequentialCommandGroup(
-                                                        new InstantCommand(shooter::lowerHood, shooter),
+                                                        // Setting up the Shooter
                                                         new ParallelDeadlineGroup(new SequentialCommandGroup(
                                                                         new WaitToFire(shooter, portTracker),
                                                                         new TargetHoodCommand(shooter, portTracker)),
@@ -70,22 +70,42 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                                                         portTracker)),
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
-                                                        //new WaitCommand(0.3),
+                                                        // Shooting the three preloaded Powercells
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-                                                        //new WaitCommand(0.3),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.4),
-                                                        //new WaitCommand(0.3),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-                                                        new SequentialCommandGroup(new TurretPositionCommand(turret, 0)
-                                                                        //,new ShooterSetCommand(shooter,shooter.hoodAngleHigh, 0))
-                                                                        )),
-                                        // deploying the collector while shooting
-                                        new DeployCommand(collector)),
-                                        // driving off the initiation line, further into the field
-                                        new DriveForwardCommand(drivetrain, bling, 1.4, 2.5),
-                                        // Chasing and collecting three Powercells
+                                                        // Shutting down the Shooter
+                                                        new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
+                                                                        new ShooterSetCommand(shooter,
+                                                                                        shooter.hoodAngleHigh, 0))));
+                } else if (compAutoNum == 1) {
+                        return new SequentialCommandGroup(new ParallelCommandGroup(new SequentialCommandGroup(
                                         new SequentialCommandGroup(
-                                                        new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true,
+                                                        // Setting up the Shooter
+                                                        new ParallelDeadlineGroup(new SequentialCommandGroup(
+                                                                        new WaitToFire(shooter, portTracker),
+                                                                        new TargetHoodCommand(shooter, portTracker)),
+                                                                        new SequentialCommandGroup(
+                                                                                        new WaitForTarget(portTracker),
+                                                                                        new TargetFlywheelCommand(
+                                                                                                        shooter,
+                                                                                                        portTracker)),
+                                                                        new TurretPortAlignCommand(turret,
+                                                                                        portTracker))),
+                                        // Shooting the three preloaded Powercells
+                                        new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+                                        new AdvanceMagazineCommand(magazine, 0.9, 1.4),
+                                        new AdvanceMagazineCommand(magazine, 0.9, 1.85)// ,
+                        // new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
+                        // new ShooterSetCommand(shooter,shooter.hoodAngleHigh, 0))
+                        ),
+                                        // Deploying the collector while shooting
+                                        new DeployCommand(collector)),
+                                        // Driving off the Initiation Line
+                                        new DriveForwardCommand(drivetrain, bling, 1.4, 2.5),
+                                        // Chasing and collecting two Powercells
+                                        new SequentialCommandGroup(
+                                                        new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.7, true,
                                                                         false),
 
                                                         new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
@@ -93,28 +113,19 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new MagazineCommand(collector, magazine, bling, 0.35, 2),
                                                         new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
-                                                        new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true,
+                                                        new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 1.7, true,
                                                                         false),
 
                                                         new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.35, 2),
                                                         new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3)),
-
-                                                        //new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true,
-                                                        //                true),
-
-                                                        //new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
-                                                        //                1),
-                                                        //new MagazineCommand(collector, magazine, bling, 0.35, 2),
-                                                        //new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3)),
-                                        // turning to heading
+                                        // Turning to heading
                                         new TurnToHeading(drivetrain, bling, 0, 3.5),
-                                        // driving back to the initiation line
+                                        // Driving back to the initiation line
                                         new DriveBackwardCommand(drivetrain, bling, 1.4, 3.5),
-                                        // Shooting three collected Powercells
                                         new SequentialCommandGroup(new SequentialCommandGroup(
-                                                        new InstantCommand(shooter::lowerHood, shooter),
+                                                        // Setting up the Shooter
                                                         new ParallelDeadlineGroup(new SequentialCommandGroup(
                                                                         new WaitToFire(shooter, portTracker),
                                                                         new TargetHoodCommand(shooter, portTracker)),
@@ -125,39 +136,15 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                                                         portTracker)),
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
-                                                        //new WaitCommand(1.0),
+                                                        // Shooting the two collected Powercells
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-                                                        //new WaitCommand(1.0),
                                                         new AdvanceMagazineCommand(magazine, 0.9, 1.9),
-                                                        //new WaitCommand(1.0),
-                                                        //new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+                                                        // Shutting down the Shooter
                                                         new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                                                                         new ShooterSetCommand(shooter,
                                                                                         shooter.hoodAngleHigh, 0))));
-                } else if (compAutoNum == 1) {
-                        return new SequentialCommandGroup(
-                                        new DriveForwardCommand(drivetrain, bling, distOffInitiationLine, 1.5),
-                                        new SequentialCommandGroup(new SequentialCommandGroup(
-                                                        new InstantCommand(shooter::lowerHood, shooter),
-                                                        new ParallelDeadlineGroup(new SequentialCommandGroup(
-                                                                        new WaitToFire(shooter, portTracker),
-                                                                        new TargetHoodCommand(shooter, portTracker)),
-                                                                        new SequentialCommandGroup(
-                                                                                        new WaitForTarget(portTracker),
-                                                                                        new TargetFlywheelCommand(
-                                                                                                        shooter,
-                                                                                                        portTracker)),
-                                                                        new TurretPortAlignCommand(turret,
-                                                                                        portTracker))),
-                                                        new WaitCommand(1.0),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-                                                        new WaitCommand(1.0),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.4),
-                                                        new WaitCommand(1.0),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-                                                        new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
-                                                                        new ShooterSetCommand(shooter,
-                                                                                        shooter.hoodAngleHigh, 0))));
+                } else if (compAutoNum == 2) {
+
                 }
                 return new SequentialCommandGroup();
         }
