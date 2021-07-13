@@ -242,8 +242,9 @@ public class OpenMVSubsystem extends SubsystemBase {
     if (readHeartbeat()) {
 
       // Only log hearbeat updates once in a while.
-      if (loopCounter % 50 == 0) {
-        System.out.format("OpenMV Heartbeat. Device ID: %d  Frame: %d  Heartbeat: %d\n", deviceId, frameCounter, lastHeartbeat);
+      if (loopCounter % 200 == 0) {
+        System.out.format("OpenMV Heartbeat. Device ID: %d  Frame: %d  Heartbeat: %d\n", deviceId, frameCounter,
+            lastHeartbeat);
       }
 
       missedHeartbeats = 0;
@@ -266,12 +267,12 @@ public class OpenMVSubsystem extends SubsystemBase {
     }
 
     // See if we got a config message and update data, but only check once in a while.
-    if ((loopCounter % 50 == 0) && readConfig()) {
+    if ((loopCounter % 200 == 0) && readConfig()) {
       System.out.format("OpenMV Configuration Updated. Device ID: %d\n", deviceId);
     }
 
     // See if we got a camera status message and update data, but only check once in a while.
-    if ((loopCounter % 50 == 0) && readCameraStatus())
+    if ((loopCounter % 200 == 0) && readCameraStatus())
     {
       System.out.format("OpenMV Camera Status Updated. Device ID: %d Image Width: %d Height: %d\n", deviceId, imageWidth, imageHeight);
     }

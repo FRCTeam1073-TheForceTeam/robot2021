@@ -46,6 +46,7 @@ import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.TurretControls;
 import frc.robot.commands.TurretPortAlignCommand;
 import frc.robot.commands.TurretPositionCommand;
+import frc.robot.commands.WaitForShooterCurrentSpike;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
 import frc.robot.Constants.PowerPortConfiguration;
@@ -61,6 +62,7 @@ import frc.robot.commands.DriveForwardToXCoord;
 import frc.robot.commands.DriveForwardToXCoord.DriveDirection;
 import frc.robot.commands.DriveToLocationCommand;
 import frc.robot.commands.DriveToPointCommand;
+import frc.robot.commands.LowerMagazineWithCutoff;
 import frc.robot.commands.MagazineCommand;
 import frc.robot.commands.SquareTestCommand;
 import frc.robot.commands.TargetFlywheelCommand;
@@ -136,25 +138,25 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
-      .whenPressed(
-        new SequentialCommandGroup(
-          // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-          // new InstantCommand(shooter::stop, shooter),
-          new InstantCommand(shooter::lowerHood, shooter),
-          new ParallelDeadlineGroup(
-            new SequentialCommandGroup(
-              new WaitToFire(shooter, portTracker),
-              new TargetHoodCommand(shooter, portTracker)
-            ),
-            new SequentialCommandGroup(
-              new WaitForTarget(portTracker),
-              new TargetFlywheelCommand(shooter, portTracker)
-            ),
-            new TurretPortAlignCommand(turret, portTracker)
-          )
-        )
-      );
+    // (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
+    //   .whenPressed(
+    //     new SequentialCommandGroup(
+    //       // new InstantCommand(shooter::interruptCurrentCommand, shooter),
+    //       // new InstantCommand(shooter::stop, shooter),
+    //       new InstantCommand(shooter::lowerHood, shooter),
+    //       new ParallelDeadlineGroup(
+    //         new SequentialCommandGroup(
+    //           new WaitToFire(shooter, portTracker),
+    //           new TargetHoodCommand(shooter, portTracker)
+    //         ),
+    //         new SequentialCommandGroup(
+    //           new WaitForTarget(portTracker),
+    //           new TargetFlywheelCommand(shooter, portTracker)
+    //         ),
+    //         new TurretPortAlignCommand(turret, portTracker)
+    //       )
+    //     )
+    //   );
     (new JoystickButton(OI.operatorController, XboxController.Button.kB.value))
         .whenPressed(
           new ParallelCommandGroup(
@@ -162,13 +164,29 @@ public class RobotContainer {
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
           )
         );
-    (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
-      .whenPressed(
-        new TurretPositionCommand(turret, 0)
-      );
+    // (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
+    //   .whenPressed(
+    //     new TurretPositionCommand(turret, 0)
+    //   );
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value))
         .whenPressed(
-          new TurretPortAlignCommand(turret, portTracker)
+          new SequentialCommandGroup(
+            new ParallelDeadlineGroup(
+              new SequentialCommandGroup(
+                new WaitToFire(shooter, portTracker),
+                new TargetHoodCommand(shooter, portTracker)
+              ),
+              new SequentialCommandGroup(
+                new WaitForTarget(portTracker),
+                new TargetFlywheelCommand(shooter, portTracker)
+              ),
+              new TurretPortAlignCommand(turret, portTracker)
+            ),
+            new ParallelDeadlineGroup(
+              (new WaitForShooterCurrentSpike(shooter, true)),
+              new AdvanceMagazineCommand(magazine, 0.5, 50.85)
+            )
+          )
           // new SequentialCommandGroup(
           //   new AdvanceMagazineCommand(magazine, 1.25, 4)
           // )
@@ -284,7 +302,6 @@ public class RobotContainer {
           new DriveForwardToXCoord(drivetrain, Units.inchesToMeters(316), 2.5, DriveDirection.FORWARD, bling)
         );
       case 9:
-
         return new SequentialCommandGroup(
           //[[EMERGENCY BACKUP AUTONOMOUS]]
           //[[IN CASE OF COLLECTOR DOING WEIRD THINGS BREAK GLASS]]
@@ -393,16 +410,70 @@ public class RobotContainer {
               new TurretPortAlignCommand(turret, portTracker)
             )
           ),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
-          new WaitCommand(1.0),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.4),
-          new WaitCommand(1.0),
-          new AdvanceMagazineCommand(magazine, 0.9, 1.85),
+          new SequentialCommandGroup(
+            (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+            new WaitCommand(1.0),
+            new LowerMagazineWithCutoff(magazine)
+          ),
+          new SequentialCommandGroup(
+            (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+            new WaitCommand(1.0),
+            new LowerMagazineWithCutoff(magazine)
+          ),
+          new SequentialCommandGroup(
+            (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+            new WaitCommand(1.0),
+            new LowerMagazineWithCutoff(magazine)
+          ),
           new SequentialCommandGroup(
             new TurretPositionCommand(turret, 0),
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
           )
-        );  
+      );
+      case 13:
+      return new SequentialCommandGroup(
+          new SequentialCommandGroup(
+            new InstantCommand(shooter::lowerHood, shooter),
+            new ParallelDeadlineGroup(
+              new SequentialCommandGroup(
+                new WaitToFire(shooter, portTracker),
+                new TargetHoodCommand(shooter, portTracker)
+              ),
+              new SequentialCommandGroup(
+                new WaitForTarget(portTracker),
+                new TargetFlywheelCommand(shooter, portTracker)
+              ),
+              new TurretPortAlignCommand(turret, portTracker)
+            )
+          ),
+          new ParallelDeadlineGroup(
+            new WaitForShooterCurrentSpike(shooter, true),
+            new AdvanceMagazineCommand(magazine, 0.9, 5.85)
+          ),
+          new PrintCommand("#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$"),
+          new WaitCommand(0.125),
+          new ParallelCommandGroup(
+            new TurretPositionCommand(turret, 0),
+            new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)  
+          )
+        );
+      case 14:
+        return new SequentialCommandGroup(
+          new ShooterSetCommand(shooter, shooter.hoodAngleLow + 0.25 * (shooter.hoodAngleHigh - shooter.hoodAngleLow), 300),
+          new ParallelDeadlineGroup(
+            (new WaitForShooterCurrentSpike(shooter, true)),
+            new AdvanceMagazineCommand(magazine, 0.5, 50.85)
+          ),
+          new ShooterSetCommand(shooter, shooter.hoodAngleLow + 0.1 * (shooter.hoodAngleHigh - shooter.hoodAngleLow), 375),
+          new ParallelDeadlineGroup(
+            (new WaitForShooterCurrentSpike(shooter, true)),
+            new AdvanceMagazineCommand(magazine, 0.5, 50.85)
+          ),
+          new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
+        );
+          // new PrintCommand("###########################################\n###############      BEFORE       ###############\n###########################################"),
+          // new PrintCommand("###########################################\n###############      AFTER       ###############\n###########################################")
+          // return new LowerMagazineWithCutoff(magazine);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
@@ -410,8 +481,10 @@ public class RobotContainer {
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
-    //drivetrain.resetRobotOdometry();
     return null;
+    // return new MagazineControls(magazine);
+
+    //drivetrain.resetRobotOdometry();
     // return new AimingCalibrationControls(shooter, magazine, portTracker, drivetrain, aimingDataRecorder, 0);
   }
 

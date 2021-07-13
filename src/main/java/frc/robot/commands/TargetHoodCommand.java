@@ -108,7 +108,6 @@ public class TargetHoodCommand extends CommandBase {
   
   @Override
   public void initialize() {
-    shooter.lowerHood();
     validRangeCounter = 0;
     readyToFire = false;
   }

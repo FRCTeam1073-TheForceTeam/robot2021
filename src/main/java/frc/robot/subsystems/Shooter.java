@@ -87,7 +87,7 @@ public class Shooter extends SubsystemBase {
 
     shooterFlywheel1.setSelectedSensorPosition(0);
     shooterFlywheel1.setIntegralAccumulator(0);
-    shooterFlywheel1.configClosedloopRamp(0.25);
+    // shooterFlywheel1.configClosedloopRamp(0.25);
 
     shooterFlywheel1.config_kP(0, flywheelP);
     shooterFlywheel1.config_kI(0, flywheelI);
@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(4750);
+    rateLimiter = new SlewRateLimiter(2500);
     
     hood = new CANSparkMax(28, MotorType.kBrushless);
     hood.clearFaults();
@@ -140,8 +140,6 @@ public class Shooter extends SubsystemBase {
   public void setFlywheelVelocity(double velocity) {
     //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
     flywheelTargetVelocity = Math.max(0, velocity);
-    double rawFlywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
-    shooterFlywheel1.set(ControlMode.Velocity, rawFlywheelTargetVelocity);
   }
 
   /**
@@ -151,6 +149,15 @@ public class Shooter extends SubsystemBase {
    */
   public double getFlywheelVelocity() {
     return shooterFlywheel1.getSelectedSensorVelocity() * 10.0 * (2.0 * Math.PI) / flywheelTicksPerRevolution;
+  }
+
+  /**
+   * Gets the hood velocity in radians/second
+   * 
+   * @return The hood velocity in radians/second
+   */
+  public double getHoodVelocity() {
+    return hoodEncoder.getVelocity() * 2.0 * Math.PI / 60.0;
   }
 
   /**
@@ -267,10 +274,17 @@ public class Shooter extends SubsystemBase {
     setHoodPosition(position);
   }
 
+  public double getFlywheelCurrent() {
+    return (shooterFlywheel1.getSupplyCurrent() + shooterFlywheel2.getSupplyCurrent()) * 0.5;
+  }
+
   @Override
   public void periodic() {
+    double limitedFlywheelVelocity = rateLimiter.calculate(flywheelTargetVelocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
+    shooterFlywheel1.set(ControlMode.Velocity, limitedFlywheelVelocity);
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
     hoodMotorCurrent = hood.getOutputCurrent();
+    SmartDashboard.putNumber(":", getFlywheelCurrent());
   }
 }
