@@ -71,9 +71,18 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
                                                         // Shooting the three preloaded Powercells
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.5),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
                                                         // Shutting down the Shooter
                                                         new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                                                                         new ShooterSetCommand(shooter,
@@ -96,15 +105,15 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ParallelDeadlineGroup(
                                                                         (new WaitForShooterCurrentSpike(shooter, true)),
                                                                         new AdvanceMagazineCommand(magazine, 0.5,
-                                                                                        50.85)),
+                                                                                        50.0)),
                                                         new ParallelDeadlineGroup(
                                                                         (new WaitForShooterCurrentSpike(shooter, true)),
                                                                         new AdvanceMagazineCommand(magazine, 0.5,
-                                                                                        50.85)),
+                                                                                        50.0)),
                                                         new ParallelDeadlineGroup(
                                                                         (new WaitForShooterCurrentSpike(shooter, true)),
                                                                         new AdvanceMagazineCommand(magazine, 0.5,
-                                                                                        50.85))),
+                                                                                        50.0))),
                                                         // Deploying the collector while shooting
                                                         new DeployCommand(collector)),
                                         // Driving off the Initiation Line
@@ -125,10 +134,6 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2)),
-                                        // Turning to heading
-                                        new TurnToHeading(drivetrain, bling, 0, 3.5),
-                                        // Driving back to the initiation line
-                                        new DriveBackwardCommand(drivetrain, bling, 1.8, 3.4),
                                         new SequentialCommandGroup(new SequentialCommandGroup(
                                                         // Setting up the Shooter
                                                         new ParallelDeadlineGroup(new SequentialCommandGroup(
@@ -145,11 +150,11 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ParallelDeadlineGroup(
                                                                         (new WaitForShooterCurrentSpike(shooter, true)),
                                                                         new AdvanceMagazineCommand(magazine, 0.5,
-                                                                                        50.85)),
+                                                                                        50.0)),
                                                         new ParallelDeadlineGroup(
                                                                         (new WaitForShooterCurrentSpike(shooter, true)),
                                                                         new AdvanceMagazineCommand(magazine, 0.5,
-                                                                                        50.85)),
+                                                                                        50.0)),
                                                         // Shutting down the Shooter
                                                         new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                                                                         new ShooterSetCommand(shooter,
@@ -169,9 +174,18 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
                                                         // Shooting the three preloaded Powercells
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.5),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0))),
                                                         // Deploying the collector while shooting
                                                         new DeployCommand(collector)),
                                         // Driving off the Initiation Line
@@ -194,10 +208,6 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2)),
-                                        // Turning to heading
-                                        new TurnToHeading(drivetrain, bling, 0, 3.5),
-                                        // Driving back to the initiation line
-                                        new DriveBackwardCommand(drivetrain, bling, 1.8, 3.4),
                                         new SequentialCommandGroup(new SequentialCommandGroup(
                                                         // Setting up the Shooter
                                                         new ParallelDeadlineGroup(new SequentialCommandGroup(
@@ -211,8 +221,14 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
                                                         // Shooting the two collected Powercells
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 2.0),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
                                                         // Shutting down the Shooter
                                                         new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                                                                         new ShooterSetCommand(shooter,
@@ -232,9 +248,18 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
                                                         // Shooting the three preloaded Powercells
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.5),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0))),
                                                         // Deploying the collector while shooting
                                                         new DeployCommand(collector)),
                                         // Driving off the Initiation Line
@@ -280,9 +305,18 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                                         new TurretPortAlignCommand(turret,
                                                                                         portTracker))),
                                                         // Shooting the three collected Powercells
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.5),
-                                                        new AdvanceMagazineCommand(magazine, 0.9, 1.8),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
+                                                        new ParallelDeadlineGroup(
+                                                                        (new WaitForShooterCurrentSpike(shooter, true)),
+                                                                        new AdvanceMagazineCommand(magazine, 0.5,
+                                                                                        50.0)),
                                                         // Shutting down the Shooter
                                                         new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                                                                         new ShooterSetCommand(shooter,
