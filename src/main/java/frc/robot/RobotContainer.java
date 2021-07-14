@@ -163,10 +163,8 @@ public class RobotContainer {
     // );
     (new JoystickButton(OI.operatorController, XboxController.Button.kB.value)).whenPressed(new ParallelCommandGroup(
         new TurretPositionCommand(turret, 0), new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
-    // .whenPressed(
-    // new TurretPositionCommand(turret, 0)
-    // );
+    (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
+        .whenPressed(new TurretPositionCommand(turret, 0));
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value)).whenPressed(new SequentialCommandGroup(
         new ParallelDeadlineGroup(
             new SequentialCommandGroup(new WaitToFire(shooter, portTracker),

@@ -27,23 +27,22 @@ public class ShuffleboardWidgets extends SubsystemBase {
         public static int auto = 100;
         private byte autoNum = 16;
         private byte place = -1;
-        private String[] autoNames = {
-                "1CellScan&Collect",            // 0
-                "2CellScan&Collect",            // 1
-                "3CellScan&Collect",            // 2
-                "Squaretest",                   // 3
-                "DriveTPoint",                  // 4
-                "AutoFire",                     // 5
-                "GalaxySearchSlow",             // 6
-                "ConditionalCommandTest",       // 7
-                "Drove&TurnToHeading",          // 8
-                "AutonomousAwardAwfulness",     // 9
-                "GalaxySearchFast",             // 10
-                "PurePursuitBarrel",            // 11
-                "FireThreePowerCells",          // 12
-                "FireOnePowerCell",             // 13
-                "FireDetectionTest",            // 14
-                "CompAuto1"                     // 15
+        private String[] autoNames = { "1CellScan&Collect", // 0
+                        "2CellScan&Collect", // 1
+                        "3CellScan&Collect", // 2
+                        "Squaretest", // 3
+                        "DriveTPoint", // 4
+                        "AutoFire", // 5
+                        "GalaxySearchSlow", // 6
+                        "ConditionalCommandTest", // 7
+                        "Drove&TurnToHeading", // 8
+                        "AutonomousAwardAwfulness", // 9
+                        "GalaxySearchFast", // 10
+                        "PurePursuitBarrel", // 11
+                        "FireThreePowerCells", // 12
+                        "FireOnePowerCell", // 13
+                        "FireDetectionTest", // 14
+                        "CompAuto1" // 15
         };
 
         private static ShuffleboardLayout autoChooser;
@@ -86,6 +85,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private double turretVelocity = 0.0;
 
         private double flywheelVelocity = 0.0;
+        private double flywheelTargetVelocity = 0.0;
         private double hoodAngle = 0.0;
         private double hoodPosition = 0.0;
         private double hoodMin = 0.0;
@@ -123,6 +123,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private NetworkTableEntry turretVelocityE;
 
         private NetworkTableEntry flywheelVelocityE;
+        private NetworkTableEntry flywheelTargetVelocityE;
         private NetworkTableEntry hoodAngleE;
         private NetworkTableEntry hoodPositionE;
         private NetworkTableEntry hoodMinE;
@@ -172,7 +173,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(4, 2);
                 cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
-                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,0);
+                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,
+                                0);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
@@ -189,7 +191,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private void createWidgets() {
                 for (byte i = 0; i < autoNum; i++) {
-                        //System.out.println(i + "," + autoNum);
+                        // System.out.println(i + "," + autoNum);
                         autosE[i] = autoChooser.add(autoNames[i], autos[i]).withWidget(BuiltInWidgets.kToggleSwitch)
                                         .getEntry();
                 }
@@ -216,6 +218,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 turretVelocityE = turreting.add("Velocity", turretVelocity).getEntry();
 
                 flywheelVelocityE = shooting.add("Velocity", flywheelVelocity).getEntry();
+                flywheelTargetVelocityE = shooting.add("Target Velocity", shooter.getFlywheelTargetVelocity())
+                                .getEntry();
                 hoodAngleE = shooting.add("Angle", hoodAngle).withWidget(BuiltInWidgets.kDial)
                                 .withProperties(Map.of("min", 0, "max", 180)).getEntry();
                 hoodPositionE = shooting.add("Position", hoodPosition).getEntry();
@@ -272,6 +276,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 turretVelocity = turret.getVelocity();
 
                 flywheelVelocity = shooter.getFlywheelVelocity();
+                flywheelTargetVelocity = shooter.getFlywheelTargetVelocity();
                 hoodAngle = Units.radiansToDegrees(shooter.getHoodAngle());
                 hoodPosition = shooter.getHoodPosition();
                 flywheelTemp1 = shooter.getFlywheelTemperatures()[0];
@@ -305,6 +310,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 turretVelocityE.setDouble(turretVelocity);
 
                 flywheelVelocityE.setDouble(flywheelVelocity);
+                flywheelTargetVelocityE.setDouble(flywheelTargetVelocity);
                 hoodAngleE.setDouble(hoodAngle);
                 hoodPositionE.setDouble(hoodPosition);
                 flywheelTemp1E.setDouble(flywheelTemp1);
