@@ -302,6 +302,7 @@ public class Bling extends SubsystemBase {
       rangeRGB(minLEDsVolts, num, 255, 255, 0);
     } else {
       rangeRGB(minLEDsVolts, num, 255, 0, 0);
+    }
   }
 
 
