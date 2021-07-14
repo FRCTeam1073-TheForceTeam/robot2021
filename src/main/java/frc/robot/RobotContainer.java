@@ -457,7 +457,7 @@ public class RobotContainer {
           // new PrintCommand("###########################################\n###############      AFTER       ###############\n###########################################")
           // return new LowerMagazineWithCutoff(magazine);
           case 15:
-          return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker, bling, 0);
+          return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker, bling, 1);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
