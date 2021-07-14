@@ -31,10 +31,11 @@ public class MagazineControls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    magazineVelocity = OI.operatorController.getRawAxis(2) * Constants.MAX_FLYWHEEL_SPEED;
-    if (OI.operatorController.getBumper(Hand.kLeft)) {
-      magazineVelocity *= -1;
-    }
+    magazineVelocity = OI.operatorController.getRawAxis(1) * Constants.MAX_FLYWHEEL_SPEED;
+    // if (OI.operatorController.getBumper(Hand.kLeft)) {
+    //   magazineVelocity *= -1;
+    // }
+
     //SmartDashboard.putNumber("Magazine Power", magazineVelocity);
 
     magazine.setVelocity(magazineVelocity);
