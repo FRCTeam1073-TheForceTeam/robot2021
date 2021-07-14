@@ -184,9 +184,7 @@ public class TargetFlywheelCommand extends CommandBase {
   }
 
   public void end(boolean interrupted) {
-    if (interrupted) {
-      shooter.setFlywheelVelocity(0);
-    }
+
   }
 
   public boolean isFinished() {
