@@ -34,6 +34,7 @@ import frc.robot.subsystems.PowerCellTracker;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Climber;
 // Import controls: Add controls here.
 import frc.robot.commands.CollectorControls;
 import frc.robot.commands.DeployCommand;
@@ -69,6 +70,7 @@ import frc.robot.commands.TargetFlywheelCommand;
 import frc.robot.commands.TargetHoodCommand;
 import frc.robot.commands.TurnCommand;
 import frc.robot.commands.TurnToHeading;
+import frc.robot.commands.ClimberTestControls;
 // Import components: add software components (ex. InterpolatorTable, ErrorToOutput, DataRecorder) here
 import frc.robot.memory.Memory;
 import frc.robot.components.DataRecorder;
@@ -90,6 +92,7 @@ public class RobotContainer {
   private final Magazine magazine = new Magazine();
   private final Turret turret = new Turret();
   private final Shooter shooter = new Shooter();
+  private final Climber climber = new Climber();
   private final frc.robot.subsystems.Map map = new frc.robot.subsystems.Map();
   // private final Localizer localizer = new Localizer(drivetrain);
   private final PowerPortTracker portTracker = new PowerPortTracker();
@@ -103,6 +106,7 @@ public class RobotContainer {
   private final ShooterControls teleShooter = new ShooterControls(shooter);
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
+  private final ClimberTestControls teleClimberTest = new ClimberTestControls(climber);
 
   public static final DataRecorder aimingDataRecorder = new DataRecorder("/tmp/AimingDataFile.txt");
 
@@ -481,7 +485,7 @@ public class RobotContainer {
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
-    return null;
+    return teleClimberTest;
     // return new MagazineControls(magazine);
 
     //drivetrain.resetRobotOdometry();
