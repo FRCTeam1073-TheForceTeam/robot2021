@@ -20,6 +20,7 @@ public class ChaseCommand extends CommandBase {
     private final double maxRotationalSpeed;
     private final double maxVelocity;
     private final boolean shouldScan;
+    private final boolean scanRight;
     private boolean isFinished;
     private boolean hasFinishedNormally;
 
@@ -59,19 +60,22 @@ public class ChaseCommand extends CommandBase {
      *                           robot at (the minimum is 25% of this).
      * @param maxVelocity        The maximum velocity this command will move the
      *                           robot at (the minimum is 25% of this).
-     * @param shouldScan360      If true this command should turn scanning for
+     * @param shouldScan         If true this command should turn scanning for
      *                           powercells until it can see one or has turned 2
      *                           radians. If the latter is the case it will end the
      *                           program.
+     * @param scanRight          Should the robot start scanning to the right, if
+     *                           set to false it will start to the left
      */
     public ChaseCommand(Drivetrain drivetrain, PowerCellTracker powerCellTracker, Bling bling,
-            double maxRotationalSpeed, double maxVelocity, boolean shouldScan) {
+            double maxRotationalSpeed, double maxVelocity, boolean shouldScan, boolean scanRight) {
         this.drivetrain = drivetrain;
         this.powerCellTracker = powerCellTracker;
         this.bling = bling;
         this.maxRotationalSpeed = maxRotationalSpeed;
         this.maxVelocity = maxVelocity;
         this.shouldScan = shouldScan;
+        this.scanRight = scanRight;
         addRequirements(drivetrain);
     }
 
@@ -115,12 +119,14 @@ public class ChaseCommand extends CommandBase {
             skipScan = true;
             isScanning = true;
             initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
-            if (Math.signum(initialAngle) < 0) {
+            if (scanRight) {
+                // if (Math.signum(initialAngle) < 0) {
                 scanRotationalSpeedMultiplier = MathUtil.clamp(Math.abs(-(lastData.cx - 146) / 100.0), 0.35, 1);
             } else {
                 scanRotationalSpeedMultiplier = -MathUtil.clamp(Math.abs(-(lastData.cx - 146) / 100.0), 0.35, 1);
             }
-            // timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier * maxVelocity));
+            // timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier *
+            // maxVelocity));
             timeToTurn = 8000;
             initialTime = System.currentTimeMillis();
         } else {
