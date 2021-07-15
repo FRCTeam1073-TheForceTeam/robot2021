@@ -96,7 +96,7 @@ public class Shooter extends SubsystemBase {
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
     rateLimiter = new SlewRateLimiter(2500);
-    
+
     hood = new CANSparkMax(28, MotorType.kBrushless);
     hood.clearFaults();
     hood.restoreFactoryDefaults();
@@ -138,7 +138,8 @@ public class Shooter extends SubsystemBase {
    * Sets the flywheel velocity in radians/second.
    */
   public void setFlywheelVelocity(double velocity) {
-    //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
+    // flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 *
+    // Math.PI);
     flywheelTargetVelocity = Math.max(0, velocity);
   }
 
@@ -179,8 +180,8 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Instantly stops the flywheel motor. Due to the PIDF loop
-   * being tuned for high velocities, this may cause some oscillation.
+   * Instantly stops the flywheel motor. Due to the PIDF loop being tuned for high
+   * velocities, this may cause some oscillation.
    */
   public void stop() {
     rateLimiter.reset(0);
@@ -188,25 +189,26 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Cancels whatever command is currently requiring the shooter. Due to the way the
-   * shooter works, this is almost always ShooterControls.
-   * This is necessary for the auto-aiming in the teleop controls, but it really
-   * shouldn't be used in situations where it's not properly accounted for and it could
-   * cause a bunch of super weird problems if the current command is canceled when the
+   * Cancels whatever command is currently requiring the shooter. Due to the way
+   * the shooter works, this is almost always ShooterControls. This is necessary
+   * for the auto-aiming in the teleop controls, but it really shouldn't be used
+   * in situations where it's not properly accounted for and it could cause a
+   * bunch of super weird problems if the current command is canceled when the
    * rest of the code doesn't expect it, so, uh, use it responsibly?
    * 
-   * Also, if there isn't currently a command requiring the shooter, nothing should happen.
+   * Also, if there isn't currently a command requiring the shooter, nothing
+   * should happen.
    */
   public void interruptCurrentCommand() {
     Command currentCommand = getCurrentCommand();
     if (currentCommand != null) {
-      getCurrentCommand().cancel();      
+      getCurrentCommand().cancel();
     }
   }
 
   /**
-   * Causes the flywheel motor to ramp down to zero (as opposed to
-   * stop() which causes it to halt near-instantly).
+   * Causes the flywheel motor to ramp down to zero (as opposed to stop() which
+   * causes it to halt near-instantly).
    */
   public void setZero() {
     setFlywheelVelocity(0);
@@ -280,7 +282,8 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double limitedFlywheelVelocity = rateLimiter.calculate(flywheelTargetVelocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
+    double limitedFlywheelVelocity = rateLimiter
+        .calculate(flywheelTargetVelocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
     shooterFlywheel1.set(ControlMode.Velocity, limitedFlywheelVelocity);
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
