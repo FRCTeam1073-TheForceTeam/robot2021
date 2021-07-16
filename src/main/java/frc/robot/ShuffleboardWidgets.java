@@ -25,27 +25,12 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardTab tab;
         // private static NetworkTableEntry chooseAuto;
         public static int auto = 100;
-        private byte autoNum = 19;
+        private byte autoNum = 4;
         private byte place = -1;
-        private String[] autoNames = { "1CellScan&Collect", // 0
-                        "2CellScan&Collect", // 1
-                        "3CellScan&Collect", // 2
-                        "Squaretest", // 3
-                        "DriveTPoint", // 4
-                        "AutoFire", // 5
-                        "GalaxySearchSlow", // 6
-                        "ConditionalCommandTest", // 7
-                        "Drove&TurnToHeading", // 8
-                        "AutonomousAwardAwfulness", // 9
-                        "GalaxySearchFast", // 10
-                        "PurePursuitBarrel", // 11
-                        "FireThreePowerCells", // 12
-                        "FireOnePowerCell", // 13
-                        "FireDetectionTest", // 14
-                        "Comp3Cells", // 15
-                        "CompL5Cells", // 16
-                        "CompM5Cells", // 17
-                        "CompL6Cells" // 18
+        private String[] autoNames = { "Comp3Cells", // 0
+                        "CompL5Cells", // 1
+                        "CompM5Cells", // 2
+                        "CompL6Cells" // 3
         };
 
         private static ShuffleboardLayout autoChooser;
