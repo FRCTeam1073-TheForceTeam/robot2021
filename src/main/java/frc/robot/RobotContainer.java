@@ -410,7 +410,16 @@ public class RobotContainer {
       // return new LowerMagazineWithCutoff(magazine);
       case 15:
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 0);
+      case 16:
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 1);
+      case 17:
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 2);
+      case 18:
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 3);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
