@@ -197,32 +197,32 @@ public class RobotContainer {
     switch (ShuffleboardWidgets.auto) {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
             new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
             new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3),
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.5, 2),
             new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
       case 2:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
             new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
 
@@ -252,17 +252,17 @@ public class RobotContainer {
             // perimeter
 
             // Collect PC one
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
             // Collect PC two
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.5, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
 
             // Collect PC three
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
 
             // Turn to original pointing position and drive to cross the #11 line (Galactic
             // Search)
@@ -327,21 +327,21 @@ public class RobotContainer {
             // perimeter
 
             // Collect PC one
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
                     new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)),
                 // Collect PC two
                 new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
                     new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)),
                 // Collect PC three
                 new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
 
             // Turn to original pointing position and drive to cross the #11 line (Galactic
             // Search)

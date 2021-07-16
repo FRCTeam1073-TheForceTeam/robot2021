@@ -22,9 +22,7 @@ public class MagazineCommand extends CommandBase {
     private boolean isFinished;
     private boolean hasFinishedNormally;
     private int checkNumPreviousMemoryEntries;
-    private int loopsFalse;
     private boolean lastReading;
-    private boolean wasFalse;
 
     /**
      * Creates a new MagazineCommand.
@@ -61,14 +59,6 @@ public class MagazineCommand extends CommandBase {
         hadNothing = false;
         isFinished = false;
         hasFinishedNormally = true;
-        // if (!sensor) {
-        //     bling.setArray("red");
-        //     bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
-        //     hadNothing = true;
-        //     hasFinishedNormally = false;
-        //     isFinished = true;
-        // }
-        loopsFalse = 0;
         if (checkNumPreviousMemoryEntries > 0
                 && !RobotContainer.memory.havePreviousFinished(checkNumPreviousMemoryEntries)) {
             hasFinishedNormally = false;
@@ -89,16 +79,14 @@ public class MagazineCommand extends CommandBase {
         if (lastReading == true && sensor == false) {
             collector.setCollect(0.0);
             magazine.setVelocity(0.0);
-            // bling.setArray("orange");
             isFinished = true;
         } else {
             collector.setCollect(0.4);
             magazine.setVelocity(velocity);
-            // bling.setArray("green");
-            // loopsFalse = 0;
+            bling.setArray("orange");
         }
 
-        // bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
 
         lastReading = sensor;
     }
@@ -108,6 +96,7 @@ public class MagazineCommand extends CommandBase {
     public void end(boolean interrupted) {
         magazine.setVelocity(0.0);
         collector.setCollect(0.0);
+        bling.setColorRGBAll(0, 0, 0);
         RobotContainer.memory.addToMemory("MagazineCommand", hasFinishedNormally);
     }
 
