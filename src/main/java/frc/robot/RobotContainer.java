@@ -163,10 +163,8 @@ public class RobotContainer {
     // );
     (new JoystickButton(OI.operatorController, XboxController.Button.kB.value)).whenPressed(new ParallelCommandGroup(
         new TurretPositionCommand(turret, 0), new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
-    // .whenPressed(
-    // new TurretPositionCommand(turret, 0)
-    // );
+    (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
+        .whenPressed(new TurretPositionCommand(turret, 0));
     (new JoystickButton(OI.operatorController, XboxController.Button.kY.value)).whenPressed(new SequentialCommandGroup(
         new ParallelDeadlineGroup(
             new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
@@ -412,7 +410,16 @@ public class RobotContainer {
       // return new LowerMagazineWithCutoff(magazine);
       case 15:
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 0);
+      case 16:
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 1);
+      case 17:
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 2);
+      case 18:
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 3);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
