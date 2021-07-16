@@ -25,7 +25,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardTab tab;
         // private static NetworkTableEntry chooseAuto;
         public static int auto = 100;
-        private byte autoNum = 16;
+        private byte autoNum = 19;
         private byte place = -1;
         private String[] autoNames = { "1CellScan&Collect", // 0
                         "2CellScan&Collect", // 1
