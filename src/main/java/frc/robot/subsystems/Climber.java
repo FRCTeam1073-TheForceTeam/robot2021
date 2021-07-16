@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
 
-  private WPI_TalonFX leftClimber;
-  private WPI_TalonFX rightClimber;
+  public WPI_TalonFX leftClimber;
+  public WPI_TalonFX rightClimber;
   
   private double[] climberTargetVelocity;
 
@@ -33,17 +33,18 @@ public class Climber extends SubsystemBase {
     leftClimber = new WPI_TalonFX(28);
     rightClimber = new WPI_TalonFX(29);
     climberTargetVelocity = new double[2];
-    configureClimber();
+    rightClimber.setInverted(true);
+    // configureClimber();
   }
 
   public void setPower(double leftPower, double rightPower) {
-    double[] positions = getPositions();
-    if (isAtLimit(positions[0], leftPower)) {
-      leftPower = 0;
-    }
-    if (isAtLimit(positions[1], rightPower)) {
-      rightPower = 0;
-    }
+    // double[] positions = getPositions();
+    // if (isAtLimit(positions[0], leftPower)) {
+    //   leftPower = 0;
+    // }
+    // if (isAtLimit(positions[1], rightPower)) {
+    //   rightPower = 0;
+    // }
     leftClimber.set(ControlMode.PercentOutput, leftPower);
     rightClimber.set(ControlMode.PercentOutput, rightPower);
   }
@@ -166,11 +167,13 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     double[] rawPositions = getRawPositions();
     double[] rawVelocities = getRawVelocities();
+    SmartDashboard.putBoolean("IS LEFT ALIVE", leftClimber.isAlive());
+    
     SmartDashboard.putString("[Climber] Climber positions (raw) [C0]", rawPositions[0] + ", " + rawPositions[1]);
     SmartDashboard.putString("[Climber] Climber velocities (raw) [C1]", rawVelocities[0] + ", " + rawVelocities[1]);
     SmartDashboard.putString("[Climber] Climber powers [C2]", leftClimber.getMotorOutputPercent() + ", " + rightClimber.getMotorOutputPercent());
-    double ratio = 1023.0 * ((leftClimber.getMotorOutputPercent() / rawVelocities[0])
-        + (rightClimber.getMotorOutputPercent() / rawVelocities[1])) * 0.5;
+    double ratio = 1023.0 * ((leftClimber.get() / rawVelocities[0]));
     SmartDashboard.putNumber("[Climber] Power/velocity ratio [C3]", ratio);
+    SmartDashboard.putString("[Climber] Climber current loads (A) [C4]", leftClimber.getSupplyCurrent() + ", " + rightClimber.getSupplyCurrent());
   }
 }

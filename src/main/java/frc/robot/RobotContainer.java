@@ -134,9 +134,10 @@ public class RobotContainer {
     shuffle.initialize();
 
     drivetrain.setDefaultCommand(teleDrive);
-    turret.setDefaultCommand(teleTurret);
+    // turret.setDefaultCommand(teleTurret);
     collector.setDefaultCommand(teleCollect);
     shooter.setDefaultCommand(teleShooter);
+    climber.setDefaultCommand(teleClimberTest);
   }
 
   /**
@@ -431,7 +432,7 @@ public class RobotContainer {
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
-    return teleClimberTest;
+    return null;
     // return new MagazineControls(magazine);
 
     //drivetrain.resetRobotOdometry();

@@ -4,6 +4,10 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.OI;
@@ -23,11 +27,19 @@ public class ClimberTestControls extends CommandBase {
     climber.setPower(0, 0);
   }
 
+  boolean a = false;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double power = OI.operatorController.getRawAxis(1) * 0.01;
-    climber.setPower(power, power);
+    a = !a;
+    SmartDashboard.putBoolean("$A$", a);
+    double leftPower = OI.operatorController.getRawAxis(1) * 0.5;
+    double rightPower = OI.operatorController.getRawAxis(5) * 0.5;
+    SmartDashboard.putNumber("leftPower", leftPower);
+    SmartDashboard.putNumber("rightPower", rightPower);
+    climber.leftClimber.set(ControlMode.PercentOutput, leftPower);
+    climber.rightClimber.set(ControlMode.PercentOutput, rightPower);
+    // climber.setPower(leftPower, rightPower);
   }
 
   // Called once the command ends or is interrupted.
