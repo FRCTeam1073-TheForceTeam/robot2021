@@ -31,22 +31,16 @@ public class TargetFlywheelCommand extends CommandBase {
    * port.
    **/
   InterpolatorTable flywheelTableHigh = new InterpolatorTable(
-      /* Old high interpolator table (need to redo this later). */
-      // new InterpolatorTableEntry(1.6, 332.0),
-      // new InterpolatorTableEntry(1.8, 348.0),
-      // new InterpolatorTableEntry(3.48, 410.1),
-      // new InterpolatorTableEntry(4.86, 509.8),
-      // new InterpolatorTableEntry(6.18,527.15)
-
-      /*
-       * This is just a copy of the low interpolator table. Until we fix the data,
-       * we'll use this.
-       */
-      new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35, 343.75),
-      new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54, 375),
-      new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56, 437.3),
-      new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51, 468.75),
-      new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51, 468.75));
+    new InterpolatorTableEntry(1.52, 312.5),
+    new InterpolatorTableEntry(2.01, 336.94),
+    new InterpolatorTableEntry(2.50, 332.57),
+    new InterpolatorTableEntry(3.00, 383.82),
+    new InterpolatorTableEntry(3.52, 421.875),
+    new InterpolatorTableEntry(4.04, 437.5),
+    new InterpolatorTableEntry(4.54, 453.125),
+    new InterpolatorTableEntry(5.01, 468.75),
+    new InterpolatorTableEntry(5.49, 500.00)
+  );
 
   /** Table for shooting in 107, or anywhere else with the small power port. **/
   InterpolatorTable flywheelTableLow = new InterpolatorTable(

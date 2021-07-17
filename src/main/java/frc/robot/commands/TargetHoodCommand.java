@@ -36,11 +36,15 @@ public class TargetHoodCommand extends CommandBase {
 
   /**Table for shooting in the gym, or anywhere else with the full-size power port.**/
   InterpolatorTable hoodTableHigh = new InterpolatorTable(
-    new InterpolatorTableEntry(1.6, 0.675),
-    new InterpolatorTableEntry(1.8, 0.644),
-    new InterpolatorTableEntry(3.48, 0.515),
-    new InterpolatorTableEntry(4.86, 0.373),
-    new InterpolatorTableEntry(6.18, 0.355)
+    new InterpolatorTableEntry(1.52, 0.745),
+    new InterpolatorTableEntry(2.01, 0.667),
+    new InterpolatorTableEntry(2.50, 0.628),
+    new InterpolatorTableEntry(3.00, 0.501),
+    new InterpolatorTableEntry(3.52, 0.445),
+    new InterpolatorTableEntry(4.04, 0.406),
+    new InterpolatorTableEntry(4.54, 0.408),
+    new InterpolatorTableEntry(5.01, 0.354),
+    new InterpolatorTableEntry(5.49, 0.354)
   );
 
   /**Table for shooting in 107, or anywhere else with the small power port.**/
