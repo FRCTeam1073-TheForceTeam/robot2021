@@ -49,6 +49,8 @@ public class Shooter extends SubsystemBase {
 
   private double hoodMotorCurrent;
 
+  private boolean isHoodGearSlipping;
+
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
   public final double minHoodPosition = 0;
@@ -96,6 +98,8 @@ public class Shooter extends SubsystemBase {
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
     rateLimiter = new SlewRateLimiter(2500);
+
+    isHoodGearSlipping = false;
 
     hood = new CANSparkMax(28, MotorType.kBrushless);
     hood.clearFaults();
@@ -280,11 +284,22 @@ public class Shooter extends SubsystemBase {
     return (shooterFlywheel1.getSupplyCurrent() + shooterFlywheel2.getSupplyCurrent()) * 0.5;
   }
 
+  public boolean isHoodGearSlipping() {
+    return isHoodGearSlipping;
+  }
+
   @Override
   public void periodic() {
     double limitedFlywheelVelocity = rateLimiter
         .calculate(flywheelTargetVelocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
     shooterFlywheel1.set(ControlMode.Velocity, limitedFlywheelVelocity);
+    
+    double hallSensorVelocity = hoodHallSensor.getVelocity() * 2.0 * Math.PI / 60.0;
+    double quadEncoderVelocity = hoodEncoder.getVelocity() * 2.0 * Math.PI / 60.0;
+    if ((Math.abs(hallSensorVelocity) >= 1.0) && (Math.abs(quadEncoderVelocity / hallSensorVelocity) < 0.5)) {
+      isHoodGearSlipping = true;
+    }
+
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
     hoodMotorCurrent = hood.getOutputCurrent();
