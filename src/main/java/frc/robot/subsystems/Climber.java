@@ -30,8 +30,8 @@ public class Climber extends SubsystemBase {
 
   /** Creates a new Climber. */
   public Climber() {
-    leftClimber = new WPI_TalonFX(28);
-    rightClimber = new WPI_TalonFX(29);
+    leftClimber = new WPI_TalonFX(29);
+    rightClimber = new WPI_TalonFX(30);
     climberTargetVelocity = new double[2];
     rightClimber.setInverted(true);
     // configureClimber();
