@@ -60,6 +60,13 @@ public class Turret extends SubsystemBase {
       return turretRotator.getSelectedSensorVelocity(0) * 10.0 / turretTicksPerRadian;
     }
 
+    /**
+     * Returns true if the turret is at the programmed end positions.
+     */
+    public boolean isAtEndpoint() {
+      return ((getPosition() < turretMinimumAngle) || (getPosition() > turretMaximumAngle));
+    }
+
     /// Sets the velocity of the turret in radians/second.
     public void setVelocity(double angularVelocity) {
       if ((getPosition() < turretMinimumAngle && angularVelocity < 0) || (getPosition() > turretMaximumAngle && angularVelocity > 0)) {

@@ -109,6 +109,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private boolean collectorStalled = false;
         private boolean hoodGearSlipping = false;
+        private boolean turretAtLimit = false;
 
         private NetworkTableEntry[] autosE = new NetworkTableEntry[autoNum];
 
@@ -155,6 +156,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private NetworkTableEntry isCollectorStalled;
         private NetworkTableEntry isHoodGearSlipping;
         private NetworkTableEntry isShooterCurrentHigh;
+        private NetworkTableEntry isTurretAtLimit;
 
         public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
                         Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) {
@@ -186,7 +188,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
                 shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,0);
-                warningReadout = tab.getLayout("Mechanism warnings", BuiltInLayouts.kList).withSize(3, 5).withPosition(6,0);
+                warningReadout = tab.getLayout("Mechanism warnings", BuiltInLayouts.kList).withSize(2, 5).withPosition(6,0);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
@@ -265,10 +267,18 @@ public class ShuffleboardWidgets extends SubsystemBase {
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", 0, "max", Constants.MAX_FLYWHEEL_SPEED)).getEntry();
                 
-                isCollectorStalled = warningReadout.add("IS COLLECTOR STALLED", !collectorStalled)
-                                .withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-                isHoodGearSlipping = warningReadout.add("IS HOOD GEAR SLIPPING", !hoodGearSlipping)
-                                .withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+                isCollectorStalled = warningReadout.add("IS COLLECTOR STALLED", collectorStalled)
+                                .withWidget(BuiltInWidgets.kBooleanBox)
+                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .getEntry();
+                isHoodGearSlipping = warningReadout.add("IS HOOD GEAR SLIPPING", hoodGearSlipping)
+                                .withWidget(BuiltInWidgets.kBooleanBox)
+                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .getEntry();
+                isTurretAtLimit = warningReadout.add("IS TURRET AT LIMIT", turretAtLimit)
+                                .withWidget(BuiltInWidgets.kBooleanBox)
+                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .getEntry();
         }
 
         private void updateWidgets() {
@@ -311,6 +321,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 collectorStalled = collector.isStalled();
                 hoodGearSlipping = shooter.isHoodGearSlipping();
+                turretAtLimit = turret.isAtEndpoint();
 
                 robotAngE.setDouble(robotAng);
                 robotAngleE.setDouble(robotAngle);
@@ -349,8 +360,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 shooterHoodAngleDegrees.setDouble(Units.radiansToDegrees(hoodAngle));
                 shooterFlywheelSpeed.setDouble(flywheelVelocity);
 
-                isCollectorStalled.setBoolean(!collectorStalled);
-                isHoodGearSlipping.setBoolean(!hoodGearSlipping);
+                isCollectorStalled.setBoolean(collectorStalled);
+                isHoodGearSlipping.setBoolean(hoodGearSlipping);
+                isHoodGearSlipping.setBoolean(turretAtLimit);
         }
 
         private void updateAutoChooser() {
