@@ -172,7 +172,7 @@ public class RobotContainer {
             new SequentialCommandGroup(new WaitForTarget(portTracker), new TargetFlywheelCommand(shooter, portTracker)),
             new TurretPortAlignCommand(turret, portTracker)),
         new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-            new AdvanceMagazineCommand(magazine, 0.5, 50.85)))
+            new AdvanceMagazineCommand(magazine, 0.5, 50.85, true)))
     // new SequentialCommandGroup(
     // new AdvanceMagazineCommand(magazine, 1.25, 4)
     // )

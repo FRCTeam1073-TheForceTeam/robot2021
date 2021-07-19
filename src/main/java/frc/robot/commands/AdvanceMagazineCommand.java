@@ -19,7 +19,14 @@ public class AdvanceMagazineCommand extends CommandBase {
   private double numPowerCells;
   private int checkNumPreviousMemoryEntries;
   private boolean isFinished;
-
+  private boolean preventInterrupt;
+  
+  /** This is isn't an ideal way of doing this, but just setting the commands we want to be
+  un-interruptible isn't a good solution, since we want the auto-shooting command itself to
+  be interruptible (just not by another AdvanceMagazineCommand). This will just mean that
+  the auto-firing can't be interrupted by manual inputs from the driver or operator.*/
+  private static boolean isInstanceRunning = false;
+  
   /**
    * Advances magazine by a certain number of power cell diameters.
    * If the number of diameters is negative, it will run backwards.
@@ -29,21 +36,34 @@ public class AdvanceMagazineCommand extends CommandBase {
    * @param numPowerCells_ Number of power cells (defaults to 1)
    */
   public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_, double numPowerCells_,
-      int checkNumPreviousMemoryEntries) {
+      int checkNumPreviousMemoryEntries, boolean preventInterrupt_) {
     magazine = magazine_;
     magVelocity = magVelocity_;
     numPowerCells = numPowerCells_;
+    //If another uninterruptible command is running, other commands act as if they don't take priority.
+    preventInterrupt = preventInterrupt_&&!(isInstanceRunning);
+    if (preventInterrupt) {
+      isInstanceRunning = true;
+    }
     magVelocity = Math.abs(magVelocity) * Math.signum(numPowerCells);
     this.checkNumPreviousMemoryEntries = checkNumPreviousMemoryEntries;
     addRequirements(magazine);
   }
 
   public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_, double numPowerCells_) {
-    this(magazine_, magVelocity_, numPowerCells_, 0);
+    this(magazine_, magVelocity_, numPowerCells_, 0, false);
+  }
+
+  public AdvanceMagazineCommand(Magazine magazine_, double numPowerCells_, double magVelocity_, int checkNumPreviousMemoryEntries) {
+    this(magazine_, magVelocity_, numPowerCells_, checkNumPreviousMemoryEntries, false);
   }
 
   public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_) {
-    this(magazine_, magVelocity_, 1, 0);
+    this(magazine_, magVelocity_, 1, 0, false);
+  }
+
+  public AdvanceMagazineCommand(Magazine magazine_, double numPowerCells_, double magVelocity_, boolean preventInterrupt_) {
+    this(magazine_, magVelocity_, numPowerCells_, 0, preventInterrupt_);
   }
 
   public AdvanceMagazineCommand(Magazine magazine_) {
@@ -77,12 +97,19 @@ public class AdvanceMagazineCommand extends CommandBase {
     System.out.println("#############################################");
     System.out.println("#############################################");
     System.out.println("#############################################");
+    if (preventInterrupt) {
+      isInstanceRunning = false;
+    }
     magazine.setVelocity(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return isFinished;
+    if (!preventInterrupt && isInstanceRunning) {
+      return true;
+    } else {
+      return isFinished;
+    }
   }
 }
