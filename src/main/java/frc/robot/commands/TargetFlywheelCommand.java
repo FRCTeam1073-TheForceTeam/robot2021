@@ -98,32 +98,8 @@ public class TargetFlywheelCommand extends CommandBase {
       flywheelTable = flywheelTableHigh;
     }
 
-    // new InterpolatorTableEntry(1.5,343.75),
-    // new InterpolatorTableEntry(1.759,343.75),
-    // new InterpolatorTableEntry(2.609,375),
-    // new InterpolatorTableEntry(3.34,360.1),
-    // new InterpolatorTableEntry(4.76,430),
-    // new InterpolatorTableEntry(5.019,467.8),
-    // new InterpolatorTableEntry(6.52,503.5),
-    // new InterpolatorTableEntry(8.25,531.25),
-    // new InterpolatorTableEntry(8.7,562.5)
-    // new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35,
-    // 343.75),
-    // new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54,
-    // 375),
-    // new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56,
-    // 437.3),
-    // new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51,
-    // 468.75),
-    // new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51,
-    // 468.75));
     shooter = shooter_;
     portTracker = portTracker_;
-    currentFlywheelVelocity = 0;
-    flywheelVelocity = 0;
-    range = 0;
-    numLoops = 0;
-    hasValidRangeData = false;
     // addRequirements(shooter);
   }
 
@@ -153,7 +129,11 @@ public class TargetFlywheelCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("key", 258);
+    currentFlywheelVelocity = 0;
+    flywheelVelocity = 0;
+    range = 0;
+    numLoops = 0;
+    hasValidRangeData = false;
     // shooter.setFlywheelVelocity(0);
   }
 

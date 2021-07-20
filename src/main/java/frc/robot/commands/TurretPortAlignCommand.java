@@ -28,11 +28,8 @@ public class TurretPortAlignCommand extends CommandBase {
     turret = turret_;
     portTracker = portTracker_;
     endWhenAligned = endWhenAligned_;
-    addRequirements(turret);
-    coordinateSeparation = 0;
-    portData = new PowerPortData();
-    framesWithoutSignal = 0;
     maxFramesWithoutSignal = maxFramesWithoutSignal_;
+    addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -47,6 +44,9 @@ public class TurretPortAlignCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    coordinateSeparation = 0;
+    portData = new PowerPortData();
+    framesWithoutSignal = 0;
     turret.setVelocity(0);
   }
 

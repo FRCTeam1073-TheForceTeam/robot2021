@@ -106,6 +106,18 @@ public class RobotContainer {
   private final ShooterControls teleShooter = new ShooterControls(shooter);
   private final CollectorControls teleCollect = new CollectorControls(collector);
   private final TurretControls teleTurret = new TurretControls(turret);
+  private final SequentialCommandGroup autoFireCommand = new SequentialCommandGroup(
+      new ParallelDeadlineGroup(
+        new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
+            new TargetHoodCommand(shooter, portTracker)),
+        new SequentialCommandGroup(new WaitForTarget(portTracker), new TargetFlywheelCommand(shooter, portTracker)),
+        new TurretPortAlignCommand(turret, portTracker)
+      ),
+      new ParallelDeadlineGroup(
+        (new WaitForShooterCurrentSpike(shooter, true)),
+        new AdvanceMagazineCommand(magazine, 0.5, 50.85)
+      )
+  );
 
   public static final DataRecorder aimingDataRecorder = new DataRecorder("/tmp/AimingDataFile.txt");
 
@@ -133,7 +145,6 @@ public class RobotContainer {
     turret.setDefaultCommand(teleTurret);
     collector.setDefaultCommand(teleCollect);
     shooter.setDefaultCommand(teleShooter);
-    magazine.setDefaultCommand(teleMagazine);
   }
 
   /**
@@ -162,30 +173,30 @@ public class RobotContainer {
     // )
     // )
     // );
-    (new JoystickButton(OI.operatorController, XboxController.Button.kB.value)).whenPressed(new ParallelCommandGroup(
-        new TurretPositionCommand(turret, 0), new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
+
+    // (new JoystickButton(OI.driverController, XboxController.Axis.kRightTrigger.value))
+    //   .cancelWhenActive(autoFireCommand);
+    (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
+      .cancelWhenPressed(autoFireCommand);
+
+
     (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
         .whenPressed(new TurretPositionCommand(turret, 0));
-    (new JoystickButton(OI.operatorController, XboxController.Button.kY.value)).whenPressed(new SequentialCommandGroup(
-        new ParallelDeadlineGroup(
-            new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
-                new TargetHoodCommand(shooter, portTracker)),
-            new SequentialCommandGroup(new WaitForTarget(portTracker), new TargetFlywheelCommand(shooter, portTracker)),
-            new TurretPortAlignCommand(turret, portTracker)),
-        new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-            new AdvanceMagazineCommand(magazine, 0.5, 50.85)))
-    // new SequentialCommandGroup(
-    // new AdvanceMagazineCommand(magazine, 1.25, 4)
-    // )
-    );
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
-    //     .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kBumperRight.value))
-    //     .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
-    // (new JoystickButton(OI.driverController, XboxController.Button.kY.value))
-    //     .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
-    // (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
-    //     .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+    (new JoystickButton(OI.operatorController, XboxController.Button.kB.value)).whenPressed(new ParallelCommandGroup(
+        new TurretPositionCommand(turret, 0), new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
+    (new JoystickButton(OI.operatorController, XboxController.Button.kY.value))
+      .whenPressed(autoFireCommand);
+      // new SequentialCommandGroup(
+      // new AdvanceMagazineCommand(magazine, 1.25, 4)
+      // )
+    (new JoystickButton(OI.operatorController, XboxController.Button.kBack.value))
+        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+    (new JoystickButton(OI.operatorController, XboxController.Button.kStart.value))
+        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+    (new JoystickButton(OI.driverController, XboxController.Button.kY.value))
+        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+    (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
+        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
   }
 
   /**
