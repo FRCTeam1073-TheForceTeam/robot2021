@@ -95,11 +95,13 @@ public class Bling extends SubsystemBase {
 
 
 
-      LEDRainbow(15, 25, 20000);
+      // LEDRainbow(15, 25, 20000);
 
-      batteryBling(0, 10, 8.0, 12.5);
+      batteryBling(0, 8, 8.0, 12.5);
 
-      reverseRange(0, 39, 40);
+      reverseRange(0, 40, 40);
+
+      m_led.setData(m_ledBuffer);
 
     } else {
       clearLEDs();
@@ -185,7 +187,7 @@ public class Bling extends SubsystemBase {
 
   public void setLED(int i, int r, int g, int b) {
     m_ledBuffer.setRGB(i, r, g, b);
-    m_led.setData(m_ledBuffer);
+    // m_led.setData(m_ledBuffer);
   }
 
 
@@ -258,7 +260,7 @@ public class Bling extends SubsystemBase {
     for (int i = min; i < (max); i++) {
       m_ledBuffer.setRGB(i, r, g, b);
     }
-    m_led.setData(m_ledBuffer);
+    // m_led.setData(m_ledBuffer);
   }
 
 
@@ -272,6 +274,14 @@ public class Bling extends SubsystemBase {
     }
 
     m_led.setData(m_ledBuffer);
+  }
+
+
+
+  public void setSlot(int slotNum, int r, int g, int b) {
+    if (slotNum <= 4 && slotNum > 0) {
+      rangeRGB(slotNum * 8, 7, r, g, b);
+    }
   }
 
 
@@ -308,6 +318,7 @@ public class Bling extends SubsystemBase {
 
 
   public void LEDRainbow(int startLEDs, int numLEDs, int targetTime) {
+    /*
     if (counter_rainbow >= targetTime) {
       move_rainbow++;
       move_rainbow %= numLEDs;
@@ -354,16 +365,14 @@ public class Bling extends SubsystemBase {
     }
 
     m_led.setData(m_ledBuffer);
+    */
   }
 
 
 
   public void reverseRange(int startRange, int numRange, int setRangeStart) {
-    int rangeNum = startRange + numRange;
-
-    for (int i = setRangeStart; i < setRangeStart + numRange; i++) {
-      m_ledBuffer.setLED(i, m_ledBuffer.getLED8Bit(rangeNum));
-      rangeNum -= 1;
+    for (int i = 0; i < numRange; i++) {
+      m_ledBuffer.setLED(setRangeStart + numRange - i - 1, m_ledBuffer.getLED8Bit(i));
     }
   }
 
