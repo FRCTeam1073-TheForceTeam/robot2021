@@ -174,8 +174,8 @@ public class RobotContainer {
     // )
     // );
 
-    // (new JoystickButton(OI.driverController, XboxController.Axis.kRightTrigger.value))
-    //   .cancelWhenActive(autoFireCommand);
+    (new JoystickButton(OI.driverController, XboxController.Axis.kRightTrigger.value))
+      .cancelWhenActive(autoFireCommand);
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
       .cancelWhenPressed(autoFireCommand);
 
