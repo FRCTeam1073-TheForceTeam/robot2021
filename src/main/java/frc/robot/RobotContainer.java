@@ -44,6 +44,7 @@ import frc.robot.commands.DriveControls;
 import frc.robot.commands.MagazineControls;
 import frc.robot.commands.PurePursuit;
 import frc.robot.commands.RetractCommand;
+import frc.robot.commands.RevisedCompetitionAutonomous;
 import frc.robot.commands.ShooterControls;
 import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.TurretControls;
@@ -424,8 +425,8 @@ public class RobotContainer {
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 0);
       case 16:
-        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
-            bling, 1);
+        return new RevisedCompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker,
+            portTracker, bling);
       case 17:
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 2);
