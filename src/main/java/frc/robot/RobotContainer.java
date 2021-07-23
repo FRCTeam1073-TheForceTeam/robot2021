@@ -4,16 +4,7 @@
 
 package frc.robot;
 
-import java.time.Instant;
-import java.util.Map;
-
-import javax.swing.plaf.TreeUI;
-
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -21,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -43,7 +32,6 @@ import frc.robot.commands.DeployCommand;
 import frc.robot.commands.DriveControls;
 import frc.robot.commands.MagazineControls;
 import frc.robot.commands.PurePursuit;
-import frc.robot.commands.RetractCommand;
 import frc.robot.commands.ShooterControls;
 import frc.robot.commands.ShooterSetCommand;
 import frc.robot.commands.TurretControls;
@@ -52,18 +40,15 @@ import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.WaitForShooterCurrentSpike;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
-import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.Utility.PathBuilder.PathIndex;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
-import frc.robot.commands.AimingCalibrationControls;
 import frc.robot.commands.AutomaticFireCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.DriveForwardToXCoord;
 import frc.robot.commands.DriveForwardToXCoord.DriveDirection;
-import frc.robot.commands.DriveToLocationCommand;
 import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.LowerMagazineWithCutoff;
 import frc.robot.commands.MagazineCommand;
@@ -145,25 +130,6 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
-    // .whenPressed(
-    // new SequentialCommandGroup(
-    // // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-    // // new InstantCommand(shooter::stop, shooter),
-    // new InstantCommand(shooter::lowerHood, shooter),
-    // new ParallelDeadlineGroup(
-    // new SequentialCommandGroup(
-    // new WaitToFire(shooter, portTracker),
-    // new TargetHoodCommand(shooter, portTracker)
-    // ),
-    // new SequentialCommandGroup(
-    // new WaitForTarget(portTracker),
-    // new TargetFlywheelCommand(shooter, portTracker)
-    // ),
-    // new TurretPortAlignCommand(turret, portTracker)
-    // )
-    // )
-    // );
     (new JoystickButton(OI.operatorController, XboxController.Button.kB.value)).whenPressed(new ParallelCommandGroup(
         new TurretPositionCommand(turret, 0), new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
     (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))

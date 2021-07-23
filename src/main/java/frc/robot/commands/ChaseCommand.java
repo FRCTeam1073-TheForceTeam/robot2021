@@ -40,7 +40,6 @@ public class ChaseCommand extends CommandBase {
     private double rotationalSpeedMultiplier;
     private double scanRotationalSpeedMultiplier;
     private double velocityMultiplier;
-    private double initialAngle;
     private long initialTime;
     private long time;
     private long timeToTurn;
@@ -118,15 +117,11 @@ public class ChaseCommand extends CommandBase {
             alignState();
             skipScan = true;
             isScanning = true;
-            initialAngle = drivetrain.getRobotPose().getRotation().getRadians();
             if (scanRight) {
-                // if (Math.signum(initialAngle) < 0) {
                 scanRotationalSpeedMultiplier = MathUtil.clamp(Math.abs(-(lastData.cx - 146) / 100.0), 0.35, 1);
             } else {
                 scanRotationalSpeedMultiplier = -MathUtil.clamp(Math.abs(-(lastData.cx - 146) / 100.0), 0.35, 1);
             }
-            // timeToTurn = (long) (1000 * (2 * Math.PI) / (scanRotationalSpeedMultiplier *
-            // maxVelocity));
             timeToTurn = 8000;
             initialTime = System.currentTimeMillis();
         } else {
@@ -229,14 +224,14 @@ public class ChaseCommand extends CommandBase {
             scan360();
         }
         drivetrain.setVelocity(velocityMultiplier * maxVelocity, rotationalSpeedMultiplier * maxRotationalSpeed);
-        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+        bling.setSlot(1, bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         drivetrain.setVelocity(0.0, 0.0);
-        bling.setColorRGBAll(0, 0, 0);
+        bling.setSlot(1, 0, 0, 0);
         RobotContainer.memory.addToMemory("ChaseCommand", hasFinishedNormally);
     }
 

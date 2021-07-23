@@ -47,7 +47,6 @@ public class CollectCommand extends CommandBase {
         this.checkNumPreviousMemoryEntries = checkNumPreviousMemoryEntries;
         addRequirements(drivetrain);
         addRequirements(collector);
-        addRequirements(bling);
     }
 
     /**
@@ -132,7 +131,7 @@ public class CollectCommand extends CommandBase {
 
         collector.setCollect(powerMultiplier * maxPower);
         drivetrain.setVelocity(velocity, 0.0);
-        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+        bling.setSlot(2, bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
         if (collector.getSensor()) {
             trueLoops++;
         } else {
@@ -148,7 +147,7 @@ public class CollectCommand extends CommandBase {
     public void end(boolean interrupted) {
         drivetrain.setVelocity(0.0, 0.0);
         collector.setCollect(0.0);
-        bling.setColorRGBAll(0, 0, 0);
+        bling.setSlot(2, 0, 0, 0);
         RobotContainer.memory.addToMemory("CollectCommand", hasFinishedNormally);
     }
 
