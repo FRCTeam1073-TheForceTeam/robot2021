@@ -42,6 +42,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardLayout cellTracking;
         private static ShuffleboardLayout portTracking;
         private static ShuffleboardLayout shootingReadout;
+        private static ShuffleboardLayout warningReadout;
 
         private Drivetrain drivetrain;
         private Collector collector;
@@ -91,6 +92,10 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private int portX = 0;
         private int portY = 0;
 
+        private boolean collectorStalled = false;
+        private boolean hoodGearSlipping = false;
+        private boolean turretAtLimit = false;
+
         private NetworkTableEntry[] autosE = new NetworkTableEntry[autoNum];
 
         private NetworkTableEntry robotAngE;
@@ -113,6 +118,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private NetworkTableEntry flywheelVelocityE;
         private NetworkTableEntry flywheelTargetVelocityE;
         private NetworkTableEntry hoodAngleE;
+        private NetworkTableEntry hoodAngleRadiansE;
         private NetworkTableEntry hoodPositionE;
         private NetworkTableEntry hoodMinE;
         private NetworkTableEntry hoodMaxE;
@@ -128,9 +134,14 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private NetworkTableEntry portYE;
 
         private NetworkTableEntry shooterFlywheelSpeed;
-        private NetworkTableEntry shooterHoodAngle;
+        private NetworkTableEntry shooterHoodAngleDegrees;
         private NetworkTableEntry sensorRange;
         private NetworkTableEntry portTrackerHasData;
+
+        private NetworkTableEntry isCollectorStalled;
+        private NetworkTableEntry isHoodGearSlipping;
+        private NetworkTableEntry isShooterCurrentHigh;
+        private NetworkTableEntry isTurretAtLimit;
 
         public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
                         Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) {
@@ -161,8 +172,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(4, 2);
                 cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
                 portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
-                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,
-                                0);
+                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,0);
+                warningReadout = tab.getLayout("Mechanism warnings", BuiltInLayouts.kList).withSize(2, 5).withPosition(6,0);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
@@ -208,8 +219,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 flywheelVelocityE = shooting.add("Velocity", flywheelVelocity).getEntry();
                 flywheelTargetVelocityE = shooting.add("Target Velocity", shooter.getFlywheelTargetVelocity())
                                 .getEntry();
-                hoodAngleE = shooting.add("Angle", hoodAngle).withWidget(BuiltInWidgets.kDial)
-                                .withProperties(Map.of("min", 0, "max", 180)).getEntry();
+                hoodAngleE = shooting.add("Angle", hoodAngle).withWidget(BuiltInWidgets.kNumberBar)
+                                .withProperties(Map.of("min", shooter.hoodAngleLow, "max", shooter.hoodAngleHigh)).getEntry();
                 hoodPositionE = shooting.add("Position", hoodPosition).getEntry();
                 hoodMinE = shooting.add("Min P", hoodMin).getEntry();
                 hoodMaxE = shooting.add("Max P", hoodMax).getEntry();
@@ -232,7 +243,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 sensorRange = shootingReadout.add("Range sensor distance (meters)", portTracker.getRange())
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", 0, "max", Constants.MAXIMUM_DETECTABLE_RANGE)).getEntry();
-                shooterHoodAngle = shootingReadout.add("Hood angle (radians)", hoodAngle)
+                shooterHoodAngleDegrees = shootingReadout.add("Hood angle (degrees)", hoodAngle)
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", shooter.hoodAngleLow * 180.0 / Math.PI, "max",
                                                 shooter.hoodAngleHigh * 180.0 / Math.PI))
@@ -240,6 +251,19 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 shooterFlywheelSpeed = shootingReadout.add("Flywheel speed (radians/s)", flywheelVelocity)
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", 0, "max", Constants.MAX_FLYWHEEL_SPEED)).getEntry();
+                
+                isCollectorStalled = warningReadout.add("IS COLLECTOR STALLED", collectorStalled)
+                                .withWidget(BuiltInWidgets.kBooleanBox)
+                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .getEntry();
+                isHoodGearSlipping = warningReadout.add("IS HOOD GEAR SLIPPING", hoodGearSlipping)
+                                .withWidget(BuiltInWidgets.kBooleanBox)
+                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .getEntry();
+                isTurretAtLimit = warningReadout.add("IS TURRET AT LIMIT", turretAtLimit)
+                                .withWidget(BuiltInWidgets.kBooleanBox)
+                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .getEntry();
         }
 
         private void updateWidgets() {
@@ -265,7 +289,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 flywheelVelocity = shooter.getFlywheelVelocity();
                 flywheelTargetVelocity = shooter.getFlywheelTargetVelocity();
-                hoodAngle = Units.radiansToDegrees(shooter.getHoodAngle());
+                hoodAngle = shooter.getHoodAngle();
                 hoodPosition = shooter.getHoodPosition();
                 flywheelTemp1 = shooter.getFlywheelTemperatures()[0];
                 flywheelTemp2 = shooter.getFlywheelTemperatures()[1];
@@ -279,6 +303,10 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 portTracker.getPortData(portData);
                 portX = portData.cx;
                 portY = portData.cy;
+
+                collectorStalled = collector.isStalled();
+                hoodGearSlipping = shooter.isHoodGearSlipping();
+                turretAtLimit = turret.isAtEndpoint();
 
                 robotAngE.setDouble(robotAng);
                 robotAngleE.setDouble(robotAngle);
@@ -314,9 +342,12 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 portTrackerHasData.setBoolean(portTracker.getPortData(new PowerPortData()));
                 sensorRange.setDouble(portTracker.getRange());
-                shooterHoodAngle.setDouble(hoodAngle);
+                shooterHoodAngleDegrees.setDouble(Units.radiansToDegrees(hoodAngle));
                 shooterFlywheelSpeed.setDouble(flywheelVelocity);
 
+                isCollectorStalled.setBoolean(collectorStalled);
+                isHoodGearSlipping.setBoolean(hoodGearSlipping);
+                isHoodGearSlipping.setBoolean(turretAtLimit);
         }
 
         private void updateAutoChooser() {
