@@ -36,7 +36,7 @@ public class CollectCommand extends CommandBase {
      * @param colletor The collector used by this command.
      * @param magazine The magazine used by this command.
      * @param bling    The bling used by this command.
-     * @param maxPower    The power the collector should run at for this command.
+     * @param maxPower The power the collector should run at for this command.
      * @param time     The time the collector should run for for this command
      *                 (milliseconds).
      */
@@ -57,10 +57,10 @@ public class CollectCommand extends CommandBase {
     /**
      * Creates a new CollectCommand that runs the Collector at 100%.
      *
-     * @param colletor  The collector used by this command.
-     * @param magazine  The magazine used by this command.
-     * @param bling     The bling used by this command.
-     * @param maxPower  The power the collector should run at for this command.
+     * @param colletor The collector used by this command.
+     * @param magazine The magazine used by this command.
+     * @param bling    The bling used by this command.
+     * @param maxPower The power the collector should run at for this command.
      */
     public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling, double maxPower) {
         this(drivetrain, collector, magazine, bling, maxPower, 0);
@@ -82,7 +82,7 @@ public class CollectCommand extends CommandBase {
     public void initialize() {
         firstLoop = true;
         powerMultiplier = 1.0;
-        velocity = 0.95;
+        velocity = 0.7;
         shouldUnstall = false;
         isFinished = false;
         trueLoops = 0;
@@ -122,7 +122,7 @@ public class CollectCommand extends CommandBase {
                 velocity = 0.0;
                 powerMultiplier *= -1;
                 hasFinishedNormally = false;
-            } else if (time - initialTime >= 1600) {
+            } else if (time - initialTime >= 900) {
                 velocity = 0.0;
                 bling.setArray("purple");
             } else {

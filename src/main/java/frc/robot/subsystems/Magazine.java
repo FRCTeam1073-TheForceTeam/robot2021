@@ -20,7 +20,7 @@ public class Magazine extends SubsystemBase {
   private int cellCount;
   private double P = 0.6;
   private double I = 0.01;
-  private double D = 0;
+  private double D = 0.15;
   private double F = 0;
   // private boolean cellCheck, cellEntering, cellExiting;
   private double magazineTicksPerMeter = ((18054.0 + 18271.0 + 18296.0 + 18282.0 + 18243.0) / 5.0)
@@ -85,6 +85,10 @@ public class Magazine extends SubsystemBase {
     return cellCount;
   }
 
+  /**
+   * Gets output from the intake sensor inside the magazine.
+   * @return Returns true if the beam is broken due to a power cell being in the intake and false if there's nothing in the way.
+   */
   public boolean getSensor() {
     return isInTaking;
   }
@@ -110,5 +114,6 @@ public class Magazine extends SubsystemBase {
     // magazineMotor.setSelectedSensorPosition(0);
     // }
     isInTaking = !inTakeSensor.get();
+    SmartDashboard.putNumber("Magazine error", magazineMotor.getClosedLoopError());
   }
 }

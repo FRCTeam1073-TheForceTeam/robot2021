@@ -49,6 +49,8 @@ public class Shooter extends SubsystemBase {
 
   private double hoodMotorCurrent;
 
+  private boolean isHoodGearSlipping;
+
   private final double flywheelTicksPerRevolution = 2048;
   private final int hoodEncoderTPR = 4096;
   public final double minHoodPosition = 0;
@@ -87,7 +89,7 @@ public class Shooter extends SubsystemBase {
 
     shooterFlywheel1.setSelectedSensorPosition(0);
     shooterFlywheel1.setIntegralAccumulator(0);
-    shooterFlywheel1.configClosedloopRamp(0.25);
+    // shooterFlywheel1.configClosedloopRamp(0.25);
 
     shooterFlywheel1.config_kP(0, flywheelP);
     shooterFlywheel1.config_kI(0, flywheelI);
@@ -95,8 +97,10 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(4750);
-    
+    rateLimiter = new SlewRateLimiter(2500);
+
+    isHoodGearSlipping = false;
+
     hood = new CANSparkMax(28, MotorType.kBrushless);
     hood.clearFaults();
     hood.restoreFactoryDefaults();
@@ -138,10 +142,9 @@ public class Shooter extends SubsystemBase {
    * Sets the flywheel velocity in radians/second.
    */
   public void setFlywheelVelocity(double velocity) {
-    //flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI);
+    // flywheelTargetVelocity = velocity * 0.1 * flywheelTicksPerRevolution / (2.0 *
+    // Math.PI);
     flywheelTargetVelocity = Math.max(0, velocity);
-    double rawFlywheelTargetVelocity = rateLimiter.calculate(velocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
-    shooterFlywheel1.set(ControlMode.Velocity, rawFlywheelTargetVelocity);
   }
 
   /**
@@ -151,6 +154,15 @@ public class Shooter extends SubsystemBase {
    */
   public double getFlywheelVelocity() {
     return shooterFlywheel1.getSelectedSensorVelocity() * 10.0 * (2.0 * Math.PI) / flywheelTicksPerRevolution;
+  }
+
+  /**
+   * Gets the hood velocity in radians/second
+   * 
+   * @return The hood velocity in radians/second
+   */
+  public double getHoodVelocity() {
+    return hoodEncoder.getVelocity() * 2.0 * Math.PI / 60.0;
   }
 
   /**
@@ -172,8 +184,8 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Instantly stops the flywheel motor. Due to the PIDF loop
-   * being tuned for high velocities, this may cause some oscillation.
+   * Instantly stops the flywheel motor. Due to the PIDF loop being tuned for high
+   * velocities, this may cause some oscillation.
    */
   public void stop() {
     rateLimiter.reset(0);
@@ -181,25 +193,26 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Cancels whatever command is currently requiring the shooter. Due to the way the
-   * shooter works, this is almost always ShooterControls.
-   * This is necessary for the auto-aiming in the teleop controls, but it really
-   * shouldn't be used in situations where it's not properly accounted for and it could
-   * cause a bunch of super weird problems if the current command is canceled when the
+   * Cancels whatever command is currently requiring the shooter. Due to the way
+   * the shooter works, this is almost always ShooterControls. This is necessary
+   * for the auto-aiming in the teleop controls, but it really shouldn't be used
+   * in situations where it's not properly accounted for and it could cause a
+   * bunch of super weird problems if the current command is canceled when the
    * rest of the code doesn't expect it, so, uh, use it responsibly?
    * 
-   * Also, if there isn't currently a command requiring the shooter, nothing should happen.
+   * Also, if there isn't currently a command requiring the shooter, nothing
+   * should happen.
    */
   public void interruptCurrentCommand() {
     Command currentCommand = getCurrentCommand();
     if (currentCommand != null) {
-      getCurrentCommand().cancel();      
+      getCurrentCommand().cancel();
     }
   }
 
   /**
-   * Causes the flywheel motor to ramp down to zero (as opposed to
-   * stop() which causes it to halt near-instantly).
+   * Causes the flywheel motor to ramp down to zero (as opposed to stop() which
+   * causes it to halt near-instantly).
    */
   public void setZero() {
     setFlywheelVelocity(0);
@@ -267,10 +280,27 @@ public class Shooter extends SubsystemBase {
     setHoodPosition(position);
   }
 
+  public double getFlywheelCurrent() {
+    return (shooterFlywheel1.getSupplyCurrent() + shooterFlywheel2.getSupplyCurrent()) * 0.5;
+  }
+
+  public boolean isHoodGearSlipping() {
+    return isHoodGearSlipping;
+  }
+
   @Override
   public void periodic() {
+    double limitedFlywheelVelocity = rateLimiter
+        .calculate(flywheelTargetVelocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
+    shooterFlywheel1.set(ControlMode.Velocity, limitedFlywheelVelocity);
+    
+    double hallSensorVelocity = hoodHallSensor.getVelocity() * 2.0 * Math.PI / 60.0;
+    double quadEncoderVelocity = hoodEncoder.getVelocity() * 2.0 * Math.PI / 60.0;
+    isHoodGearSlipping = ((Math.abs(hallSensorVelocity) >= 1.0) && (Math.abs(quadEncoderVelocity) <= 0.05));
+
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
     hoodMotorCurrent = hood.getOutputCurrent();
+    SmartDashboard.putNumber(":", getFlywheelCurrent());
   }
 }
