@@ -8,7 +8,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Magazine;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -16,7 +15,6 @@ public class CollectCommand extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final Drivetrain drivetrain;
     private final Collector collector;
-    private final Magazine magazine;
     private final Bling bling;
     private final double maxPower;
     private double powerMultiplier;
@@ -33,25 +31,22 @@ public class CollectCommand extends CommandBase {
     /**
      * Creates a new CollectCommand.
      *
-     * @param colletor The collector used by this command.
-     * @param magazine The magazine used by this command.
-     * @param bling    The bling used by this command.
-     * @param maxPower The power the collector should run at for this command.
-     * @param time     The time the collector should run for for this command
-     *                 (milliseconds).
+     * @param drivetrain The drivetrain used by this command.
+     * @param colletor   The collector used by this command.
+     * @param bling      The bling used by this command.
+     * @param maxPower   The power the collector should run at for this command.
+     * @param time       The time the collector should run for for this command
+     *                   (milliseconds).
      */
-    public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling, double maxPower,
+    public CollectCommand(Drivetrain drivetrain, Collector collector, Bling bling, double maxPower,
             int checkNumPreviousMemoryEntries) {
         this.drivetrain = drivetrain;
         this.collector = collector;
-        this.magazine = magazine;
         this.bling = bling;
         this.maxPower = maxPower;
         this.checkNumPreviousMemoryEntries = checkNumPreviousMemoryEntries;
         addRequirements(drivetrain);
         addRequirements(collector);
-        addRequirements(magazine);
-        addRequirements(bling);
     }
 
     /**
@@ -62,8 +57,8 @@ public class CollectCommand extends CommandBase {
      * @param bling    The bling used by this command.
      * @param maxPower The power the collector should run at for this command.
      */
-    public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling, double maxPower) {
-        this(drivetrain, collector, magazine, bling, maxPower, 0);
+    public CollectCommand(Drivetrain drivetrain, Collector collector, Bling bling, double maxPower) {
+        this(drivetrain, collector, bling, maxPower, 0);
     }
 
     /**
@@ -73,8 +68,8 @@ public class CollectCommand extends CommandBase {
      * @param magazine The magazine used by this command.
      * @param bling    The bling used by this command.
      */
-    public CollectCommand(Drivetrain drivetrain, Collector collector, Magazine magazine, Bling bling) {
-        this(drivetrain, collector, magazine, bling, 1.0, 0);
+    public CollectCommand(Drivetrain drivetrain, Collector collector, Bling bling) {
+        this(drivetrain, collector, bling, 1.0, 0);
     }
 
     // Called when the command is initially scheduled.
@@ -122,6 +117,10 @@ public class CollectCommand extends CommandBase {
                 velocity = 0.0;
                 powerMultiplier *= -1;
                 hasFinishedNormally = false;
+            } else if (time - initialTime >= 5000) {
+                collector.setCollect(0.0);
+                hasFinishedNormally = false;
+                isFinished = true;
             } else if (time - initialTime >= 900) {
                 velocity = 0.0;
                 bling.setArray("purple");
@@ -132,7 +131,7 @@ public class CollectCommand extends CommandBase {
 
         collector.setCollect(powerMultiplier * maxPower);
         drivetrain.setVelocity(velocity, 0.0);
-        bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+        bling.setSlot(2, bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
         if (collector.getSensor()) {
             trueLoops++;
         } else {
@@ -148,7 +147,7 @@ public class CollectCommand extends CommandBase {
     public void end(boolean interrupted) {
         drivetrain.setVelocity(0.0, 0.0);
         collector.setCollect(0.0);
-        bling.setColorRGBAll(0, 0, 0);
+        bling.setSlot(2, 0, 0, 0);
         RobotContainer.memory.addToMemory("CollectCommand", hasFinishedNormally);
     }
 
