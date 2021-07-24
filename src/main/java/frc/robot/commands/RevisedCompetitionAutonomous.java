@@ -83,13 +83,13 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
         new SequentialCommandGroup(
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true, false),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.4, 2),
             new AdvanceMagazineCommand(magazine, bling, 0.5, 0.1, 3),
 
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true, false),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.4, 2)
         ),
         new SequentialCommandGroup(

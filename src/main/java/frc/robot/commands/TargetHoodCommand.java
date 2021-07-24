@@ -6,10 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.PowerPortTracker.PowerPortData;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
@@ -22,6 +24,7 @@ public class TargetHoodCommand extends CommandBase {
 
   Shooter shooter;
   PowerPortTracker portTracker;
+  Bling bling;
   double hoodAngle;
 
   double range;

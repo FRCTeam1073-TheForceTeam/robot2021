@@ -6,9 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
@@ -21,6 +24,7 @@ import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
 public class TargetFlywheelCommand extends CommandBase {
 
   Shooter shooter;
+  Bling bling;
   PowerPortTracker portTracker;
   double flywheelVelocity;
   double currentFlywheelVelocity;
@@ -91,6 +95,7 @@ public class TargetFlywheelCommand extends CommandBase {
   public TargetFlywheelCommand(Shooter shooter_, PowerPortTracker portTracker_, int rangeUpdatePeriod_,
       double acceptableVelocityDifference_) {
     rangeUpdatePeriod = rangeUpdatePeriod_;
+    bling = RobotContainer.getBling();
 
     if (Constants.portConfig == PowerPortConfiguration.LOW) {
       flywheelTable = flywheelTableLow;
@@ -148,17 +153,20 @@ public class TargetFlywheelCommand extends CommandBase {
     }
     numLoops++;
     if (hasValidRangeData) {
+      bling.setSlot(4, 255, 255, (int) (255.0 * MathUtil.clamp(currentFlywheelVelocity / flywheelVelocity, 0.0, 1.0)));
       flywheelVelocity = flywheelTable.getValue(range);
       shooter.setFlywheelVelocity(flywheelVelocity);
       currentFlywheelVelocity = shooter.getFlywheelVelocity();
       SmartDashboard.putNumber("[TGTF] Range [0]", range);
       SmartDashboard.putNumber("[TGTF] Target flywheel vel [1]", flywheelVelocity);
       SmartDashboard.putNumber("[TGTF] Actual flywheel vel [2]", currentFlywheelVelocity);
+    } else {
+      bling.setSlot(4, 128, 255, 0);
     }
   }
 
   public void end(boolean interrupted) {
-
+    bling.setSlot(4, 0, 0, 0);
   }
 
   public boolean isFinished() {
