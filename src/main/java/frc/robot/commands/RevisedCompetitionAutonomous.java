@@ -70,11 +70,11 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 // Shooting the three preloaded Powercells
                 new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                    new AdvanceMagazineCommand(magazine, 0.5, 50.0)),
+                    new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
                 new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                    new AdvanceMagazineCommand(magazine, 0.5, 50.0)),
+                    new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
                 new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                    new AdvanceMagazineCommand(magazine, 0.5, 50.0))
+                    new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0))
             )
         ),
         new DeployCommand(collector),
@@ -85,7 +85,7 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.4, 2),
-            new AdvanceMagazineCommand(magazine, 0.5, 0.1, 3),
+            new AdvanceMagazineCommand(magazine, bling, 0.5, 0.1, 3),
 
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true, false),
 
@@ -109,9 +109,9 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
             ),
             // Shooting the two collected Powercells
             new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                new AdvanceMagazineCommand(magazine, 0.5, 50.0)),
+                new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
             new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                new AdvanceMagazineCommand(magazine, 0.5, 50.0)),
+                new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
             // Shutting down the Shooter
             new SequentialCommandGroup(
                 new TurretPositionCommand(turret, 0),

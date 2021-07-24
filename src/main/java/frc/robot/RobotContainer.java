@@ -116,7 +116,7 @@ public class RobotContainer {
       ),
       new ParallelDeadlineGroup(
         (new WaitForShooterCurrentSpike(shooter, true)),
-        new AdvanceMagazineCommand(magazine, 0.5, 50.85)
+        new AdvanceMagazineCommand(magazine, bling, 0.5, 50.85)
       )
   );
 
@@ -194,13 +194,13 @@ public class RobotContainer {
       // new AdvanceMagazineCommand(magazine, 1.25, 4)
       // )
     (new JoystickButton(OI.operatorController, XboxController.Button.kBack.value))
-        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+        .whenPressed(new AdvanceMagazineCommand(magazine, bling, 1.25, 1));
     (new JoystickButton(OI.operatorController, XboxController.Button.kStart.value))
-        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+        .whenPressed(new AdvanceMagazineCommand(magazine, bling, 1.25, -0.1));
     (new JoystickButton(OI.driverController, XboxController.Button.kY.value))
-        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
+        .whenPressed(new AdvanceMagazineCommand(magazine, bling, 1.25, 1));
     (new JoystickButton(OI.driverController, XboxController.Button.kA.value))
-        .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, -0.1));
+        .whenPressed(new AdvanceMagazineCommand(magazine, bling, 1.25, -0.1));
   }
 
   /**
@@ -215,32 +215,32 @@ public class RobotContainer {
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
+            new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3),
+            new AdvanceMagazineCommand(magazine, bling, 0.2, 0.25, 3),
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.5, 2),
-            new AdvanceMagazineCommand(magazine, 0.2, 0.25, 3));
+            new AdvanceMagazineCommand(magazine, bling, 0.2, 0.25, 3));
       case 2:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3),
 
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3),
 
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
-            new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3));
+            new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3));
 
       // new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
       // new MagazineCommand(collector, magazine, bling, 0.35, 2),
@@ -251,7 +251,7 @@ public class RobotContainer {
       case 4:
         return new DriveToPointCommand(drivetrain, bling, 1.0, 2.0, 1.5);
       case 5:
-        return new AutomaticFireCommand(turret, shooter, portTracker, magazine);
+        return new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling);
       case 6:
         return new SequentialCommandGroup(new DeployCommand(collector), new WaitCommand(0.3),
 
@@ -269,12 +269,12 @@ public class RobotContainer {
 
             // Collect PC one
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+            new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3),
 
             // Collect PC two
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
-            new MagazineCommand(collector, magazine, bling, 0.5, 2), new AdvanceMagazineCommand(magazine, 0.2, 0.1, 3),
+            new MagazineCommand(collector, magazine, bling, 0.5, 2), new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3),
 
             // Collect PC three
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
@@ -304,14 +304,14 @@ public class RobotContainer {
             new DriveForwardCommand(drivetrain, bling, 2.0, 1.25),
 
             // Shoot
-            new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
+            new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling, 1.4),
             new InstantCommand(shooter::stop, shooter), new TurretPositionCommand(turret, 0),
 
             // Drive forward 1.5 more meters, going a bit faster.
             new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
 
             // Shoot
-            new AutomaticFireCommand(turret, shooter, portTracker, magazine, 1.4),
+            new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling, 1.4),
             new InstantCommand(shooter::stop, shooter), new TurretPositionCommand(turret, 0),
 
             // Rotate 90 degrees to the left (positive rotation on flyhweel, negative
@@ -323,7 +323,7 @@ public class RobotContainer {
             new DriveForwardCommand(drivetrain, bling, 1.5, 1.5),
 
             // Shoot
-            new AutomaticFireCommand(turret, shooter, portTracker, magazine, 5),
+            new AutomaticFireCommand(turret, shooter, portTracker, magazine, bling, 5),
             new InstantCommand(shooter::stop, shooter), new TurretPositionCommand(turret, 0),
 
             new TurnToHeading(drivetrain, bling, 0), new TurretPositionCommand(turret, 0));
@@ -346,14 +346,14 @@ public class RobotContainer {
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
-                    new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)),
+                    new AdvanceMagazineCommand(magazine, bling, 0.3, 0.35, 3)),
                 // Collect PC two
                 new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
 
             new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
-                    new AdvanceMagazineCommand(magazine, 0.3, 0.35, 3)),
+                    new AdvanceMagazineCommand(magazine, bling, 0.3, 0.35, 3)),
                 // Collect PC three
                 new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
 
@@ -383,14 +383,14 @@ public class RobotContainer {
                     new TargetFlywheelCommand(shooter, portTracker)),
                 new TurretPortAlignCommand(turret, portTracker))),
             new SequentialCommandGroup(
-                (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
-                new WaitCommand(1.0), new LowerMagazineWithCutoff(magazine)),
+                (new AdvanceMagazineCommand(magazine, bling, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+                new WaitCommand(1.0), new LowerMagazineWithCutoff(magazine, bling)),
             new SequentialCommandGroup(
-                (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
-                new WaitCommand(1.0), new LowerMagazineWithCutoff(magazine)),
+                (new AdvanceMagazineCommand(magazine, bling, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+                new WaitCommand(1.0), new LowerMagazineWithCutoff(magazine, bling)),
             new SequentialCommandGroup(
-                (new AdvanceMagazineCommand(magazine, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
-                new WaitCommand(1.0), new LowerMagazineWithCutoff(magazine)),
+                (new AdvanceMagazineCommand(magazine, bling, 0.9, 1.5)).deadlineWith(new WaitForShooterCurrentSpike(shooter)),
+                new WaitCommand(1.0), new LowerMagazineWithCutoff(magazine, bling)),
             new SequentialCommandGroup(new TurretPositionCommand(turret, 0),
                 new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
       case 13:
@@ -402,7 +402,7 @@ public class RobotContainer {
                     new TargetFlywheelCommand(shooter, portTracker)),
                 new TurretPortAlignCommand(turret, portTracker))),
             new ParallelDeadlineGroup(new WaitForShooterCurrentSpike(shooter, true),
-                new AdvanceMagazineCommand(magazine, 0.9, 5.85)),
+                new AdvanceMagazineCommand(magazine, bling, 0.9, 5.85)),
             new PrintCommand("#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$"), new WaitCommand(0.125),
             new ParallelCommandGroup(new TurretPositionCommand(turret, 0),
                 new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
@@ -411,11 +411,11 @@ public class RobotContainer {
             new ShooterSetCommand(shooter, shooter.hoodAngleLow + 0.25 * (shooter.hoodAngleHigh - shooter.hoodAngleLow),
                 300),
             new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                new AdvanceMagazineCommand(magazine, 0.5, 50.85)),
+                new AdvanceMagazineCommand(magazine, bling, 0.5, 50.85)),
             new ShooterSetCommand(shooter, shooter.hoodAngleLow + 0.1 * (shooter.hoodAngleHigh - shooter.hoodAngleLow),
                 375),
             new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                new AdvanceMagazineCommand(magazine, 0.5, 50.85)),
+                new AdvanceMagazineCommand(magazine, bling, 0.5, 50.85)),
             new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0));
       // new
       // PrintCommand("###########################################\n###############
