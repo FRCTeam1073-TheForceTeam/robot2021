@@ -4,16 +4,7 @@
 
 package frc.robot;
 
-import java.time.Instant;
-import java.util.Map;
-
-import javax.swing.plaf.TreeUI;
-
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -21,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -53,18 +42,15 @@ import frc.robot.commands.TurretPositionCommand;
 import frc.robot.commands.WaitForShooterCurrentSpike;
 import frc.robot.commands.WaitForTarget;
 import frc.robot.commands.WaitToFire;
-import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.Utility.PathBuilder.PathIndex;
 // Import commands: Add commands here.
 import frc.robot.commands.AdvanceMagazineCommand;
-import frc.robot.commands.AimingCalibrationControls;
 import frc.robot.commands.AutomaticFireCommand;
 import frc.robot.commands.ChaseCommand;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.DriveForwardToXCoord;
 import frc.robot.commands.DriveForwardToXCoord.DriveDirection;
-import frc.robot.commands.DriveToLocationCommand;
 import frc.robot.commands.DriveToPointCommand;
 import frc.robot.commands.LowerMagazineWithCutoff;
 import frc.robot.commands.MagazineCommand;
@@ -213,32 +199,32 @@ public class RobotContainer {
     switch (ShuffleboardWidgets.auto) {
       case 0:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
             new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3));
       case 1:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
             new AdvanceMagazineCommand(magazine, bling, 0.2, 0.25, 3),
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.5, 2),
             new AdvanceMagazineCommand(magazine, bling, 0.2, 0.25, 3));
       case 2:
         return new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true).andThen(
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3),
 
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3),
 
             new ChaseCommand(drivetrain, cellTracker, bling, 1.7, 1.7, true, true),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2),
             new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3));
 
@@ -268,17 +254,17 @@ public class RobotContainer {
             // perimeter
 
             // Collect PC one
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.35, 2), new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3),
 
             // Collect PC two
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new MagazineCommand(collector, magazine, bling, 0.5, 2), new AdvanceMagazineCommand(magazine, bling, 0.2, 0.1, 3),
 
             // Collect PC three
             new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.3, true, true),
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
 
             // Turn to original pointing position and drive to cross the #11 line (Galactic
             // Search)
@@ -343,21 +329,21 @@ public class RobotContainer {
             // perimeter
 
             // Collect PC one
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
                     new AdvanceMagazineCommand(magazine, bling, 0.3, 0.35, 3)),
                 // Collect PC two
                 new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(new MagazineCommand(collector, magazine, bling, 0.55, 2),
                     new AdvanceMagazineCommand(magazine, bling, 0.3, 0.35, 3)),
                 // Collect PC three
                 new ChaseCommand(drivetrain, cellTracker, bling, 2.8, 2.6, true, true)),
 
-            new CollectCommand(drivetrain, collector, magazine, bling, 1.0, 1),
+            new CollectCommand(drivetrain, collector, bling, 1.0, 1),
 
             // Turn to original pointing position and drive to cross the #11 line (Galactic
             // Search)

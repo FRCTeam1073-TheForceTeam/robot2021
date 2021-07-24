@@ -13,45 +13,43 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
 public class CompetitionAutonomous extends SequentialCommandGroup {
-        @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-        private final Drivetrain drivetrain;
-        private final Collector collector;
-        private final Magazine magazine;
-        private final Turret turret;
-        private final Shooter shooter;
-        private final PowerCellTracker cellTracker;
-        private final PowerPortTracker portTracker;
-        private final Bling bling;
-        private final int compAutoNum;
-        private final double distOffInitiationLine = 0.5;
+    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+    private final Drivetrain drivetrain;
+    private final Collector collector;
+    private final Magazine magazine;
+    private final Turret turret;
+    private final Shooter shooter;
+    private final PowerCellTracker cellTracker;
+    private final PowerPortTracker portTracker;
+    private final Bling bling;
+    private final int compAutoNum;
+    private final double distOffInitiationLine = 0.5;
 
-        /**
-         * Creates a new CompetitionAutonoumous that runs a autonmous routine
-         * 
-         * @param drivetrain  The drivetrain used by this command
-         * @param collector   The collector used by this command
-         * @param magazine    The magazine used by this command
-         * @param turret      The turret used by this command
-         * @param shooter     The shooter used by this command
-         * @param cellTracker The cellTracker used by this command
-         * @param portTracker The portTracker used by this command
-         * @param bling       The bling used by this command
-         */
-        public CompetitionAutonomous(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
-                        Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker, Bling bling,
-                        int compAutoNum) {
-                this.drivetrain = drivetrain;
-                this.collector = collector;
-                this.magazine = magazine;
-                this.turret = turret;
-                this.shooter = shooter;
-                this.cellTracker = cellTracker;
-                this.portTracker = portTracker;
-                this.bling = bling;
-                this.compAutoNum = compAutoNum;
-
-                addCommands(CompAuto());
-        }
+    /**
+     * Creates a new CompetitionAutonoumous that runs a autonmous routine
+     * 
+     * @param drivetrain  The drivetrain used by this command
+     * @param collector   The collector used by this command
+     * @param magazine    The magazine used by this command
+     * @param turret      The turret used by this command
+     * @param shooter     The shooter used by this command
+     * @param cellTracker The cellTracker used by this command
+     * @param portTracker The portTracker used by this command
+     * @param bling       The bling used by this command
+     */
+    public CompetitionAutonomous(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
+            Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker, Bling bling, int compAutoNum) {
+        this.drivetrain = drivetrain;
+        this.collector = collector;
+        this.magazine = magazine;
+        this.turret = turret;
+        this.shooter = shooter;
+        this.cellTracker = cellTracker;
+        this.portTracker = portTracker;
+        this.bling = bling;
+        this.compAutoNum = compAutoNum;
+        addCommands(CompAuto());
+    }
 
         private SequentialCommandGroup CompAuto() {
                 if (compAutoNum <= 0) {
@@ -123,7 +121,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true,
                                                                         false),
 
-                                                        new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
+                                                        new CollectCommand(drivetrain, collector, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2),
                                                         new AdvanceMagazineCommand(magazine, bling, 0.5, 0.1, 3),
@@ -131,7 +129,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true,
                                                                         false),
 
-                                                        new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
+                                                        new CollectCommand(drivetrain, collector, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2)),
                                         new SequentialCommandGroup(new SequentialCommandGroup(
@@ -197,7 +195,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true,
                                                                         false),
 
-                                                        new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
+                                                        new CollectCommand(drivetrain, collector, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2),
                                                         new AdvanceMagazineCommand(magazine, bling, 0.5, 0.1, 3),
@@ -205,7 +203,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true,
                                                                         false),
 
-                                                        new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
+                                                        new CollectCommand(drivetrain, collector, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2)),
                                         new SequentialCommandGroup(new SequentialCommandGroup(
@@ -269,7 +267,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true,
                                                                         false),
 
-                                                        new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
+                                                        new CollectCommand(drivetrain, collector, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2),
                                                         new AdvanceMagazineCommand(magazine, bling, 0.5, 0.1, 3),
@@ -277,7 +275,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true,
                                                                         false),
 
-                                                        new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
+                                                        new CollectCommand(drivetrain, collector, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2),
                                                         new AdvanceMagazineCommand(magazine, bling, 0.5, 0.1, 3),
@@ -285,7 +283,7 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
                                                         new ChaseCommand(drivetrain, cellTracker, bling, 2.5, 2.0, true,
                                                                         false),
 
-                                                        new CollectCommand(drivetrain, collector, magazine, bling, 1.0,
+                                                        new CollectCommand(drivetrain, collector, bling, 1.0,
                                                                         1),
                                                         new MagazineCommand(collector, magazine, bling, 0.4, 2)),
                                         // Turning to heading
