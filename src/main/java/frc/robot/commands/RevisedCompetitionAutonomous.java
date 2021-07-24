@@ -67,17 +67,19 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
                     new TurretPortAlignCommand(turret,portTracker)
                 )
             ),
-            new SequentialCommandGroup(
-                // Shooting the three preloaded Powercells
-                new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                    new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
-                new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                    new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
-                new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                    new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0))
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    // Shooting the three preloaded Powercells
+                    new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
+                        new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
+                    new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
+                        new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
+                    new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
+                        new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0))
+                ),                    
+                new DeployCommand(collector)
             )
         ),
-        new DeployCommand(collector),
 
         // Chasing and collecting two Powercells
         new SequentialCommandGroup(

@@ -54,7 +54,7 @@ public class DriveForwardCommand extends CommandBase {
   @Override
   public void initialize() {
     bling.setArray("blue");
-    bling.setColorRGBAll(bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+    bling.setSlot(1, bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
     initPose = drivetrain.getRobotPose();
   }
 

@@ -30,11 +30,11 @@ public class Climber extends SubsystemBase {
 
   /** Creates a new Climber. */
   public Climber() {
-    leftClimber = new WPI_TalonFX(30);
-    rightClimber = new WPI_TalonFX(29);
+    leftClimber = new WPI_TalonFX(29);
+    rightClimber = new WPI_TalonFX(30);
     climberTargetVelocity = new double[2];
     rightClimber.setInverted(true);
-    // configureClimber();
+    configureClimber();
   }
 
   public void setPower(double leftPower, double rightPower) {
@@ -49,8 +49,9 @@ public class Climber extends SubsystemBase {
       }
       if (isAtLimit(positions[1], rightPower)) {
         rightPower = 0;
-      }        
+      }
     }
+    
     leftClimber.set(ControlMode.PercentOutput, leftPower);
     rightClimber.set(ControlMode.PercentOutput, rightPower);
   }

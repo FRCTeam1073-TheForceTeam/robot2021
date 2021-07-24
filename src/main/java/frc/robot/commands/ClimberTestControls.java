@@ -33,15 +33,16 @@ public class ClimberTestControls extends CommandBase {
   public void execute() {
     a = !a;
     double leftPower=0;
-    double rightPower=0;
+    double 
+    rightPower=0;
     SmartDashboard.putBoolean("$A$", a);
-    if(OI.operatorController.getBumper(Hand.kLeft)) {
-      leftPower = OI.operatorController.getRawAxis(1);
+    if(OI.operatorController.getTriggerAxis(Hand.kLeft)>0.5) {
+      leftPower = -OI.operatorController.getRawAxis(1);
     }
-    if(OI.operatorController.getBumper(Hand.kRight)) {
-      rightPower = OI.operatorController.getRawAxis(1);
+    if(OI.operatorController.getTriggerAxis(Hand.kRight)>0.5) {
+      rightPower = -OI.operatorController.getRawAxis(1);
     }
-    climber.setPower(leftPower, rightPower, true);
+    climber.setPower(leftPower, rightPower);
     // climber.setPower(leftPower, rightPower);
   }
 

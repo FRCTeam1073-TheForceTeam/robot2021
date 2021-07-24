@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -14,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.*;
 // Import subsystems: Add subsystems here.
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
@@ -105,10 +106,14 @@ public class RobotContainer {
       ),
       new ParallelDeadlineGroup(
         (new WaitForShooterCurrentSpike(shooter, true)),
-        new AdvanceMagazineCommand(magazine, bling, 0.5, 50.85)
+        new AdvanceMagazineCommand(magazine, bling, 0.5, 8)
       )
   );
   private final ClimberTestControls teleClimberTest = new ClimberTestControls(climber);
+  private final SequentialCommandGroup teleopChaseCommand = new SequentialCommandGroup(
+    new CollectCommand(drivetrain, collector, bling, 1.0, 0),
+    new MagazineCommand(collector, magazine, bling, 0.4, 1)
+  );
 
   public static final DataRecorder aimingDataRecorder = new DataRecorder("/tmp/AimingDataFile.txt");
 
@@ -143,34 +148,19 @@ public class RobotContainer {
   }
 
   /**
+   * \\
+   * 
    * Use this method to define your button->command mappings. Buttons can be
    * created by instantiating a {@link GenericHID} or one of its subclasses
    * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
-    // .whenPressed(
-    // new SequentialCommandGroup(
-    // // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-    // // new InstantCommand(shooter::stop, shooter),
-    // new InstantCommand(shooter::lowerHood, shooter),
-    // new ParallelDeadlineGroup(
-    // new SequentialCommandGroup(
-    // new WaitToFire(shooter, portTracker),
-    // new TargetHoodCommand(shooter, portTracker)
-    // ),
-    // new SequentialCommandGroup(
-    // new WaitForTarget(portTracker),
-    // new TargetFlywheelCommand(shooter, portTracker)
-    // ),
-    // new TurretPortAlignCommand(turret, portTracker)
-    // )
-    // )
-    // );
 
+    (new Trigger(() -> {return OI.driverController.getTriggerAxis(Hand.kLeft) > 0.5;}))
+      .whileActiveContinuous(teleopChaseCommand);
     (new JoystickButton(OI.driverController, XboxController.Axis.kRightTrigger.value))
-      .cancelWhenActive(autoFireCommand);
+      .whenActive(autoFireCommand);
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
       .cancelWhenPressed(autoFireCommand);
 

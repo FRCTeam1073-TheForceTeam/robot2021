@@ -63,8 +63,8 @@ public class Shooter extends SubsystemBase {
   SlewRateLimiter rateLimiter;
 
   public Shooter() {
-    shooterFlywheel1 = new WPI_TalonFX(29);
-    shooterFlywheel2 = new WPI_TalonFX(30);
+    shooterFlywheel1 = new WPI_TalonFX(22);
+    shooterFlywheel2 = new WPI_TalonFX(23);
 
     shooterFlywheel1.configFactoryDefault();
     shooterFlywheel2.configFactoryDefault();

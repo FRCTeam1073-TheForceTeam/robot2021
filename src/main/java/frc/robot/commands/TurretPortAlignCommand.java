@@ -52,7 +52,7 @@ public class TurretPortAlignCommand extends CommandBase {
 
   public double curve(double input, double maxSpeed) {
 	if (Math.abs(input) > 0.025) {
-	  return Math.signum(input) * (0.3 + Math.pow(Math.abs(input / maxSpeed), 0.65) * maxSpeed);
+	  return Math.signum(input) * (0.15 + Math.pow(Math.abs(input / maxSpeed), 0.65) * maxSpeed);
 	} else {
 	  return 0;
 	}
