@@ -24,7 +24,7 @@ public class ClimberTestControls extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.setPower(0, 0);
+    climber.setPower(0, 0, true);
   }
 
   boolean a = false;
@@ -32,19 +32,24 @@ public class ClimberTestControls extends CommandBase {
   @Override
   public void execute() {
     a = !a;
+    double leftPower=0;
+    double rightPower=0;
     SmartDashboard.putBoolean("$A$", a);
-    double leftPower = OI.operatorController.getRawAxis(1) * 0.5;
-    double rightPower = OI.operatorController.getRawAxis(5) * 0.5;
-    SmartDashboard.putNumber("leftPower", leftPower);
-    SmartDashboard.putNumber("rightPower", rightPower);
-    climber.leftClimber.set(ControlMode.PercentOutput, leftPower);
-    climber.rightClimber.set(ControlMode.PercentOutput, rightPower);
+    if(OI.operatorController.getBumper(Hand.kLeft)) {
+      leftPower = OI.operatorController.getRawAxis(1);
+    }
+    if(OI.operatorController.getBumper(Hand.kRight)) {
+      rightPower = OI.operatorController.getRawAxis(1);
+    }
+    climber.setPower(leftPower, rightPower, true);
     // climber.setPower(leftPower, rightPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    climber.setPower(0, 0, true);
+  }
 
   // Returns true when the command should end.
   @Override

@@ -30,21 +30,27 @@ public class Climber extends SubsystemBase {
 
   /** Creates a new Climber. */
   public Climber() {
-    leftClimber = new WPI_TalonFX(29);
-    rightClimber = new WPI_TalonFX(30);
+    leftClimber = new WPI_TalonFX(30);
+    rightClimber = new WPI_TalonFX(29);
     climberTargetVelocity = new double[2];
     rightClimber.setInverted(true);
     // configureClimber();
   }
 
   public void setPower(double leftPower, double rightPower) {
-    // double[] positions = getPositions();
-    // if (isAtLimit(positions[0], leftPower)) {
-    //   leftPower = 0;
-    // }
-    // if (isAtLimit(positions[1], rightPower)) {
-    //   rightPower = 0;
-    // }
+    setPower(leftPower, rightPower, false);
+  }
+
+  public void setPower(double leftPower, double rightPower, boolean overrideLimit) {
+    if (!overrideLimit) {
+      double[] positions = getPositions();
+      if (isAtLimit(positions[0], leftPower)) {
+        leftPower = 0;
+      }
+      if (isAtLimit(positions[1], rightPower)) {
+        rightPower = 0;
+      }        
+    }
     leftClimber.set(ControlMode.PercentOutput, leftPower);
     rightClimber.set(ControlMode.PercentOutput, rightPower);
   }
@@ -168,6 +174,9 @@ public class Climber extends SubsystemBase {
     double[] rawPositions = getRawPositions();
     double[] rawVelocities = getRawVelocities();
     SmartDashboard.putBoolean("IS LEFT ALIVE", leftClimber.isAlive());
+
+    SmartDashboard.putBoolean("[Climber] LIMIT LEFT", (isAtLimit(getPositions()[0], -1)||isAtLimit(getPositions()[0], 1)));
+    SmartDashboard.putBoolean("[Climber] LIMIT RIGHT", (isAtLimit(getPositions()[1], -1)||isAtLimit(getPositions()[1], 1)));
     
     SmartDashboard.putString("[Climber] Climber positions (raw) [C0]", rawPositions[0] + ", " + rawPositions[1]);
     SmartDashboard.putString("[Climber] Climber velocities (raw) [C1]", rawVelocities[0] + ", " + rawVelocities[1]);

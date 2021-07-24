@@ -179,16 +179,36 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 // 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 2)
                 // .withPosition(0, 0).getEntry();
 
-                autoChooser = tab.getLayout("Auto-Chooser", BuiltInLayouts.kList).withSize(1, 2).withPosition(0, 0);
-                driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 3).withPosition(0, 2);
-                collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(1, 2).withPosition(1, 0);
-                magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(1, 2).withPosition(2, 0);
-                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(2, 3).withPosition(2, 2);
-                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(4, 2);
-                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
-                portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
-                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,0);
-                warningReadout = tab.getLayout("Mechanism warnings", BuiltInLayouts.kList).withSize(2, 5).withPosition(6,0);
+                autoChooser = tab.getLayout("Auto-Chooser", BuiltInLayouts.kList)
+                        .withSize(4, 9)
+                        .withPosition(0, 0);
+                driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList)
+                        .withSize(4, 4)
+                        .withPosition(4, 5);
+                collecting = tab.getLayout("Collector", BuiltInLayouts.kList)
+                        .withSize(4, 3)
+                        .withPosition(4, 0);
+                magazining = tab.getLayout("Magazine", BuiltInLayouts.kList)
+                        .withSize(4, 3)
+                        .withPosition(10, 0);
+                turreting = tab.getLayout("Turret", BuiltInLayouts.kList)
+                        .withSize(5, 4)
+                        .withPosition(14, 5);
+                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList)
+                        .withSize(2, 9)
+                        .withPosition(8, 0);
+                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList)
+                        .withSize(4, 2)
+                        .withPosition(4, 3);
+                portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList)
+                        .withSize(4, 2)
+                        .withPosition(10, 7);
+                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList)
+                        .withSize(5, 5)
+                        .withPosition(14, 0);
+                warningReadout = tab.getLayout("Mechanism warnings", BuiltInLayouts.kList)
+                        .withSize(4, 4)
+                        .withPosition(10, 3);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
