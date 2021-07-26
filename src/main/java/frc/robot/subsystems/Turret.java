@@ -71,6 +71,7 @@ public class Turret extends SubsystemBase {
     public void setVelocity(double angularVelocity) {
       if ((getPosition() < turretMinimumAngle && angularVelocity < 0) || (getPosition() > turretMaximumAngle && angularVelocity > 0)) {
         turretRotator.set(ControlMode.Velocity, 0);
+        turretRateLimiter.reset(0);
         return;
       }
       turretVelocity = turretRateLimiter.calculate(angularVelocity) * turretTicksPerRadian * 0.1;
@@ -81,6 +82,7 @@ public class Turret extends SubsystemBase {
     public void setPower(double power) {
       if ((getPosition() < turretMinimumAngle && power < 0) || (getPosition() > turretMaximumAngle && power > 0)) {
         turretRotator.set(ControlMode.PercentOutput, 0);
+        turretRateLimiter.reset(0);
         return;
       }
       turretRotator.set(ControlMode.PercentOutput, power);

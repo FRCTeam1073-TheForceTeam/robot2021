@@ -155,7 +155,6 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private NetworkTableEntry isCollectorStalled;
         private NetworkTableEntry isHoodGearSlipping;
-        private NetworkTableEntry isShooterCurrentHigh;
         private NetworkTableEntry isTurretAtLimit;
 
         public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
@@ -328,7 +327,6 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 hoodPosition = shooter.getHoodPosition();
                 flywheelTemp1 = shooter.getFlywheelTemperatures()[0];
                 flywheelTemp2 = shooter.getFlywheelTemperatures()[1];
-                hoodMotorCurrent = shooter.getHoodMotorCurrent();
 
                 cellTracker.getCellData(cellData);
                 cellX = cellData.cx;
@@ -382,7 +380,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 isCollectorStalled.setBoolean(collectorStalled);
                 isHoodGearSlipping.setBoolean(hoodGearSlipping);
-                isHoodGearSlipping.setBoolean(turretAtLimit);
+                isTurretAtLimit.setBoolean(turretAtLimit);
         }
 
         private void updateAutoChooser() {
