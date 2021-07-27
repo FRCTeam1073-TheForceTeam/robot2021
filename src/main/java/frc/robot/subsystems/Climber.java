@@ -42,15 +42,15 @@ public class Climber extends SubsystemBase {
   }
 
   public void setPower(double leftPower, double rightPower, boolean overrideLimit) {
-    if (!overrideLimit) {
-      double[] positions = getPositions();
-      if (isAtLimit(positions[0], leftPower)) {
-        leftPower = 0;
-      }
-      if (isAtLimit(positions[1], rightPower)) {
-        rightPower = 0;
-      }
-    }
+    // if (!overrideLimit) {
+    //   double[] positions = getPositions();
+    //   if (isAtLimit(positions[0], leftPower)) {
+    //     leftPower = 0;
+    //   }
+    //   if (isAtLimit(positions[1], rightPower)) {
+    //     rightPower = 0;
+    //   }
+    // }
     
     leftClimber.set(ControlMode.PercentOutput, leftPower);
     rightClimber.set(ControlMode.PercentOutput, rightPower);
@@ -124,8 +124,8 @@ public class Climber extends SubsystemBase {
     leftClimber.configFactoryDefault();
     rightClimber.configFactoryDefault();
 
-    leftClimber.setInverted(TalonFXInvertType.CounterClockwise);  //equivalent to (false).
-    rightClimber.setInverted(TalonFXInvertType.Clockwise);        //equivalent to (true).
+    leftClimber.setInverted(TalonFXInvertType.Clockwise);  //equivalent to (false).
+    rightClimber.setInverted(TalonFXInvertType.CounterClockwise); //equivalent to (true).
 
     leftClimber.neutralOutput();
     rightClimber.neutralOutput();
