@@ -82,7 +82,7 @@ public class RobotContainer {
   private final Collector collector = new Collector();
   private final Magazine magazine = new Magazine();
   private final Turret turret = new Turret();
-  private final Shooter shooter = new Shooter();
+  private static final Shooter shooter = new Shooter();
   private final Climber climber = new Climber();
   private final frc.robot.subsystems.Map map = new frc.robot.subsystems.Map();
   // private final Localizer localizer = new Localizer(drivetrain);
@@ -434,7 +434,9 @@ public class RobotContainer {
   public Command getTestCommand() {
     return teleDrive;
   }
-
+  public static Shooter getShooter() {
+    return shooter;
+  }
   public static Bling getBling() {
     return bling;
   }

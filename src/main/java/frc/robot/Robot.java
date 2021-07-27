@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
     // TODO: Any additional disable logic.
     RobotContainer.getBling().clearLEDs();
     RobotContainer.getBling().cleared();
+    RobotContainer.getShooter().setFlywheelVelocity(0);
     RobotContainer.aimingDataRecorder.onDisable();
   }
 

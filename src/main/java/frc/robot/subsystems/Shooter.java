@@ -296,7 +296,7 @@ public class Shooter extends SubsystemBase {
     
     double hallSensorVelocity = hoodHallSensor.getVelocity() * 2.0 * Math.PI / 60.0;
     double quadEncoderVelocity = hoodEncoder.getVelocity() * 2.0 * Math.PI / 60.0;
-    isHoodGearSlipping = ((Math.abs(hallSensorVelocity) >= 1.0) && (Math.abs(quadEncoderVelocity) <= 0.05));
+    isHoodGearSlipping = (Math.abs(quadEncoderVelocity) < 0.05) && (Math.abs(hallSensorVelocity) > 0.05);
 
     flywheelTemperatures[0] = shooterFlywheel1.getTemperature();
     flywheelTemperatures[1] = shooterFlywheel2.getTemperature();
