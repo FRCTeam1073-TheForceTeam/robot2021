@@ -55,16 +55,11 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
   private SequentialCommandGroup RevisedCompAuto() {
     return new SequentialCommandGroup(
         // Optional Wait
-				new ParallelDeadlineGroup(
-					new WaitCommand(ShuffleboardWidgets.waitTime),
-					new ParallelDeadlineGroup(
-						new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
-							new TargetHoodCommand(shooter, portTracker)),
-						new SequentialCommandGroup(new WaitForTarget(portTracker),
-							new TargetFlywheelCommand(shooter, portTracker)),
-						new TurretPortAlignCommand(turret, portTracker))),
         new ParallelDeadlineGroup(
-            new DriveForwardCommand(drivetrain, bling, 0.8, 2.5),
+            new SequentialCommandGroup(
+                new WaitCommand(ShuffleboardWidgets.waitTime),
+                new DriveForwardCommand(drivetrain, bling, 0.8, 2.5)
+            ),
             new ShooterSetCommand(shooter,0.354,474.609375)
         ),
         new SequentialCommandGroup(

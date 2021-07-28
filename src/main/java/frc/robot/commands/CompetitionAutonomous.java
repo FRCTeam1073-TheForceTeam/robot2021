@@ -56,25 +56,20 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 	private SequentialCommandGroup CompAuto() {
 		if (compAutoNum <= 0) {
 			return new SequentialCommandGroup(
-					// Optional Wait
-					new ParallelDeadlineGroup(
-						new WaitCommand(ShuffleboardWidgets.waitTime),
+				new SequentialCommandGroup(
+					new SequentialCommandGroup(
+						// Setting up the Shooter
 						new ParallelDeadlineGroup(
-							new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
-								new TargetHoodCommand(shooter, portTracker)),
-							new SequentialCommandGroup(new WaitForTarget(portTracker),
-								new TargetFlywheelCommand(shooter, portTracker)),
-							new TurretPortAlignCommand(turret, portTracker))),
-					// Drive off the Initiation Line
-					new DriveForwardCommand(drivetrain, bling, distOffInitiationLine, 2.0), new SequentialCommandGroup(
-							new SequentialCommandGroup(
-									// Setting up the Shooter
-									new ParallelDeadlineGroup(
-											new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
+							new ParallelCommandGroup(
+								new WaitCommand(ShuffleboardWidgets.waitTime),
+								new ParallelDeadlineGroup(
+								new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
 													new TargetHoodCommand(shooter, portTracker)),
 											new SequentialCommandGroup(new WaitForTarget(portTracker),
 													new TargetFlywheelCommand(shooter, portTracker)),
 											new TurretPortAlignCommand(turret, portTracker))),
+					// Drive off the Initiation Line
+					new DriveForwardCommand(drivetrain, bling, distOffInitiationLine, 2.0))),
 							// Shooting the three preloaded Powercells
 							new ParallelDeadlineGroup(new WaitForShooterCurrentSpike(shooter, true),
 									new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
@@ -87,23 +82,17 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 									new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0))));
 		} else if (compAutoNum == 1) {
 			return new SequentialCommandGroup(
-				// Optional Wait
-				new ParallelDeadlineGroup(
-					new WaitCommand(ShuffleboardWidgets.waitTime),
-					new ParallelDeadlineGroup(
-						new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
-							new TargetHoodCommand(shooter, portTracker)),
-						new SequentialCommandGroup(new WaitForTarget(portTracker),
-							new TargetFlywheelCommand(shooter, portTracker)),
-						new TurretPortAlignCommand(turret, portTracker))),
 					new ParallelCommandGroup(new SequentialCommandGroup(new SequentialCommandGroup(
 							// Setting up the Shooter
+							new ParallelDeadlineGroup(
+							new ParallelCommandGroup(
+								new WaitCommand(ShuffleboardWidgets.waitTime),
 							new ParallelDeadlineGroup(
 									new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
 											new TargetHoodCommand(shooter, portTracker)),
 									new SequentialCommandGroup(new WaitForTarget(portTracker),
 											new TargetFlywheelCommand(shooter, portTracker)),
-									new TurretPortAlignCommand(turret, portTracker))),
+									new TurretPortAlignCommand(turret, portTracker))))),
 							// Shooting the three preloaded Powercells
 							new ParallelDeadlineGroup(new WaitForShooterCurrentSpike(shooter, true),
 									new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
@@ -141,23 +130,17 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 									new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0))));
 		} else if (compAutoNum == 2) {
 			return new SequentialCommandGroup(
-				// Optional Wait
-				new ParallelDeadlineGroup(
-					new WaitCommand(ShuffleboardWidgets.waitTime),
-					new ParallelDeadlineGroup(
-						new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
-							new TargetHoodCommand(shooter, portTracker)),
-						new SequentialCommandGroup(new WaitForTarget(portTracker),
-							new TargetFlywheelCommand(shooter, portTracker)),
-						new TurretPortAlignCommand(turret, portTracker))),
-					new ParallelCommandGroup(new SequentialCommandGroup(new SequentialCommandGroup(
+				new ParallelCommandGroup(new SequentialCommandGroup(new SequentialCommandGroup(
 							// Setting up the Shooter
+							new ParallelDeadlineGroup(
+							new ParallelCommandGroup(
+								new WaitCommand(ShuffleboardWidgets.waitTime),
 							new ParallelDeadlineGroup(
 									new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
 											new TargetHoodCommand(shooter, portTracker)),
 									new SequentialCommandGroup(new WaitForTarget(portTracker),
 											new TargetFlywheelCommand(shooter, portTracker)),
-									new TurretPortAlignCommand(turret, portTracker))),
+									new TurretPortAlignCommand(turret, portTracker))))),
 							// Shooting the three preloaded Powercells
 							new ParallelDeadlineGroup(new WaitForShooterCurrentSpike(shooter, true),
 									new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
@@ -197,23 +180,17 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 									new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0))));
 		} else if (compAutoNum == 3) {
 			return new SequentialCommandGroup(
-				// Optional Wait
-				new ParallelDeadlineGroup(
-					new WaitCommand(ShuffleboardWidgets.waitTime),
-					new ParallelDeadlineGroup(
-						new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
-							new TargetHoodCommand(shooter, portTracker)),
-						new SequentialCommandGroup(new WaitForTarget(portTracker),
-							new TargetFlywheelCommand(shooter, portTracker)),
-						new TurretPortAlignCommand(turret, portTracker))),
 					new ParallelCommandGroup(new SequentialCommandGroup(new SequentialCommandGroup(
 							// Setting up the Shooter
+							new ParallelDeadlineGroup(
+							new ParallelCommandGroup(
+								new WaitCommand(ShuffleboardWidgets.waitTime),
 							new ParallelDeadlineGroup(
 									new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
 											new TargetHoodCommand(shooter, portTracker)),
 									new SequentialCommandGroup(new WaitForTarget(portTracker),
 											new TargetFlywheelCommand(shooter, portTracker)),
-									new TurretPortAlignCommand(turret, portTracker))),
+									new TurretPortAlignCommand(turret, portTracker))))),
 							// Shooting the three preloaded Powercells
 							new ParallelDeadlineGroup(new WaitForShooterCurrentSpike(shooter, true),
 									new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
