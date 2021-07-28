@@ -23,10 +23,11 @@ public class Turret extends SubsystemBase {
       //0.75 1458
 
     private double turretVelocity;
+    private double turretTargetVelocity;
     private double turretTicksPerRadian = 4163.175;
 
-    public double turretMinimumAngle = -2.039;
-    public double turretMaximumAngle = 3.795;
+    public double turretMinimumAngle = -3;
+    public double turretMaximumAngle = 192.9 * (Math.PI / 180.0);
 
     public SlewRateLimiter turretRateLimiter;
 
@@ -47,7 +48,7 @@ public class Turret extends SubsystemBase {
       turretRotator.setSelectedSensorPosition(0); //Note: turret does not have limit switches and needs to be indexed manually.
       turretRotator.setIntegralAccumulator(0);
       setPIDF();
-      turretRateLimiter = new SlewRateLimiter(6);
+      turretRateLimiter = new SlewRateLimiter(8);
     }
 
     /// Returns the accumulated position of the turret in radians.
@@ -70,25 +71,27 @@ public class Turret extends SubsystemBase {
     /// Sets the velocity of the turret in radians/second.
     public void setVelocity(double angularVelocity) {
       if ((getPosition() < turretMinimumAngle && angularVelocity < 0) || (getPosition() > turretMaximumAngle && angularVelocity > 0)) {
+        turretTargetVelocity = 0;
         turretRotator.set(ControlMode.Velocity, 0);
+        turretRateLimiter.reset(0);
         return;
       }
-      turretVelocity = turretRateLimiter.calculate(angularVelocity) * turretTicksPerRadian * 0.1;
-      turretRotator.set(ControlMode.Velocity, turretVelocity);
+      turretTargetVelocity = angularVelocity;
     }
 
     /// Directly sets the power of the turret motor.
     public void setPower(double power) {
       if ((getPosition() < turretMinimumAngle && power < 0) || (getPosition() > turretMaximumAngle && power > 0)) {
         turretRotator.set(ControlMode.PercentOutput, 0);
+        turretRateLimiter.reset(0);
         return;
       }
       turretRotator.set(ControlMode.PercentOutput, power);
     }
 
     public void stop() {
+      turretTargetVelocity = 0;
       turretRateLimiter.reset(0);
-      turretRotator.set(ControlMode.Velocity, 0);
     }
     
     /**
@@ -106,6 +109,8 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
+      turretVelocity = turretRateLimiter.calculate(turretTargetVelocity) * turretTicksPerRadian * 0.1;
+      turretRotator.set(ControlMode.Velocity, turretVelocity);
     }
 
     public void setPIDF() {

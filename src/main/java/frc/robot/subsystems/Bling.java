@@ -307,7 +307,7 @@ public class Bling extends SubsystemBase {
     // If between 1/3 and 2/3 of the leds are lit up, the light is yellow.
     // If more than 2/3 of the leds are lit up, the light is green.
     if (num > (2 * (numberLEDsVolts / 3))) {
-      rangeRGB(minLEDsVolts, num, 0, 255, 0);
+      rangeRGB(minLEDsVolts, num, 0, 128, 255);
     } else if (num > (numberLEDsVolts / 3)) {
       rangeRGB(minLEDsVolts, num, 255, 255, 0);
     } else {

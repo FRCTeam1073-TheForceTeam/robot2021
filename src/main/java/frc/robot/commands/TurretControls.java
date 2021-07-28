@@ -32,7 +32,7 @@ public class TurretControls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turretVelocity = 1.5 * Utility.deadzone(OI.operatorController.getRawAxis(4));
+    turretVelocity = 2.5 * Utility.deadzone(OI.operatorController.getRawAxis(4));
       // turretVelocity = 0;
       // if (Math.abs(OI.operatorController.getRawAxis(4)) > 0.2) {
       //   turretVelocity = 0.75 * Math.signum(OI.operatorController.getRawAxis(4));

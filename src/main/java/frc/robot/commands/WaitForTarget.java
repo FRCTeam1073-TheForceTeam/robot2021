@@ -33,10 +33,14 @@ public class WaitForTarget extends CommandBase {
    */
   public WaitForTarget(PowerPortTracker portTracker_, int requiredValidPortDataCount_) {
     portTracker = portTracker_;
+    requiredValidPortDataCount = requiredValidPortDataCount_;
+  }
+
+  @Override
+  public void initialize() {
     portData = new PowerPortData();
     validPortDataCounter = 0;
     coordinateSeparation = -1; //Arbitrary value that won't trip isfinished 
-    requiredValidPortDataCount = requiredValidPortDataCount_;
     isPortTrackerAligned = false;
   }
 

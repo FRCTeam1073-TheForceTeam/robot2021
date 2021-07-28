@@ -6,9 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.PowerPortConfiguration;
 import frc.robot.components.InterpolatorTable;
 import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
@@ -21,6 +24,7 @@ import frc.robot.components.InterpolatorTable.InterpolatorTableEntry;
 public class TargetFlywheelCommand extends CommandBase {
 
   Shooter shooter;
+  Bling bling;
   PowerPortTracker portTracker;
   double flywheelVelocity;
   double currentFlywheelVelocity;
@@ -91,6 +95,7 @@ public class TargetFlywheelCommand extends CommandBase {
   public TargetFlywheelCommand(Shooter shooter_, PowerPortTracker portTracker_, int rangeUpdatePeriod_,
       double acceptableVelocityDifference_) {
     rangeUpdatePeriod = rangeUpdatePeriod_;
+    bling = RobotContainer.getBling();
 
     if (Constants.portConfig == PowerPortConfiguration.LOW) {
       flywheelTable = flywheelTableLow;
@@ -98,32 +103,8 @@ public class TargetFlywheelCommand extends CommandBase {
       flywheelTable = flywheelTableHigh;
     }
 
-    // new InterpolatorTableEntry(1.5,343.75),
-    // new InterpolatorTableEntry(1.759,343.75),
-    // new InterpolatorTableEntry(2.609,375),
-    // new InterpolatorTableEntry(3.34,360.1),
-    // new InterpolatorTableEntry(4.76,430),
-    // new InterpolatorTableEntry(5.019,467.8),
-    // new InterpolatorTableEntry(6.52,503.5),
-    // new InterpolatorTableEntry(8.25,531.25),
-    // new InterpolatorTableEntry(8.7,562.5)
-    // new InterpolatorTableEntry(1.79, 281.25), new InterpolatorTableEntry(2.35,
-    // 343.75),
-    // new InterpolatorTableEntry(3.05, 343.75), new InterpolatorTableEntry(3.54,
-    // 375),
-    // new InterpolatorTableEntry(3.97, 406.25), new InterpolatorTableEntry(4.56,
-    // 437.3),
-    // new InterpolatorTableEntry(5.02, 437.3), new InterpolatorTableEntry(5.51,
-    // 468.75),
-    // new InterpolatorTableEntry(6.03, 468.75), new InterpolatorTableEntry(6.51,
-    // 468.75));
     shooter = shooter_;
     portTracker = portTracker_;
-    currentFlywheelVelocity = 0;
-    flywheelVelocity = 0;
-    range = 0;
-    numLoops = 0;
-    hasValidRangeData = false;
     // addRequirements(shooter);
   }
 
@@ -153,7 +134,11 @@ public class TargetFlywheelCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("key", 258);
+    currentFlywheelVelocity = 0;
+    flywheelVelocity = 0;
+    range = 0;
+    numLoops = 0;
+    hasValidRangeData = false;
     // shooter.setFlywheelVelocity(0);
   }
 
@@ -168,17 +153,20 @@ public class TargetFlywheelCommand extends CommandBase {
     }
     numLoops++;
     if (hasValidRangeData) {
+      bling.setSlot(4, 255, 255, (int) (255.0 * MathUtil.clamp(currentFlywheelVelocity / flywheelVelocity, 0.0, 1.0)));
       flywheelVelocity = flywheelTable.getValue(range);
       shooter.setFlywheelVelocity(flywheelVelocity);
       currentFlywheelVelocity = shooter.getFlywheelVelocity();
       SmartDashboard.putNumber("[TGTF] Range [0]", range);
       SmartDashboard.putNumber("[TGTF] Target flywheel vel [1]", flywheelVelocity);
       SmartDashboard.putNumber("[TGTF] Actual flywheel vel [2]", currentFlywheelVelocity);
+    } else {
+      bling.setSlot(4, 128, 255, 0);
     }
   }
 
   public void end(boolean interrupted) {
-
+    bling.setSlot(4, 0, 0, 0);
   }
 
   public boolean isFinished() {

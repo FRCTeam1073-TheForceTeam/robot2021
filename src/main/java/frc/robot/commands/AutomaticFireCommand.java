@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
@@ -25,13 +26,13 @@ import frc.robot.subsystems.Turret;
 public class AutomaticFireCommand extends ParallelDeadlineGroup {
 
   /** Creates a new AutomaticFireCommand. */
-  public AutomaticFireCommand(Turret turret, Shooter shooter, PowerPortTracker portTracker, Magazine magazine, double magazineDistance) {
+  public AutomaticFireCommand(Turret turret, Shooter shooter, PowerPortTracker portTracker, Magazine magazine, Bling bling, double magazineDistance) {
     super(
       //Deadline command
       new SequentialCommandGroup(
           new WaitToFire(shooter, portTracker),
           new TargetHoodCommand(shooter, portTracker),
-          new AdvanceMagazineCommand(magazine, 1, magazineDistance),
+          new AdvanceMagazineCommand(magazine, bling, 1, magazineDistance),
           new InstantCommand(shooter::stop, shooter),
           new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
       ),
@@ -45,8 +46,8 @@ public class AutomaticFireCommand extends ParallelDeadlineGroup {
     );
   }
 
-  public AutomaticFireCommand(Turret turret, Shooter shooter, PowerPortTracker portTracker, Magazine magazine) {
-    this(turret, shooter, portTracker, magazine, 12);
+  public AutomaticFireCommand(Turret turret, Shooter shooter, PowerPortTracker portTracker, Magazine magazine, Bling bling) {
+    this(turret, shooter, portTracker, magazine, bling, 12);
   }
 
 }
