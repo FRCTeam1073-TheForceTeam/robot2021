@@ -46,7 +46,7 @@ public final class Constants {
      * the image width (where -1 is all the way to the left and 1 is all the way to the right)
      * for autonomous port tracking commands to be considered to be aligned.
      */
-    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.03;
+    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.0375;
  
     public static final double ACCEPTABLE_HOOD_ANGLE_DIFFERENCE = 0.02;
 
