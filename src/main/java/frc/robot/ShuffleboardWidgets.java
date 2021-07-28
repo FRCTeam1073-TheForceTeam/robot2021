@@ -347,7 +347,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 portTrackerHasData.setBoolean(portTracker.getPortData(new PowerPortData()));
                 sensorRange.setDouble(portTracker.getRange());
                 shooterHoodAngleDegrees.setDouble(Units.radiansToDegrees(hoodAngle));
-                shooterFlywheelSpeed.setDouble(flywheelVelocity);
+                shooterFlywheelSpeed.setNumber(flywheelVelocity);
 
                 isCollectorStalled.setBoolean(collectorStalled);
                 isHoodGearSlipping.setBoolean(hoodGearSlipping);
