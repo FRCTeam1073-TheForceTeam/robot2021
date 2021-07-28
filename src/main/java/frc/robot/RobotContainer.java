@@ -142,25 +142,6 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // (new JoystickButton(OI.operatorController, XboxController.Button.kX.value))
-    // .whenPressed(
-    // new SequentialCommandGroup(
-    // // new InstantCommand(shooter::interruptCurrentCommand, shooter),
-    // // new InstantCommand(shooter::stop, shooter),
-    // new InstantCommand(shooter::lowerHood, shooter),
-    // new ParallelDeadlineGroup(
-    // new SequentialCommandGroup(
-    // new WaitToFire(shooter, portTracker),
-    // new TargetHoodCommand(shooter, portTracker)
-    // ),
-    // new SequentialCommandGroup(
-    // new WaitForTarget(portTracker),
-    // new TargetFlywheelCommand(shooter, portTracker)
-    // ),
-    // new TurretPortAlignCommand(turret, portTracker)
-    // )
-    // )
-    // );
     (new JoystickButton(OI.operatorController, XboxController.Button.kB.value)).whenPressed(new ParallelCommandGroup(
         new TurretPositionCommand(turret, 0), new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)));
     (new JoystickButton(OI.operatorController, XboxController.Button.kA.value))
@@ -173,9 +154,6 @@ public class RobotContainer {
             new TurretPortAlignCommand(turret, portTracker)),
         new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
             new AdvanceMagazineCommand(magazine, 0.5, 50.85, true)))
-    // new SequentialCommandGroup(
-    // new AdvanceMagazineCommand(magazine, 1.25, 4)
-    // )
     );
     (new JoystickButton(OI.operatorController, XboxController.Button.kBumperLeft.value))
         .whenPressed(new AdvanceMagazineCommand(magazine, 1.25, 1));
