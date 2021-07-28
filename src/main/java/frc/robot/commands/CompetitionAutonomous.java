@@ -3,6 +3,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.ShuffleboardWidgets;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
@@ -54,6 +56,15 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 	private SequentialCommandGroup CompAuto() {
 		if (compAutoNum <= 0) {
 			return new SequentialCommandGroup(
+					// Optional Wait
+					new ParallelDeadlineGroup(
+						new WaitCommand(ShuffleboardWidgets.waitTime),
+						new ParallelDeadlineGroup(
+							new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
+								new TargetHoodCommand(shooter, portTracker)),
+							new SequentialCommandGroup(new WaitForTarget(portTracker),
+								new TargetFlywheelCommand(shooter, portTracker)),
+							new TurretPortAlignCommand(turret, portTracker))),
 					// Drive off the Initiation Line
 					new DriveForwardCommand(drivetrain, bling, distOffInitiationLine, 2.0), new SequentialCommandGroup(
 							new SequentialCommandGroup(
@@ -76,6 +87,15 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 									new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0))));
 		} else if (compAutoNum == 1) {
 			return new SequentialCommandGroup(
+				// Optional Wait
+				new ParallelDeadlineGroup(
+					new WaitCommand(ShuffleboardWidgets.waitTime),
+					new ParallelDeadlineGroup(
+						new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
+							new TargetHoodCommand(shooter, portTracker)),
+						new SequentialCommandGroup(new WaitForTarget(portTracker),
+							new TargetFlywheelCommand(shooter, portTracker)),
+						new TurretPortAlignCommand(turret, portTracker))),
 					new ParallelCommandGroup(new SequentialCommandGroup(new SequentialCommandGroup(
 							// Setting up the Shooter
 							new ParallelDeadlineGroup(
@@ -121,6 +141,15 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 									new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0))));
 		} else if (compAutoNum == 2) {
 			return new SequentialCommandGroup(
+				// Optional Wait
+				new ParallelDeadlineGroup(
+					new WaitCommand(ShuffleboardWidgets.waitTime),
+					new ParallelDeadlineGroup(
+						new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
+							new TargetHoodCommand(shooter, portTracker)),
+						new SequentialCommandGroup(new WaitForTarget(portTracker),
+							new TargetFlywheelCommand(shooter, portTracker)),
+						new TurretPortAlignCommand(turret, portTracker))),
 					new ParallelCommandGroup(new SequentialCommandGroup(new SequentialCommandGroup(
 							// Setting up the Shooter
 							new ParallelDeadlineGroup(
@@ -168,6 +197,15 @@ public class CompetitionAutonomous extends SequentialCommandGroup {
 									new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0))));
 		} else if (compAutoNum == 3) {
 			return new SequentialCommandGroup(
+				// Optional Wait
+				new ParallelDeadlineGroup(
+					new WaitCommand(ShuffleboardWidgets.waitTime),
+					new ParallelDeadlineGroup(
+						new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
+							new TargetHoodCommand(shooter, portTracker)),
+						new SequentialCommandGroup(new WaitForTarget(portTracker),
+							new TargetFlywheelCommand(shooter, portTracker)),
+						new TurretPortAlignCommand(turret, portTracker))),
 					new ParallelCommandGroup(new SequentialCommandGroup(new SequentialCommandGroup(
 							// Setting up the Shooter
 							new ParallelDeadlineGroup(

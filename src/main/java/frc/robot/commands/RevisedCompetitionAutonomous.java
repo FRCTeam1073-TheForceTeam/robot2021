@@ -3,6 +3,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.ShuffleboardWidgets;
 import frc.robot.subsystems.Bling;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
@@ -52,6 +54,15 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
 
   private SequentialCommandGroup RevisedCompAuto() {
     return new SequentialCommandGroup(
+        // Optional Wait
+				new ParallelDeadlineGroup(
+					new WaitCommand(ShuffleboardWidgets.waitTime),
+					new ParallelDeadlineGroup(
+						new SequentialCommandGroup(new WaitToFire(shooter, portTracker),
+							new TargetHoodCommand(shooter, portTracker)),
+						new SequentialCommandGroup(new WaitForTarget(portTracker),
+							new TargetFlywheelCommand(shooter, portTracker)),
+						new TurretPortAlignCommand(turret, portTracker))),
         new ParallelDeadlineGroup(
             new DriveForwardCommand(drivetrain, bling, 0.8, 2.5),
             new ShooterSetCommand(shooter,0.354,474.609375)

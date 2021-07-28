@@ -166,17 +166,17 @@ public class RobotContainer {
     System.out.println("\n\n\n\n\n\n\n\n!!!!!!!!!!!!!! auto: " + ShuffleboardWidgets.auto);
     switch (ShuffleboardWidgets.auto) {
       case 0:
-        return new SequentialCommandGroup(new WaitCommand(ShuffleboardWidgets.waitTime), new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
-            bling, 0));
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 0);
       case 1:
-        return new SequentialCommandGroup(new WaitCommand(ShuffleboardWidgets.waitTime), new RevisedCompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker,
-            portTracker, bling));
+        return new RevisedCompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker,
+            portTracker, bling);
       case 2:
-        return new SequentialCommandGroup(new WaitCommand(ShuffleboardWidgets.waitTime), new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
-            bling, 2));
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 2);
       case 3:
-        return new SequentialCommandGroup(new WaitCommand(ShuffleboardWidgets.waitTime), new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
-            bling, 3));
+        return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
+            bling, 3);
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
