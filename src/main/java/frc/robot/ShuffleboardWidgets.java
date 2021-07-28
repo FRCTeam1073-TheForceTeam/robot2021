@@ -197,7 +197,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                         autosE[i] = autoChooser.add(autoNames[i], autos[i]).withWidget(BuiltInWidgets.kToggleSwitch)
                                         .getEntry();
                 }
-                autoChooser.add("Wait in seconds", waitTime).getEntry();
+                waitTimeE = autoChooser.add("Wait in seconds", waitTime).getEntry();
 
                 robotAngE = driving.add("Angle mirrored", robotAng).withWidget(BuiltInWidgets.kDial)
                                 .withProperties(Map.of("min", -90, "max", 90)).getEntry();
