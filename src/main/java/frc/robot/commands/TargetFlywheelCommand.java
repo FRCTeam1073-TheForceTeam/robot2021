@@ -43,7 +43,8 @@ public class TargetFlywheelCommand extends CommandBase {
     new InterpolatorTableEntry(4.04, 437.5),
     new InterpolatorTableEntry(4.54, 453.125),
     new InterpolatorTableEntry(5.01, 468.75),
-    new InterpolatorTableEntry(5.49, 500.00)
+    new InterpolatorTableEntry(5.49, 500.00),
+    new InterpolatorTableEntry(7.00, 500.00)
   );
 
   /** Table for shooting in 107, or anywhere else with the small power port. **/
@@ -153,7 +154,9 @@ public class TargetFlywheelCommand extends CommandBase {
     }
     numLoops++;
     if (hasValidRangeData) {
-      bling.setSlot(4, 255, 255, (int) (255.0 * MathUtil.clamp(currentFlywheelVelocity / flywheelVelocity, 0.0, 1.0)));
+      // int level = (int) (255.0 * MathUtil.clamp(currentFlywheelVelocity / flywheelVelocity, 0.0, 1.0));
+      int level = (int) (255.0 * (1.0 - MathUtil.clamp(Math.abs(currentFlywheelVelocity - flywheelVelocity)/200.0, 0.0, 1.0)));
+      bling.setSlot(4, level, level, level);
       flywheelVelocity = flywheelTable.getValue(range);
       shooter.setFlywheelVelocity(flywheelVelocity);
       currentFlywheelVelocity = shooter.getFlywheelVelocity();
@@ -161,7 +164,7 @@ public class TargetFlywheelCommand extends CommandBase {
       SmartDashboard.putNumber("[TGTF] Target flywheel vel [1]", flywheelVelocity);
       SmartDashboard.putNumber("[TGTF] Actual flywheel vel [2]", currentFlywheelVelocity);
     } else {
-      bling.setSlot(4, 128, 255, 0);
+      bling.setSlot(4, 128, 0, 0);
     }
   }
 

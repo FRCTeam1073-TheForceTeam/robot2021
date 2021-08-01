@@ -97,7 +97,7 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(2500);
+    rateLimiter = new SlewRateLimiter(2900);
 
     isHoodGearSlipping = false;
 

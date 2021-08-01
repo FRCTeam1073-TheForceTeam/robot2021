@@ -39,7 +39,7 @@ public final class Constants {
      * Units are in radians/sec difference.
      * */
     // public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 2.0;
-    public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 6.0;
+    public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 3.0;
 
 
     /**
@@ -48,7 +48,7 @@ public final class Constants {
      * for autonomous port tracking commands to be considered to be aligned.
      */
     // public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.0375;
-    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.07;
+    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.05;
 
     public static final double ACCEPTABLE_HOOD_ANGLE_DIFFERENCE = 0.02;
 

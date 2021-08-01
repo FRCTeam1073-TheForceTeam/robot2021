@@ -9,10 +9,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.PowerPortTracker.PowerPortData;
+import frc.robot.subsystems.Bling;
+
 
 public class TurretPortAlignCommand extends CommandBase {
 
@@ -23,12 +26,16 @@ public class TurretPortAlignCommand extends CommandBase {
   boolean endWhenAligned;
   int framesWithoutSignal;
   int maxFramesWithoutSignal;
+  int commandingZero;
+  Bling bling;
 
   public TurretPortAlignCommand(Turret turret_, PowerPortTracker portTracker_, boolean endWhenAligned_, int maxFramesWithoutSignal_) {
 	turret = turret_;
 	portTracker = portTracker_;
 	endWhenAligned = endWhenAligned_;
 	maxFramesWithoutSignal = maxFramesWithoutSignal_;
+	commandingZero = 0;
+	bling = RobotContainer.getBling();
 	addRequirements(turret);
 	// Use addRequirements() here to declare subsystem dependencies.
   }
@@ -47,7 +54,9 @@ public class TurretPortAlignCommand extends CommandBase {
 	coordinateSeparation = 0;
 	portData = new PowerPortData();
 	framesWithoutSignal = 0;
+	commandingZero = 0;
 	turret.setVelocity(0);
+	bling.setSlot(3, 0, 128, 128);
   }
 
   public double curve(double input, double maxSpeed) {
@@ -92,13 +101,21 @@ public class TurretPortAlignCommand extends CommandBase {
 
 	  //I know that it shouldn't need clamping, but I want to make sure
 	  double input = MathUtil.clamp(coordinateSeparation, -1, 1);
+	  double curveit = 1.25 * curve(input);
+	  if (Math.abs(curveit) < 0.05) {
+		  bling.setSlot(3, 128, 0, 128);
+		  commandingZero++;
+	  } else {
+		  bling.setSlot(3, 0, 255, 255);
+		  commandingZero = 0;
+	  }
 	  double output = 1.25 * curve(input);
 	  turret.setVelocity(output);
 	  // SmartDashboard.putNumber("[T-AGN] Intended velocity", output);
 	  // SmartDashboard.putNumber("[T-AGN] Camera coordinate separation", coordinateSeparation);
 	} else {
 	  // SmartDashboard.putString("[T-AGN] Scan status", "[TOO LONG WITHOUT DATA, STOPPING]");
-	  turret.setVelocity(actualOutput);
+	  // turret.setVelocity(actualOutput);
 	}
 	// SmartDashboard.putNumber("[T-AGN] Frames without signal", framesWithoutSignal);
 	// SmartDashboard.putNumber("[T-AGN] Actual velocity", actualOutput);
@@ -107,12 +124,15 @@ public class TurretPortAlignCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+	bling.setSlot(3, 0, 0, 0);
 	turret.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	return endWhenAligned && (Math.abs(coordinateSeparation) <= Constants.ACCEPTABLE_PORT_TRACKER_ALIGNMENT);
+	return (endWhenAligned && 
+	(Math.abs(coordinateSeparation) <= Constants.ACCEPTABLE_PORT_TRACKER_ALIGNMENT))
+	 || (endWhenAligned && commandingZero > 3);
   }
 }

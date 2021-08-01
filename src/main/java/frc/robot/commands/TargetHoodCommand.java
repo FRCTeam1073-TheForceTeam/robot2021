@@ -47,7 +47,8 @@ public class TargetHoodCommand extends CommandBase {
     new InterpolatorTableEntry(4.04, 0.406),
     new InterpolatorTableEntry(4.54, 0.408),
     new InterpolatorTableEntry(5.01, 0.354),
-    new InterpolatorTableEntry(5.49, 0.354)
+    new InterpolatorTableEntry(5.49, 0.354),
+    new InterpolatorTableEntry(7.00, 0.389)
   );
 
   /**Table for shooting in 107, or anywhere else with the small power port.**/

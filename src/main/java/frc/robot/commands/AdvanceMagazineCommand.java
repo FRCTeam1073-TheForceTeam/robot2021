@@ -71,7 +71,7 @@ public class AdvanceMagazineCommand extends CommandBase {
   public void execute() {
     distanceTraveled = (magazine.getPosition() - initPosition);
     magazine.setVelocity(magVelocity);
-    bling.setSlot(3, 0, 255, 125);
+   // bling.setSlot(3, 0, 255, 125);
     isFinished = (Math.signum(numPowerCells) * distanceTraveled >= Math.signum(numPowerCells) * Constants.POWER_CELL_DIAMETER * numPowerCells);
   }
 
@@ -82,7 +82,7 @@ public class AdvanceMagazineCommand extends CommandBase {
     System.out.println("#############################################");
     System.out.println("#############################################");
     magazine.setVelocity(0);
-    bling.setSlot(3, 0, 0, 0);
+   // bling.setSlot(3, 0, 0, 0);
   }
 
   // Returns true when the command should end.

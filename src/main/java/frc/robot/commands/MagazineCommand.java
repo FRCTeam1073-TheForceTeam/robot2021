@@ -83,10 +83,10 @@ public class MagazineCommand extends CommandBase {
         } else {
             collector.setCollect(0.4);
             magazine.setVelocity(velocity);
-            bling.setArray("orange");
+            //bling.setArray("orange");
         }
 
-        bling.setSlot(3, bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
+        // bling.setSlot(3, bling.rgbArr[0], bling.rgbArr[1], bling.rgbArr[2]);
 
         lastReading = sensor;
     }
@@ -96,7 +96,7 @@ public class MagazineCommand extends CommandBase {
     public void end(boolean interrupted) {
         magazine.setVelocity(0.0);
         collector.setCollect(0.0);
-        bling.setSlot(3, 0, 0, 0);
+        // bling.setSlot(3, 0, 0, 0);
         RobotContainer.memory.addToMemory("MagazineCommand", hasFinishedNormally);
     }
 
