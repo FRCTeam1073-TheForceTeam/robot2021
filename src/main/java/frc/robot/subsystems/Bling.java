@@ -69,39 +69,11 @@ public class Bling extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
     if (!cleared) {
+      // Write code here
 
-      // gameData = DriverStation.getInstance().getGameSpecificMessage();
-
-      // if (gameData.equals("R") && gameDataBlinkCount < 5) {
-      // blinkyLights(0, m_ledBuffer.getLength(), 255, 0, 0);
-
-      // } else if (gameData.equals("G") && gameDataBlinkCount < 5) {
-      // blinkyLights(0, m_ledBuffer.getLength(), 0, 255, 0);
-
-      // } else if (gameData.equals("B") && gameDataBlinkCount < 5) {
-      // blinkyLights(0, m_ledBuffer.getLength(), 0, 0, 255);
-
-      // } else if (gameData.equals("Y") && gameDataBlinkCount < 5) {
-      // blinkyLights(0, m_ledBuffer.getLength(), 252, 227, 0);
-
-
-
-      // if (burst_done == 0) {
-      // burst(m_ledBuffer.getLength(), 0, 0, 255);
-      // // setColorRGBAll(0, 0, 0);
-      // } else {
-
-
-
-      // LEDRainbow(15, 25, 20000);
-
-      batteryBling(0, 8, 8.0, 12.5);
-
-      reverseRange(0, 40, 40);
-
-      m_led.setData(m_ledBuffer);
+      // Do not remove! This sets the LEDS
+      setLEDData();
 
     } else {
       clearLEDs();
@@ -187,7 +159,6 @@ public class Bling extends SubsystemBase {
 
   public void setLED(int i, int r, int g, int b) {
     m_ledBuffer.setRGB(i, r, g, b);
-    // m_led.setData(m_ledBuffer);
   }
 
 
@@ -196,7 +167,6 @@ public class Bling extends SubsystemBase {
   public void setLEDs2(int i, int i2, int r, int g, int b) {
     m_ledBuffer.setRGB(i, r, g, b);
     m_ledBuffer.setRGB(i2, r, g, b);
-    m_led.setData(m_ledBuffer);
   }
 
 
@@ -206,7 +176,6 @@ public class Bling extends SubsystemBase {
     for (var i = 0; i < (m_ledBuffer.getLength()); i++) {
       m_ledBuffer.setRGB(i, r, g, b);
     }
-    m_led.setData(m_ledBuffer);
   }
 
 
@@ -216,7 +185,6 @@ public class Bling extends SubsystemBase {
     for (var i = 0; i < (m_ledBuffer.getLength()); i++) {
       m_ledBuffer.setHSV(i, h, s, v);
     }
-    m_led.setData(m_ledBuffer);
   }
 
 
@@ -233,7 +201,6 @@ public class Bling extends SubsystemBase {
       m_ledBuffer.setRGB(j, r2, g2, b2);
       m_ledBuffer.setRGB(j + 1, r2, g2, b2);
     }
-    m_led.setData(m_ledBuffer);
   }
 
 
@@ -249,7 +216,6 @@ public class Bling extends SubsystemBase {
     for (int j = min + 1; j < (max); j = j + 2) {
       m_ledBuffer.setHSV(j, h2, s2, v2);
     }
-    m_led.setData(m_ledBuffer);
   }
 
 
@@ -260,7 +226,6 @@ public class Bling extends SubsystemBase {
     for (int i = min; i < (max); i++) {
       m_ledBuffer.setRGB(i, r, g, b);
     }
-    // m_led.setData(m_ledBuffer);
   }
 
 
@@ -272,8 +237,6 @@ public class Bling extends SubsystemBase {
     for (int i = min; i < (max); i++) {
       m_ledBuffer.setHSV(i, h, s, v);
     }
-
-    m_led.setData(m_ledBuffer);
   }
 
 
@@ -318,6 +281,8 @@ public class Bling extends SubsystemBase {
 
 
   public void LEDRainbow(int startLEDs, int numLEDs, int targetTime) {
+    // TODO: Fix rainbow bling
+
     /*
     if (counter_rainbow >= targetTime) {
       move_rainbow++;
@@ -364,7 +329,6 @@ public class Bling extends SubsystemBase {
       counter_rainbow++;
     }
 
-    m_led.setData(m_ledBuffer);
     */
   }
 
