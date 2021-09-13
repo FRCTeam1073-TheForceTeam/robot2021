@@ -72,6 +72,9 @@ public class Bling extends SubsystemBase {
     if (!cleared) {
       // Write code here
 
+      LEDRainbow(0, 20, 10);
+      // setLED(3, 255, 0, 0);
+
       // Do not remove! This sets the LEDS
       setLEDData();
 
@@ -281,15 +284,10 @@ public class Bling extends SubsystemBase {
 
 
   public void LEDRainbow(int startLEDs, int numLEDs, int targetTime) {
-    // TODO: Fix rainbow bling
-
-    /*
     if (counter_rainbow >= targetTime) {
       move_rainbow++;
-      move_rainbow %= numLEDs;
+      move_rainbow %= 12;
       counter_rainbow = 0;
-
-      // System.out.println(startLEDs);
 
       for (int i = startLEDs; i < (startLEDs + numLEDs); i++) {
 
@@ -328,8 +326,6 @@ public class Bling extends SubsystemBase {
     } else {
       counter_rainbow++;
     }
-
-    */
   }
 
 
