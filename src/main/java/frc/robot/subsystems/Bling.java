@@ -180,9 +180,7 @@ public class Bling extends SubsystemBase {
 
   // setColorRGBAll sets the LEDs all to one color
   public void setColorRGBAll(int r, int g, int b) {
-    for (var i = 0; i < (m_ledBuffer.getLength()); i++) {
-      m_ledBuffer.setRGB(i, r, g, b);
-    }
+    
   }
 
 
