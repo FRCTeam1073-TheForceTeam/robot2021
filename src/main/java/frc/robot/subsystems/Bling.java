@@ -72,12 +72,14 @@ public class Bling extends SubsystemBase {
     if (!cleared) {
       // Write code here
 
-      LEDRainbow(0, 40, 5);
+      setColorRGBAll(52, 235, 207);
+
+      // LEDRainbow(0, 40, 5);
 
       // setArray("blue");
       // setLED(3, rgbArr[0], rgbArr[1], rgbArr[2]);
 
-      reverseRange(0,40,40);
+      // reverseRange(0,40,40);
 
       // Do not remove! This sets the LEDS
       setLEDData();
@@ -180,7 +182,9 @@ public class Bling extends SubsystemBase {
 
   // setColorRGBAll sets the LEDs all to one color
   public void setColorRGBAll(int r, int g, int b) {
-    
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, r, g, b);
+    }
   }
 
 
