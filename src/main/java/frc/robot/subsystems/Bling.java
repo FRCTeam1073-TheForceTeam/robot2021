@@ -72,8 +72,12 @@ public class Bling extends SubsystemBase {
     if (!cleared) {
       // Write code here
 
-      LEDRainbow(0, 20, 10);
-      // setLED(3, 255, 0, 0);
+      LEDRainbow(0, 40, 5);
+
+      // setArray("blue");
+      // setLED(3, rgbArr[0], rgbArr[1], rgbArr[2]);
+
+      reverseRange(0,40,40);
 
       // Do not remove! This sets the LEDS
       setLEDData();
