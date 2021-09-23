@@ -72,7 +72,8 @@ public class Bling extends SubsystemBase {
     if (!cleared) {
       // Write code here
 
-      setColorRGBAll(52, 235, 207);
+      setColorRGBAlternate(255, 149, 0);
+      setColorRGBAlternate2(0, 0, 0);
 
       // LEDRainbow(0, 40, 5);
 
@@ -187,7 +188,17 @@ public class Bling extends SubsystemBase {
     }
   }
 
+  public void setColorRGBAlternate(int r, int g, int b) {
+    for (var i = 0; i < m_ledBuffer.getLength(); i+=2) {
+      m_ledBuffer.setRGB(i, r, g, b);
+    }
+  }
 
+  public void setColorRGBAlternate2(int r, int g, int b) {
+    for (var i = 1; i < m_ledBuffer.getLength(); i+=2) {
+      m_ledBuffer.setRGB(i, r, g, b);
+    }
+  }
 
   // setColorHSVAll() sets all of the LEDs to one color using HSV
   public void setColorHSVAll(int h, int s, int v) {
