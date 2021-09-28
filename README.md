@@ -27,8 +27,9 @@ so the teleop controls for many of the mechanisms may be more high-level than th
 
 **Magazine:**
 (Operator controller)
-  -  **Left bumper**: Move the magazine upwards by one power cell diameter.
-  -  **Right bumper**: Move the magazine downwards by one power cell diameter.
+  -  **Start button**: Move the magazine upwards by one power cell diameter.
+  -  **Back button**: Move the magazine downwards by one power cell diameter.
+
 
 **Firing controls (Shooter/Turret):**
 (Operator controller)
@@ -40,6 +41,8 @@ so the teleop controls for many of the mechanisms may be more high-level than th
   - **X button**: Aims the turret to align to the power port and automatically sets the flywheel speed and hood angle to fire a power cell. Unlike `AutomaticFireCommand`, this does not actually fire, as firing and powering the shooter down are separate commands.
 
   - **Y button**: Advances the magazine by 4 power cells. This is intended as the 'fire' command, where operators press X to aim, Y to fire, and B to stop the shooter after firing or to cancel.
+
+  -  **Left bumper**: Cancels the auto-firing command when pressed. Often necessary when trying to restart the shooter quickly.
 
   The manual controls for the shooter and turret use the D-Pad and the right stick:
   - **Right stick X**: Moves the turret
