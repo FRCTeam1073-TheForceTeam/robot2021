@@ -101,7 +101,7 @@ public class ChaseCommand extends CommandBase {
         hasData = powerCellTracker.getCellData(powerCellData);
 
         if (hasData) {
-            bling.setArray("green");
+            bling.setArray("blue");
             alignState();
             loopsWithoutData = 0;
             skipScan = true;

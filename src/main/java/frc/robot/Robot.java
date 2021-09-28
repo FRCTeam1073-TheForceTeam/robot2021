@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.OI;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -57,6 +58,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     // TODO: Any additional disable logic.
+    RobotContainer.getShooter().setFlywheelVelocity(0);
     RobotContainer.getBling().clearLEDs();
     RobotContainer.getBling().cleared();
     RobotContainer.aimingDataRecorder.onDisable();
@@ -91,6 +93,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    RobotContainer.getShooter().setFlywheelVelocity(0);
     RobotContainer.getBling().uncleared();
     CommandScheduler.getInstance().cancelAll(); // Stop all commands.
     // Start teleop command.

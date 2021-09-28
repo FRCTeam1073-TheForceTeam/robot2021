@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Bling;
 
 public class AdvanceMagazineCommand extends CommandBase {
   /** Creates a new AdvancedMagazineCommand. */
   private Magazine magazine;
+  private Bling bling;
   private double magVelocity;
   private double initPosition;
   private double distanceTraveled;
@@ -28,9 +30,10 @@ public class AdvanceMagazineCommand extends CommandBase {
    * @param magVelocity_   (Absolute value of) magazine velocity (m/s) (defaults to 1 m/s)
    * @param numPowerCells_ Number of power cells (defaults to 1)
    */
-  public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_, double numPowerCells_,
+  public AdvanceMagazineCommand(Magazine magazine_, Bling bling_, double magVelocity_, double numPowerCells_,
       int checkNumPreviousMemoryEntries) {
     magazine = magazine_;
+    bling = bling_;
     magVelocity = magVelocity_;
     numPowerCells = numPowerCells_;
     magVelocity = Math.abs(magVelocity) * Math.signum(numPowerCells);
@@ -38,16 +41,16 @@ public class AdvanceMagazineCommand extends CommandBase {
     addRequirements(magazine);
   }
 
-  public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_, double numPowerCells_) {
-    this(magazine_, magVelocity_, numPowerCells_, 0);
+  public AdvanceMagazineCommand(Magazine magazine_, Bling bling_, double magVelocity_, double numPowerCells_) {
+    this(magazine_, bling_, magVelocity_, numPowerCells_, 0);
   }
 
-  public AdvanceMagazineCommand(Magazine magazine_, double magVelocity_) {
-    this(magazine_, magVelocity_, 1, 0);
+  public AdvanceMagazineCommand(Magazine magazine_, Bling bling_, double magVelocity_) {
+    this(magazine_, bling_, magVelocity_, 1, 0);
   }
 
-  public AdvanceMagazineCommand(Magazine magazine_) {
-    this(magazine_, 0.15);
+  public AdvanceMagazineCommand(Magazine magazine_, Bling bling_) {
+    this(magazine_, bling_, 0.15);
   }
 
   // Called when the command is initially scheduled.
@@ -68,6 +71,7 @@ public class AdvanceMagazineCommand extends CommandBase {
   public void execute() {
     distanceTraveled = (magazine.getPosition() - initPosition);
     magazine.setVelocity(magVelocity);
+   // bling.setSlot(3, 0, 255, 125);
     isFinished = (Math.signum(numPowerCells) * distanceTraveled >= Math.signum(numPowerCells) * Constants.POWER_CELL_DIAMETER * numPowerCells);
   }
 
@@ -78,6 +82,7 @@ public class AdvanceMagazineCommand extends CommandBase {
     System.out.println("#############################################");
     System.out.println("#############################################");
     magazine.setVelocity(0);
+   // bling.setSlot(3, 0, 0, 0);
   }
 
   // Returns true when the command should end.

@@ -30,17 +30,17 @@ public class WaitToFire extends CommandBase {
   public WaitToFire(Shooter shooter_, PowerPortTracker portTracker_) {
     shooter = shooter_;
     portTracker = portTracker_;
+  }
+
+  @Override
+  public void initialize() {
+    initFlywheelTargetVelocity = shooter.getFlywheelTargetVelocity();
     isPortTrackerAligned = false;
     isShooterReady = false;
     portData = new PowerPortData();
     coordinateSeparation = 0;
     frameCounter = 0;
     hasData = false;
-  }
-
-  @Override
-  public void initialize() {
-    initFlywheelTargetVelocity = shooter.getFlywheelTargetVelocity();
   }
 
   // Returns true when the command should end.

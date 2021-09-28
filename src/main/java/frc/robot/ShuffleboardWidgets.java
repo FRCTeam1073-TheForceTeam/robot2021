@@ -25,28 +25,14 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private static ShuffleboardTab tab;
         // private static NetworkTableEntry chooseAuto;
         public static int auto = 100;
-        private byte autoNum = 19;
+        private byte autoNum = 4;
         private byte place = -1;
-        private String[] autoNames = { "1CellScan&Collect", // 0
-                        "2CellScan&Collect", // 1
-                        "3CellScan&Collect", // 2
-                        "Squaretest", // 3
-                        "DriveTPoint", // 4
-                        "AutoFire", // 5
-                        "GalaxySearchSlow", // 6
-                        "ConditionalCommandTest", // 7
-                        "Drove&TurnToHeading", // 8
-                        "AutonomousAwardAwfulness", // 9
-                        "GalaxySearchFast", // 10
-                        "PurePursuitBarrel", // 11
-                        "FireThreePowerCells", // 12
-                        "FireOnePowerCell", // 13
-                        "FireDetectionTest", // 14
-                        "Comp3Cells", // 15
-                        "CompL5Cells", // 16
-                        "CompM5Cells", // 17
-                        "CompL6Cells" // 18
+        private String[] autoNames = { "Comp3Cells", // 0
+                        "CompL5Cells", // 1
+                        "CompM5Cells", // 2
+                        "CompL6Cells" // 3
         };
+        public static double waitTime;
 
         private static ShuffleboardLayout autoChooser;
         private static ShuffleboardLayout driving;
@@ -112,6 +98,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private boolean turretAtLimit = false;
 
         private NetworkTableEntry[] autosE = new NetworkTableEntry[autoNum];
+        private NetworkTableEntry waitTimeE;
 
         private NetworkTableEntry robotAngE;
         private NetworkTableEntry robotAngleE;
@@ -155,7 +142,6 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private NetworkTableEntry isCollectorStalled;
         private NetworkTableEntry isHoodGearSlipping;
-        private NetworkTableEntry isShooterCurrentHigh;
         private NetworkTableEntry isTurretAtLimit;
 
         public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
@@ -179,16 +165,18 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 // 0).withWidget(BuiltInWidgets.kTextView).withSize(1, 2)
                 // .withPosition(0, 0).getEntry();
 
-                autoChooser = tab.getLayout("Auto-Chooser", BuiltInLayouts.kList).withSize(1, 2).withPosition(0, 0);
-                driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 3).withPosition(0, 2);
-                collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(1, 2).withPosition(1, 0);
-                magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(1, 2).withPosition(2, 0);
-                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(2, 3).withPosition(2, 2);
-                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(1, 3).withPosition(4, 2);
-                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(3, 0);
-                portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(1, 2).withPosition(4, 0);
-                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(2, 5).withPosition(5,0);
-                warningReadout = tab.getLayout("Mechanism warnings", BuiltInLayouts.kList).withSize(2, 5).withPosition(6,0);
+                autoChooser = tab.getLayout("Auto-Chooser", BuiltInLayouts.kList).withSize(4, 9).withPosition(0, 0);
+                driving = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(4, 4).withPosition(4, 5);
+                collecting = tab.getLayout("Collector", BuiltInLayouts.kList).withSize(4, 3).withPosition(4, 0);
+                magazining = tab.getLayout("Magazine", BuiltInLayouts.kList).withSize(4, 3).withPosition(10, 0);
+                turreting = tab.getLayout("Turret", BuiltInLayouts.kList).withSize(5, 4).withPosition(14, 5);
+                shooting = tab.getLayout("Shooter", BuiltInLayouts.kList).withSize(2, 9).withPosition(8, 0);
+                cellTracking = tab.getLayout("CellTracker", BuiltInLayouts.kList).withSize(4, 2).withPosition(4, 3);
+                portTracking = tab.getLayout("PortTracker", BuiltInLayouts.kList).withSize(4, 2).withPosition(10, 7);
+                shootingReadout = tab.getLayout("Shooter readouts", BuiltInLayouts.kList).withSize(5, 5)
+                                .withPosition(14, 0);
+                warningReadout = tab.getLayout("Mechanism warnings", BuiltInLayouts.kList).withSize(4, 4)
+                                .withPosition(10, 3);
 
                 hoodMax = shooter.maxHoodPosition;
                 hoodMin = shooter.minHoodPosition;
@@ -209,6 +197,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                         autosE[i] = autoChooser.add(autoNames[i], autos[i]).withWidget(BuiltInWidgets.kToggleSwitch)
                                         .getEntry();
                 }
+                waitTimeE = autoChooser.add("Wait in seconds", waitTime).getEntry();
 
                 robotAngE = driving.add("Angle mirrored", robotAng).withWidget(BuiltInWidgets.kDial)
                                 .withProperties(Map.of("min", -90, "max", 90)).getEntry();
@@ -235,7 +224,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 flywheelTargetVelocityE = shooting.add("Target Velocity", shooter.getFlywheelTargetVelocity())
                                 .getEntry();
                 hoodAngleE = shooting.add("Angle", hoodAngle).withWidget(BuiltInWidgets.kNumberBar)
-                                .withProperties(Map.of("min", shooter.hoodAngleLow, "max", shooter.hoodAngleHigh)).getEntry();
+                                .withProperties(Map.of("min", shooter.hoodAngleLow, "max", shooter.hoodAngleHigh))
+                                .getEntry();
                 hoodPositionE = shooting.add("Position", hoodPosition).getEntry();
                 hoodMinE = shooting.add("Min P", hoodMin).getEntry();
                 hoodMaxE = shooting.add("Max P", hoodMax).getEntry();
@@ -266,18 +256,18 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 shooterFlywheelSpeed = shootingReadout.add("Flywheel speed (radians/s)", flywheelVelocity)
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", 0, "max", Constants.MAX_FLYWHEEL_SPEED)).getEntry();
-                
+
                 isCollectorStalled = warningReadout.add("IS COLLECTOR STALLED", collectorStalled)
                                 .withWidget(BuiltInWidgets.kBooleanBox)
-                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .withProperties(Map.of("Color when false", "#1f1f1f", "Color when true", "#ff0000"))
                                 .getEntry();
                 isHoodGearSlipping = warningReadout.add("IS HOOD GEAR SLIPPING", hoodGearSlipping)
                                 .withWidget(BuiltInWidgets.kBooleanBox)
-                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .withProperties(Map.of("Color when false", "#1f1f1f", "Color when true", "#ff0000"))
                                 .getEntry();
                 isTurretAtLimit = warningReadout.add("IS TURRET AT LIMIT", turretAtLimit)
                                 .withWidget(BuiltInWidgets.kBooleanBox)
-                                .withProperties(Map.of("Color when false","#1f1f1f","Color when true","#ff0000"))
+                                .withProperties(Map.of("Color when false", "#1f1f1f", "Color when true", "#ff0000"))
                                 .getEntry();
         }
 
@@ -308,7 +298,6 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 hoodPosition = shooter.getHoodPosition();
                 flywheelTemp1 = shooter.getFlywheelTemperatures()[0];
                 flywheelTemp2 = shooter.getFlywheelTemperatures()[1];
-                hoodMotorCurrent = shooter.getHoodMotorCurrent();
 
                 cellTracker.getCellData(cellData);
                 cellX = cellData.cx;
@@ -358,11 +347,11 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 portTrackerHasData.setBoolean(portTracker.getPortData(new PowerPortData()));
                 sensorRange.setDouble(portTracker.getRange());
                 shooterHoodAngleDegrees.setDouble(Units.radiansToDegrees(hoodAngle));
-                shooterFlywheelSpeed.setDouble(flywheelVelocity);
+                shooterFlywheelSpeed.setNumber(flywheelVelocity);
 
                 isCollectorStalled.setBoolean(collectorStalled);
                 isHoodGearSlipping.setBoolean(hoodGearSlipping);
-                isHoodGearSlipping.setBoolean(turretAtLimit);
+                isTurretAtLimit.setBoolean(turretAtLimit);
         }
 
         private void updateAutoChooser() {
@@ -383,7 +372,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 if (place > -1) {
                         auto = place;
                 }
-                // auto = (int) chooseAuto.getDouble(100.0);
+
+                waitTime = waitTimeE.getDouble(0.0);
         }
 
         boolean a = false;
