@@ -20,10 +20,10 @@ public final class Constants {
     public static final double THROTTLE_FALLOFF = 0.7;
 
     public enum PowerPortConfiguration {
-        LOW,HIGH
+        LOW,HIGH,HIGH_EXP
     };
 
-    public static final PowerPortConfiguration portConfig = PowerPortConfiguration.HIGH;
+    public static final PowerPortConfiguration portConfig = PowerPortConfiguration.HIGH_EXP;
 
     /**Power cell diameter in meters.**/
     public static final double POWER_CELL_DIAMETER = 0.18;

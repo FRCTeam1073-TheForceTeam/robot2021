@@ -137,6 +137,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private NetworkTableEntry shooterFlywheelSpeed;
         private NetworkTableEntry shooterHoodAngleDegrees;
+        private NetworkTableEntry shooterHoodAngleRadians;
         private NetworkTableEntry sensorRange;
         private NetworkTableEntry portTrackerHasData;
 
@@ -248,6 +249,11 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 sensorRange = shootingReadout.add("Range sensor distance (meters)", portTracker.getRange())
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", 0, "max", Constants.MAXIMUM_DETECTABLE_RANGE)).getEntry();
+                shooterHoodAngleRadians = shootingReadout.add("Hood angle (radians)", hoodAngle)
+                                .withWidget(BuiltInWidgets.kNumberBar)
+                                .withProperties(Map.of("min", shooter.hoodAngleLow * 180.0 / Math.PI, "max",
+                                                shooter.hoodAngleHigh * 180.0 / Math.PI))
+                                .getEntry();
                 shooterHoodAngleDegrees = shootingReadout.add("Hood angle (degrees)", hoodAngle)
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", shooter.hoodAngleLow * 180.0 / Math.PI, "max",
@@ -347,6 +353,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 portTrackerHasData.setBoolean(portTracker.getPortData(new PowerPortData()));
                 sensorRange.setDouble(portTracker.getRange());
                 shooterHoodAngleDegrees.setDouble(Units.radiansToDegrees(hoodAngle));
+                shooterHoodAngleRadians.setDouble(hoodAngle);
                 shooterFlywheelSpeed.setNumber(flywheelVelocity);
 
                 isCollectorStalled.setBoolean(collectorStalled);
