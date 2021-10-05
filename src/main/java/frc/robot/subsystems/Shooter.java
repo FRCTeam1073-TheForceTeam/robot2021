@@ -79,8 +79,8 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.setSafetyEnabled(false);
     shooterFlywheel2.setSafetyEnabled(false);
 
-    shooterFlywheel1.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0.1));
-    shooterFlywheel2.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0.1));
+    shooterFlywheel1.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30, 0.1));
+    shooterFlywheel2.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30, 0.1));
 
     shooterFlywheel1.setNeutralMode(NeutralMode.Brake);
     shooterFlywheel2.setNeutralMode(NeutralMode.Brake);
@@ -97,7 +97,7 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(2900);
+    rateLimiter = new SlewRateLimiter(3600);
 
     isHoodGearSlipping = false;
 
