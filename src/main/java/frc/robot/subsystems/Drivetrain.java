@@ -266,6 +266,10 @@ public class Drivetrain extends SubsystemBase  {
         leftMotorLeader.config_kF(0, kF);
     }
 
+    /**
+     * Returns a ChassisSpeeds object for the drivetrain's velocity in m/s.
+     * @return
+     */
     public ChassisSpeeds getDrivetrainVelocity() {
         return kinematics.toChassisSpeeds(getWheelSpeeds());
     }
