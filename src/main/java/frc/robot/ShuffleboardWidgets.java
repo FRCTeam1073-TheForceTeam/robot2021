@@ -19,7 +19,8 @@ import frc.robot.subsystems.PowerPortTracker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
-public class ShuffleboardWidgets extends SubsystemBase {
+public class ShuffleboardWidgets extends SubsystemBase 
+{
         private static ShuffleboardTab tab;
 
         private static ShuffleboardLayout testPanel;
@@ -42,9 +43,11 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private double flywheelVelocity = 0.0;
 
         private NetworkTableEntry yourDisplay;
+        private int myNumber = 3;
 
         public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
-                        Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) {
+                        Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) 
+                        {
                 this.drivetrain = drivetrain;
                 this.collector = collector;
                 this.magazine = magazine;
@@ -54,7 +57,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 this.portTracker = portTracker;
         }
 
-        public void initialize() {
+        public void initialize() 
+        {
                 tab = Shuffleboard.getTab("Robot 2021");
 
                 testPanel = tab.getLayout("Test Panel", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0);
@@ -63,15 +67,17 @@ public class ShuffleboardWidgets extends SubsystemBase {
         }
 
         @Override
-        public void periodic() {
+        public void periodic() 
+        {
                 updateWidgets();
                 Shuffleboard.update();
         }
 
-        private void createWidgets() {
+        private void createWidgets() 
+        {
 
                 //Robot velocity in m/s: number bar display from -4 m/s to +4 m/s
-                robotVelocityDisplay = testPanel.add("Drivetrain velocity (meters/second)", robotVelocity).withWidget(BuiltInWidgets.kNumberBar)
+                robotVelocityDisplay = testPanel.add("Drivetrain velocity (meters per second)", robotVelocity).withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", -4, "max", 4)).getEntry();
 
                 //True/false value for if the collector is deployed (gray when off, green when on).
@@ -79,12 +85,17 @@ public class ShuffleboardWidgets extends SubsystemBase {
                                 .withProperties(Map.of("min", "#050505", "max", "#b0ff00")).getEntry();
 
                 //Graph of the flywheel speed in radians/s.
-                flywheelVelocityGraph = testPanel.add("Flywheel velocity (radians/second)", flywheelVelocity).withWidget(BuiltInWidgets.kGraph)
+                flywheelVelocityGraph = testPanel.add("Flywheel velocity (radians per second)", flywheelVelocity).withWidget(BuiltInWidgets.kGraph)
                                 .getEntry();
-
+                
+                yourDisplay = testPanel.add("Testing", 123456789)
+                        .withWidget(BuiltInWidgets.kGraph).
+                        withProperties(Map.of("Lower bound",
+                        0, "Upper bound", 100000.0, "Automatic bounds", 0)).getEntry();
         }
 
-        private void updateWidgets() {
+        private void updateWidgets() 
+        {
                 robotVelocity = drivetrain.getDrivetrainVelocity().vxMetersPerSecond;
                 robotVelocityDisplay.setNumber(robotVelocity);
 
@@ -93,5 +104,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
                 flywheelVelocity = shooter.getFlywheelVelocity();
                 flywheelVelocityGraph.setNumber(flywheelVelocity);
+
+                myNumber++;
+                yourDisplay.setNumber(myNumber);
         }
 }
