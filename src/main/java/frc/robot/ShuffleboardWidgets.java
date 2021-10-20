@@ -73,9 +73,7 @@ public class ShuffleboardWidgets extends SubsystemBase
                 Shuffleboard.update();
         }
 
-        private void createWidgets() 
-        {
-
+        private void createWidgets() {
                 //Robot velocity in m/s: number bar display from -4 m/s to +4 m/s
                 robotVelocityDisplay = testPanel.add("Drivetrain velocity (meters per second)", robotVelocity).withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", -4, "max", 4)).getEntry();
