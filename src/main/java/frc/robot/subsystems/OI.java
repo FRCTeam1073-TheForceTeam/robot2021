@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class OI {
-
     public static XboxController driverController;
     public static XboxController operatorController;
 
@@ -11,5 +10,4 @@ public class OI {
         driverController = new XboxController(0);
         operatorController = new XboxController(1);
     }
-
 }
