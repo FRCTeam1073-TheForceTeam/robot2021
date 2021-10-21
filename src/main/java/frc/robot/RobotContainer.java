@@ -5,17 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.TestCommand;
+
 // Import subsystems: Add subsystems here.
+
+import frc.robot.subsystems.*;
 
 // Import controls: Add controls here.
 
@@ -33,11 +28,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
 
   // Subsystems: Add subsystems here
+  TestSubsystem testSubsystem = new TestSubsystem();
 
   // Controls: Add controls here.
-
-  // private final ParallelCommandGroup teleopCommand =
-  // teleDrive.alongWith(teleCollect);
+  TestCommand testCommand = new TestCommand(testSubsystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -54,6 +48,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
   }
 
   /**
@@ -62,15 +57,19 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // Return the command that will run during autonomous ('return null' means no command will be run)
     return null;
   }
 
   // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
-    return null;
+    // Return the command that will run during teleop ('return null' means no command will be run)
+    return testCommand;
   }
 
   public Command getTestCommand() {
+    // Return the command that will run during test mode (it's not that important)
+    // ('return null' means no command will be run)
     return null;
   }
 }

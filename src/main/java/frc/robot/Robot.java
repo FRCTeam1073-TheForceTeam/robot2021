@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // TODO: Any additional periodic work for teleop mode.
+
   }
 
   @Override
@@ -115,6 +115,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-  }
 
+  }
 }
