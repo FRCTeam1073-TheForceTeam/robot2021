@@ -28,6 +28,8 @@ public class TestCommand extends CommandBase {
   @Override
   public void execute() {
     // Code that loops until the command ends (do actual motor stuff here!):
+    testSubsystem.testMotor.set(0.2);
+
 
   }
 

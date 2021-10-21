@@ -17,7 +17,7 @@ public class TestSubsystem extends SubsystemBase {
   /** Creates a new TestSubsystem. */
   public TestSubsystem() {
     // Initialize devices here:
-
+testMotor = new WPI_TalonFX(20);
 
   }
 
