@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.OI;
 import frc.robot.subsystems.TestSubsystem;
 
 public class TestCommand extends CommandBase {
@@ -28,7 +29,7 @@ public class TestCommand extends CommandBase {
   @Override
   public void execute() {
     // Code that loops until the command ends (do actual motor stuff here!):
-    testSubsystem.testMotor.set(0.2);
+    testSubsystem.testMotor.set(OI.driverController.getRawAxis(1)*0.2);
   }
 
   @Override
