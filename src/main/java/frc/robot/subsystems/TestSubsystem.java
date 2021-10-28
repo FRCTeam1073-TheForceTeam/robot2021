@@ -14,13 +14,14 @@ public class TestSubsystem extends SubsystemBase {
 
   // Define devices here:
   public WPI_TalonFX testMotor;
-  public static int ticksPerRevolution = 2048;
+  public int ticksPerRevolution = 2048;
 
   /** Creates a new TestSubsystem. */
   public TestSubsystem() {
     // Initialize devices here:
     testMotor = new WPI_TalonFX(20);
-    testMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+    testMotor.configFactoryDefault();
+    testMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     testMotor.setSelectedSensorPosition(0);
   }
   
