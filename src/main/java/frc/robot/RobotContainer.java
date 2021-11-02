@@ -123,6 +123,16 @@ public class RobotContainer {
     collector.setDefaultCommand(teleCollect);
     shooter.setDefaultCommand(teleShooter);
     climber.setDefaultCommand(teleClimberTest);
+    RevisedCompetitionAutonomous.init(
+      drivetrain,
+      collector,
+      magazine,
+      turret,
+      shooter,
+      cellTracker,
+      portTracker,
+      bling
+    );
   }
 
   /**
@@ -169,14 +179,15 @@ public class RobotContainer {
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 0);
       case 1:
-        return new RevisedCompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker,
-            portTracker, bling);
+        return RevisedCompetitionAutonomous.getAuto5Cells();
       case 2:
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 2);
       case 3:
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 3);
+      case 4:
+        return RevisedCompetitionAutonomous.getAuto4Cells();
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }
