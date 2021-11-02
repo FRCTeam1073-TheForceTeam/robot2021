@@ -87,7 +87,10 @@ public class RobotContainer {
       ),
       new ParallelDeadlineGroup(
         (new WaitForShooterCurrentSpike(shooter, true)),
-        new AdvanceMagazineCommand(magazine, bling, 0.5, 8)
+        new ParallelCommandGroup(
+          new TurretPortAlignCommand(turret, portTracker),
+          new AdvanceMagazineCommand(magazine, bling, 0.5, 8)
+        )
       )
   );
   private final ClimberTestControls teleClimberTest = new ClimberTestControls(climber);
