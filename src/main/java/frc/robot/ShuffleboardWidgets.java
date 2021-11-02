@@ -143,6 +143,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private NetworkTableEntry isCollectorStalled;
         private NetworkTableEntry isHoodGearSlipping;
         private NetworkTableEntry isTurretAtLimit;
+        private NetworkTableEntry powerPortConfig;
 
         public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
                         Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) {
@@ -269,6 +270,9 @@ public class ShuffleboardWidgets extends SubsystemBase {
                                 .withWidget(BuiltInWidgets.kBooleanBox)
                                 .withProperties(Map.of("Color when false", "#1f1f1f", "Color when true", "#ff0000"))
                                 .getEntry();
+                powerPortConfig = warningReadout.add("Power Port Config",Constants.portConfig.name())
+                                .withWidget(BuiltInWidgets.kTextView)
+                                .getEntry();
         }
 
         private void updateWidgets() {
@@ -352,6 +356,7 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 isCollectorStalled.setBoolean(collectorStalled);
                 isHoodGearSlipping.setBoolean(hoodGearSlipping);
                 isTurretAtLimit.setBoolean(turretAtLimit);
+                powerPortConfig.setString(Constants.portConfig.name());
         }
 
         private void updateAutoChooser() {

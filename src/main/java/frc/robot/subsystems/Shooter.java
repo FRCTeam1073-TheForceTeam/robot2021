@@ -11,6 +11,7 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -79,8 +80,8 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.setSafetyEnabled(false);
     shooterFlywheel2.setSafetyEnabled(false);
 
-    shooterFlywheel1.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0.1));
-    shooterFlywheel2.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0.1));
+    shooterFlywheel1.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 25, 0.2));
+    shooterFlywheel2.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 25, 0.2));
 
     shooterFlywheel1.setNeutralMode(NeutralMode.Brake);
     shooterFlywheel2.setNeutralMode(NeutralMode.Brake);
