@@ -30,7 +30,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private String[] autoNames = { "Comp3Cells", // 0
                         "CompL5Cells", // 1
                         "CompM5Cells", // 2
-                        "CompL6Cells" // 3
+                        "CompL6Cells", // 3
+                        "CompL4Cells"  // 4
         };
         public static double waitTime;
 
