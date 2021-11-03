@@ -23,6 +23,10 @@ public class Utility {
         return deadzone(rawAxisValue, Constants.CONTROLLER_DEADZONE);
     }
 
+    public static double lerp(double low, double high, double alpha) {
+        return low+ (high - low) * alpha;
+    }
+
     static class PathBuilder {
         public enum PathIndex {
             BARREL_1, BARREL_2, BARREL_3, BARREL_4, SLALOM, BOUNCE, TEST, HOME

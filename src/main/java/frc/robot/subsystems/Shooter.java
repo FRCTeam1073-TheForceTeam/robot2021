@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.components.ShooterRateLimiter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -61,7 +62,7 @@ public class Shooter extends SubsystemBase {
   public final double hoodAngleLow = 19.64 * Math.PI / 180.0;
   public final double kRawMotorRange = 2.523808240890503;
   private boolean usingExternalHoodEncoder = true;
-  SlewRateLimiter rateLimiter;
+  ShooterRateLimiter rateLimiter;
 
   public Shooter() {
     shooterFlywheel1 = new WPI_TalonFX(22);
@@ -98,7 +99,7 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.config_kF(0, flywheelF);
     flywheelTemperatures = new double[] { -273.15, 15e6 };
 
-    rateLimiter = new SlewRateLimiter(2900);
+    rateLimiter = new ShooterRateLimiter(2900);
 
     isHoodGearSlipping = false;
 
@@ -292,7 +293,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     double limitedFlywheelVelocity = rateLimiter
-        .calculate(flywheelTargetVelocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI));
+        .calculate(flywheelTargetVelocity * 0.1 * flywheelTicksPerRevolution / (2.0 * Math.PI), getFlywheelVelocity());
     shooterFlywheel1.set(ControlMode.Velocity, limitedFlywheelVelocity);
     
     double hallSensorVelocity = hoodHallSensor.getVelocity() * 2.0 * Math.PI / 60.0;
