@@ -81,8 +81,8 @@ public class Shooter extends SubsystemBase {
     shooterFlywheel1.setSafetyEnabled(false);
     shooterFlywheel2.setSafetyEnabled(false);
 
-    shooterFlywheel1.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 25, 0.2));
-    shooterFlywheel2.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 25, 0.2));
+    shooterFlywheel1.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 25, 25, 0.2));
+    shooterFlywheel2.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 25, 25, 0.2));
 
     shooterFlywheel1.setNeutralMode(NeutralMode.Brake);
     shooterFlywheel2.setNeutralMode(NeutralMode.Brake);

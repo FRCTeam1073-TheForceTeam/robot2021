@@ -118,8 +118,9 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
                         new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
                             new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
                         new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                            new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0))
-                    ),                    
+                            new AdvanceMagazineCommand(magazine, bling, 0.5, 8.0)),
+                        new AdvanceMagazineCommand(magazine, bling, 0.5, 0.3)
+                    ),
                     new DeployCommand(collector)
                 )
             ),
@@ -147,17 +148,16 @@ public class RevisedCompetitionAutonomous extends SequentialCommandGroup {
                         new TurretPortAlignCommand(turret,portTracker)
                     )
                 ),
-                // Shooting the two collected Powercells
+                // Shooting the collected Powercell
                 new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
                     new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
-                new ParallelDeadlineGroup((new WaitForShooterCurrentSpike(shooter, true)),
-                    new AdvanceMagazineCommand(magazine, bling, 0.5, 50.0)),
-                // Shutting down the Shooter
+                new AdvanceMagazineCommand(magazine, bling, 0.5, 0.3),
+                    // Shutting down the Shooter
                 new SequentialCommandGroup(
                     new TurretPositionCommand(turret, 0),
                     new ShooterSetCommand(shooter, shooter.hoodAngleHigh, 0)
                 )
             )
         );
-      }
+    }
 }
