@@ -25,7 +25,7 @@ public final class Constants {
         LOW,HIGH,HIGH_EXP
     };
 
-    public static final PowerPortConfiguration portConfig = PowerPortConfiguration.HIGH_EXP;
+    public static final PowerPortConfiguration portConfig = PowerPortConfiguration.HIGH;
 
     /**Power cell diameter in meters.**/
     public static final double POWER_CELL_DIAMETER = 0.18;
