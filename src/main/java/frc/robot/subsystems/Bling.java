@@ -72,7 +72,14 @@ public class Bling extends SubsystemBase {
     if (!cleared) {
       // Write code here
 
-      LEDRainbow(0, 20, 10);
+      if (OI.driverController.getRawAxis(1) > 0.1) {
+        setColorRGBAll(76, 0, 99);
+      } else {
+        setColorRGBAll(0,0,0);
+      }
+    
+      // LEDRainbow(0, 20, 10);
+
       // setLED(3, 255, 0, 0);
 
       // Do not remove! This sets the LEDS
