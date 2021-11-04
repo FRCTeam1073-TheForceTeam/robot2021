@@ -51,6 +51,21 @@ public class TargetHoodCommand extends CommandBase {
     new InterpolatorTableEntry(7.00, 0.389)
   );
 
+  InterpolatorTable hoodTableHigh2 = new InterpolatorTable(
+    new InterpolatorTableEntry(1.52, 0.745),
+    new InterpolatorTableEntry(2.37, 0.716),
+    new InterpolatorTableEntry(2.61, 0.600),
+    new InterpolatorTableEntry(3.07, 0.501),
+    new InterpolatorTableEntry(3.44, 0.440),
+    new InterpolatorTableEntry(3.74, 0.405),
+    new InterpolatorTableEntry(4.02, 0.400),
+    new InterpolatorTableEntry(4.47, 0.389),
+    new InterpolatorTableEntry(4.98, 0.380),
+    new InterpolatorTableEntry(5.49, 0.356),
+    new InterpolatorTableEntry(6.04, 0.358),
+    new InterpolatorTableEntry(7.00, 0.389)
+  );
+
   /**Table for shooting in 107, or anywhere else with the small power port.**/
   InterpolatorTable hoodTableLow = new InterpolatorTable(
     new InterpolatorTableEntry(1.79, 0.658353), new InterpolatorTableEntry(2.35, 0.483353),
@@ -76,7 +91,10 @@ public class TargetHoodCommand extends CommandBase {
       hoodTable = hoodTableLow;
     } else if (Constants.portConfig == PowerPortConfiguration.HIGH) {
       hoodTable = hoodTableHigh;
+    } else if (Constants.portConfig == PowerPortConfiguration.HIGH_EXP) {
+      hoodTable = hoodTableHigh2;
     }
+
     validRangeCounter = 0;
     readyToFire = false;
   }

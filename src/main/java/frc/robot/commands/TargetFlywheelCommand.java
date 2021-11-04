@@ -47,12 +47,27 @@ public class TargetFlywheelCommand extends CommandBase {
     new InterpolatorTableEntry(7.00, 500.00)
   );
 
+    /**
+   * Table for shooting in the gym, or anywhere else with the full-size power
+   * port.
+   **/
+  InterpolatorTable flywheelTableHigh2 = new InterpolatorTable(
+    new InterpolatorTableEntry(1.52, 312.5),
+    new InterpolatorTableEntry(2.37, 328.1),
+    new InterpolatorTableEntry(2.61, 343.75),
+    new InterpolatorTableEntry(3.07, 389.7),
+    new InterpolatorTableEntry(3.44, 415.1),
+    new InterpolatorTableEntry(3.74, 428.4),
+    new InterpolatorTableEntry(4.02, 436.8),
+    new InterpolatorTableEntry(4.47, 450.8),
+    new InterpolatorTableEntry(4.98, 467.7),
+    new InterpolatorTableEntry(5.49, 484.4),
+    new InterpolatorTableEntry(6.04, 500.0),
+    new InterpolatorTableEntry(7.00, 500.0)
+  );
+
   /** Table for shooting in 107, or anywhere else with the small power port. **/
   InterpolatorTable flywheelTableLow = new InterpolatorTable(
-      /*
-       * Scaled down all the speeds by the same factor as the high one vs. the low
-       * one. It works pretty well for now, we'll need to retune this later.
-       */
       new InterpolatorTableEntry(1.79, 281.25 * (281.25 / 332.0)),
       new InterpolatorTableEntry(2.35, 343.75 * (281.25 / 332.0)),
       new InterpolatorTableEntry(3.05, 343.75 * (281.25 / 332.0)),
@@ -102,7 +117,10 @@ public class TargetFlywheelCommand extends CommandBase {
       flywheelTable = flywheelTableLow;
     } else if (Constants.portConfig == PowerPortConfiguration.HIGH) {
       flywheelTable = flywheelTableHigh;
+    } else if (Constants.portConfig == PowerPortConfiguration.HIGH_EXP) {
+      flywheelTable = flywheelTableHigh2;
     }
+
 
     shooter = shooter_;
     portTracker = portTracker_;
