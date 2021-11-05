@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.RobotController;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -20,7 +22,7 @@ public final class Constants {
     public static final double THROTTLE_FALLOFF = 0.7;
 
     public enum PowerPortConfiguration {
-        LOW,HIGH
+        LOW,HIGH,HIGH_EXP
     };
 
     public static final PowerPortConfiguration portConfig = PowerPortConfiguration.HIGH;
@@ -39,7 +41,7 @@ public final class Constants {
      * Units are in radians/sec difference.
      * */
     // public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 2.0;
-    public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 3.0;
+    public static final double ACCEPTABLE_FLYWHEEL_VELOCITY_DIFFERENCE = 6.0;
 
 
     /**
@@ -48,7 +50,7 @@ public final class Constants {
      * for autonomous port tracking commands to be considered to be aligned.
      */
     // public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.0375;
-    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.05;
+    public static final double ACCEPTABLE_PORT_TRACKER_ALIGNMENT = 0.06;
 
     public static final double ACCEPTABLE_HOOD_ANGLE_DIFFERENCE = 0.02;
 

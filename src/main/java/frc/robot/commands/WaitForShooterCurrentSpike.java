@@ -48,11 +48,11 @@ public class WaitForShooterCurrentSpike extends CommandBase {
     double diff = (nearVal - farVal);
     double hoodDiff = shooter.getHoodPosition() - smoothHoodPos;
 
-    if (timer <= 20) {
+    if (timer <= 15) {
       timer++;
       return false;
     }
-    return (Math.abs(hoodVelocity) >= 1.25);
+    return (Math.abs(hoodVelocity) >= 1.1);
 
     // if (hoodDiff >= 4.5 && timer >= 15) {
     //   return finish;

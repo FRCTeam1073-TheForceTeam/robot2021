@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -87,7 +88,10 @@ public class RobotContainer {
       ),
       new ParallelDeadlineGroup(
         (new WaitForShooterCurrentSpike(shooter, true)),
-        new AdvanceMagazineCommand(magazine, bling, 0.5, 8)
+        new ParallelCommandGroup(
+          new TurretPortAlignCommand(turret, portTracker),
+          new AdvanceMagazineCommand(magazine, bling, 0.5, 8)
+        )
       )
   );
   private final ClimberTestControls teleClimberTest = new ClimberTestControls(climber);
@@ -123,6 +127,16 @@ public class RobotContainer {
     collector.setDefaultCommand(teleCollect);
     shooter.setDefaultCommand(teleShooter);
     climber.setDefaultCommand(teleClimberTest);
+    RevisedCompetitionAutonomous.init(
+      drivetrain,
+      collector,
+      magazine,
+      turret,
+      shooter,
+      cellTracker,
+      portTracker,
+      bling
+    );
   }
 
   /**
@@ -169,14 +183,15 @@ public class RobotContainer {
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 0);
       case 1:
-        return new RevisedCompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker,
-            portTracker, bling);
+        return RevisedCompetitionAutonomous.getAuto5Cells();
       case 2:
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 2);
       case 3:
         return new CompetitionAutonomous(drivetrain, collector, magazine, turret, shooter, cellTracker, portTracker,
             bling, 3);
+      case 4:
+        return RevisedCompetitionAutonomous.getAuto4Cells();
       default:
         return new TurnCommand(drivetrain, bling, 0.0);
     }

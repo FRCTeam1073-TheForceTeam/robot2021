@@ -24,7 +24,8 @@ public class InterpolatorTable {
      * @param extrapolate Whether or not to extrapolate
      * @param entries_ The array of entries
      */
-    public InterpolatorTable(boolean extrapolate, InterpolatorTableEntry... entries_) {
+    public InterpolatorTable(boolean extrapolate_, InterpolatorTableEntry... entries_) {
+        extrapolate = extrapolate_;
         entries = entries_;
     }
 

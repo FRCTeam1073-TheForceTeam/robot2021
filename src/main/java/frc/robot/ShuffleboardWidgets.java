@@ -1,7 +1,10 @@
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Map;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -30,7 +33,8 @@ public class ShuffleboardWidgets extends SubsystemBase {
         private String[] autoNames = { "Comp3Cells", // 0
                         "CompL5Cells", // 1
                         "CompM5Cells", // 2
-                        "CompL6Cells" // 3
+                        "CompL6Cells", // 3
+                        "CompL4Cells" // 4
         };
         public static double waitTime;
 
@@ -137,12 +141,15 @@ public class ShuffleboardWidgets extends SubsystemBase {
 
         private NetworkTableEntry shooterFlywheelSpeed;
         private NetworkTableEntry shooterHoodAngleDegrees;
+        private NetworkTableEntry shooterHoodAngleRadians;
         private NetworkTableEntry sensorRange;
         private NetworkTableEntry portTrackerHasData;
 
         private NetworkTableEntry isCollectorStalled;
         private NetworkTableEntry isHoodGearSlipping;
         private NetworkTableEntry isTurretAtLimit;
+        private NetworkTableEntry powerPortConfig;
+        private NetworkTableEntry branchInfo;
 
         public ShuffleboardWidgets(Drivetrain drivetrain, Collector collector, Magazine magazine, Turret turret,
                         Shooter shooter, PowerCellTracker cellTracker, PowerPortTracker portTracker) {
@@ -248,6 +255,11 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 sensorRange = shootingReadout.add("Range sensor distance (meters)", portTracker.getRange())
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", 0, "max", Constants.MAXIMUM_DETECTABLE_RANGE)).getEntry();
+                shooterHoodAngleRadians = shootingReadout.add("Hood angle (radians)", hoodAngle)
+                                .withWidget(BuiltInWidgets.kNumberBar)
+                                .withProperties(Map.of("min", shooter.hoodAngleLow * 180.0 / Math.PI, "max",
+                                                shooter.hoodAngleHigh * 180.0 / Math.PI))
+                                .getEntry();
                 shooterHoodAngleDegrees = shootingReadout.add("Hood angle (degrees)", hoodAngle)
                                 .withWidget(BuiltInWidgets.kNumberBar)
                                 .withProperties(Map.of("min", shooter.hoodAngleLow * 180.0 / Math.PI, "max",
@@ -269,6 +281,19 @@ public class ShuffleboardWidgets extends SubsystemBase {
                                 .withWidget(BuiltInWidgets.kBooleanBox)
                                 .withProperties(Map.of("Color when false", "#1f1f1f", "Color when true", "#ff0000"))
                                 .getEntry();
+                powerPortConfig = warningReadout.add("Power Port Config", Constants.portConfig.name())
+                                .withWidget(BuiltInWidgets.kTextView).getEntry();
+                branchInfo = warningReadout.add("Git branch info", "<???>").withWidget(BuiltInWidgets.kTextView)
+                                .getEntry();
+                try {
+                        branchInfo.setString(
+                                Files.readString(Filesystem.getDeployDirectory().toPath().resolve("branch_name.txt"))+","+
+                                Files.readString(Filesystem.getDeployDirectory().toPath().resolve("branch_hash.txt"))
+                        );
+                } catch (IOException e) {
+                        branchInfo.setString("ERROR: Couldn't find branch_name.txt!!!");
+                        e.printStackTrace();
+                }
         }
 
         private void updateWidgets() {
@@ -347,11 +372,13 @@ public class ShuffleboardWidgets extends SubsystemBase {
                 portTrackerHasData.setBoolean(portTracker.getPortData(new PowerPortData()));
                 sensorRange.setDouble(portTracker.getRange());
                 shooterHoodAngleDegrees.setDouble(Units.radiansToDegrees(hoodAngle));
+                shooterHoodAngleRadians.setDouble(hoodAngle);
                 shooterFlywheelSpeed.setNumber(flywheelVelocity);
 
                 isCollectorStalled.setBoolean(collectorStalled);
                 isHoodGearSlipping.setBoolean(hoodGearSlipping);
                 isTurretAtLimit.setBoolean(turretAtLimit);
+                powerPortConfig.setString(Constants.portConfig.name());
         }
 
         private void updateAutoChooser() {

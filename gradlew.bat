@@ -64,6 +64,8 @@ goto fail
 :init
 @rem Get command-line arguments, handling Windows variants
 
+git symbolic-ref HEAD > .\src\main\deploy\branch_name.txt
+git rev-parse --short HEAD > .\src\main\deploy\branch_hash.txt
 if not "%OS%" == "Windows_NT" goto win9xME_args
 
 :win9xME_args
