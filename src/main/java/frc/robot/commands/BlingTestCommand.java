@@ -33,8 +33,8 @@ public class BlingTestCommand extends CommandBase {
       // if((ctr>>i)%2==1){
         bling.setLEDDouble(
           i,
-            0.4 * Math.exp(-4 * Math.pow(i - 8 * Math.pow(Math.sin(time * 3.0+0.1),2),2)),
-            0.4 * Math.exp(-3 * Math.pow(i - 8 * Math.pow(Math.sin(time * 3.0),2),2)),
+            0.4 * Math.exp(-2 * Math.pow(i - 8 * Math.pow(Math.sin(time * 3.0+0.1),2),2)),
+            0.4 * Math.exp(-2 * Math.pow(i - 8 * Math.pow(Math.sin(time * 3.0),2),2)),
             0.4 * Math.exp(-2 * Math.pow(i - 8 * Math.pow(Math.sin(time * 3.0-0.2),2),2))
         );
       // } else {
