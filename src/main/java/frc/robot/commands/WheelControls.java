@@ -29,11 +29,11 @@ public class WheelControls extends CommandBase {
 
   @Override
   public void execute() {
-    if (OI.driverController.getBumperPressed(Hand.kLeft))
+    if (OI.driverController.getBumper(Hand.kLeft))
     {
       wheel.setPower(OI.driverController.getRawAxis(1) * 0.05);
     }
-    else if (OI.driverController.getBumperPressed(Hand.kRight))
+    else if (OI.driverController.getBumper(Hand.kRight))
     {
       wheel.setPower(OI.driverController.getRawAxis(1) * 0.4);
     }
