@@ -31,7 +31,7 @@ public class WheelControls extends CommandBase {
   public void execute() {
     if (OI.driverController.getBumper(Hand.kLeft))
     {
-      wheel.setPower(OI.driverController.getRawAxis(1) * 0.05);
+      wheel.setPower(OI.driverController.getRawAxis(1) * 0.1);
     }
     else if (OI.driverController.getBumper(Hand.kRight))
     {
