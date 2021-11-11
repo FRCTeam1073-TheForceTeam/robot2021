@@ -16,6 +16,7 @@ public class BlingTestCommand extends CommandBase {
 
   public BlingTestCommand(Bling bling_) {
     bling = bling_;
+    addRequirements(bling);
   }
 
   // Called when the command is initially scheduled.
