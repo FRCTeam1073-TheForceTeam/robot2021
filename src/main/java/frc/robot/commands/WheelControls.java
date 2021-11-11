@@ -10,7 +10,7 @@ import frc.robot.subsystems.WheelSubsystem;
 
 public class WheelControls extends CommandBase {
 
-  //Subsytems objects go here:
+  //Subsystems objects go here:
   WheelSubsystem wheel;
 
   /** Creates a new TestCommand object. */
@@ -27,7 +27,7 @@ public class WheelControls extends CommandBase {
 
   @Override
   public void execute() {
-    wheel.setPower(OI.driverController.getRawAxis(1));
+    wheel.setPower(0.2*OI.driverController.getRawAxis(1));
   }
 
   @Override
