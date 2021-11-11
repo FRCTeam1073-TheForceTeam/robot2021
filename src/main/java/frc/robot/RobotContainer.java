@@ -33,7 +33,7 @@ public class RobotContainer {
   TextPrinter textPrinter = new TextPrinter();
 
   // Controls: Add controls here.
-  WheelControls testCommand = new WheelControls(wheel);
+  WheelControls wheelControls = new WheelControls(wheel);
   BlingTestCommand blingTest = new BlingTestCommand(bling);
 
   /**
@@ -42,6 +42,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Initialize static OI class:
     OI.init();
+    wheel.setDefaultCommand(wheelControls);
+    bling.setDefaultCommand(blingTest);
   }
 
   /**
@@ -66,7 +68,7 @@ public class RobotContainer {
 
   public Command getTeleopCommand() {
     // Return the command that will run during teleop ('return null' means no command will be run)
-    return blingTest;
+    return null;
   }
 
   public Command getTestCommand() {
