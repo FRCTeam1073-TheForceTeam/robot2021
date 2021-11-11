@@ -27,7 +27,7 @@ public class WheelControls extends CommandBase {
 
   @Override
   public void execute() {
-    wheel.setPower(OI.driverController.getRawAxis(1)*0.1);
+    wheel.setPower(OI.driverController.getRawAxis(1)*0.2);
   }
 
   @Override
