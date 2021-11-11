@@ -4,20 +4,21 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class TestSubsystem extends SubsystemBase {
+public class WheelSubsystem extends SubsystemBase {
 
   // Define devices here:
   public WPI_TalonFX testMotor;
   public int ticksPerRevolution = 2048;
 
   /** Creates a new TestSubsystem. */
-  public TestSubsystem() {
+  public WheelSubsystem() {
     // Initialize devices here:
     testMotor = new WPI_TalonFX(20);
     testMotor.configFactoryDefault();
@@ -29,9 +30,12 @@ public class TestSubsystem extends SubsystemBase {
     return testMotor.getSelectedSensorPosition() * (2 * Math.PI) / ticksPerRevolution;
   }
 
+  public void setPower(double power) {
+    testMotor.set(ControlMode.PercentOutput, power);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per loop:
-
   }
 }

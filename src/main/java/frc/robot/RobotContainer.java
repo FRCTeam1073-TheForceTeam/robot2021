@@ -6,8 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.BlingTestCommand;
-import frc.robot.commands.TestCommand;
+import frc.robot.commands.*;
 
 // Import subsystems: Add subsystems here.
 
@@ -29,11 +28,12 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
 
   // Subsystems: Add subsystems here
-  TestSubsystem testSubsystem = new TestSubsystem();
+  WheelSubsystem wheel = new WheelSubsystem();
   Bling bling = new Bling();
+  TextPrinter textPrinter = new TextPrinter();
 
   // Controls: Add controls here.
-  TestCommand testCommand = new TestCommand(testSubsystem);
+  WheelControls testCommand = new WheelControls(wheel);
   BlingTestCommand blingTest = new BlingTestCommand(bling);
 
   /**
@@ -64,7 +64,6 @@ public class RobotContainer {
     return null;
   }
 
-  // Command that we run in teleoperation mode.
   public Command getTeleopCommand() {
     // Return the command that will run during teleop ('return null' means no command will be run)
     return blingTest;
