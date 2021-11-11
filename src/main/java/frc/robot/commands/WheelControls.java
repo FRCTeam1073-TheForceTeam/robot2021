@@ -4,9 +4,13 @@
 
 package frc.robot.commands;
 
+import javax.lang.model.util.ElementScanner6;
+
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.OI;
 import frc.robot.subsystems.WheelSubsystem;
+
 
 public class WheelControls extends CommandBase {
 
@@ -27,7 +31,18 @@ public class WheelControls extends CommandBase {
 
   @Override
   public void execute() {
-    wheel.setPower(OI.driverController.getRawAxis(1));
+    if (OI.driverController.getBumperPressed(Hand.kLeft))
+    {
+      wheel.setPower(OI.driverController.getRawAxis(1) * 0.05);
+    }
+    else if (OI.driverController.getBumperPressed(Hand.kRight))
+    {
+      wheel.setPower(OI.driverController.getRawAxis(1) * 0.4);
+    }
+    else
+    {
+      wheel.setPower(OI.driverController.getRawAxis(1) * 0.2);
+    }
   }
 
   @Override
