@@ -10,7 +10,7 @@ import frc.robot.subsystems.WheelSubsystem;
 
 public class WheelControls extends CommandBase {
 
-  //Subsytems objects go here:
+  //Subsystems objects go here:
   WheelSubsystem wheel;
 
   /** Creates a new TestCommand object. */
