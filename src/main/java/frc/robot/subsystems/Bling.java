@@ -59,21 +59,21 @@ public class Bling extends SubsystemBase {
 
   public void setColor(String color) {
     if (color.equals("red")) {
-      setColor(85, 0, 0);
+      setRGBAll(85, 0, 0);
     } else if (color.equals("orange")) {
-      setColor(85, 55, 0);
+      setRGBAll(85, 55, 0);
     } else if (color.equals("yellow")) {
-      setColor(85, 85, 0);
+      setRGBAll(85, 85, 0);
     } else if (color.equals("green")) {
-      setColor(0, 85, 0);
+      setRGBAll(0, 85, 0);
     } else if (color.equals("blue")) {
-      setColor(0, 0, 85);
+      setRGBAll(0, 0, 85);
     } else if (color.equals("purple")) {
-      setColor(42, 0, 42);
+      setRGBAll(42, 0, 42);
     } else if (color.equals("black")) {
-      setColor(0, 0, 0);
+      setRGBAll(0, 0, 0);
     } else if (color.equals("white")) {
-      setColor(85, 85, 85);
+      setRGBAll(85, 85, 85);
     }
   }
 
