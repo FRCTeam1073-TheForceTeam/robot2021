@@ -6,18 +6,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.OI;
-import frc.robot.subsystems.TestSubsystem;
+import frc.robot.subsystems.WheelSubsystem;
 
-public class TestCommand extends CommandBase {
+public class WheelControls extends CommandBase {
 
   //Subsytems objects go here:
-  TestSubsystem testSubsystem;
+  WheelSubsystem wheel;
 
   /** Creates a new TestCommand object. */
-  public TestCommand(TestSubsystem testSubsystem_) {
-    testSubsystem = testSubsystem_;
-    addRequirements(testSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
+  public WheelControls(WheelSubsystem wheel_) {
+    wheel = wheel_;
+    addRequirements(wheel);
   }
 
   @Override
@@ -28,14 +27,12 @@ public class TestCommand extends CommandBase {
 
   @Override
   public void execute() {
-    // Code that loops until the command ends (do actual motor stuff here!):
-    testSubsystem.testMotor.set(OI.driverController.getRawAxis(1)*0.2);
+    wheel.setPower(OI.driverController.getRawAxis(1));
   }
 
   @Override
   public void end(boolean interrupted) {
     // Code that runs (once) when the command ends:
-
   }
 
   // Returns true when the command should end.
