@@ -6,6 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.*;
 
 // Import subsystems: Add subsystems here.
@@ -62,8 +66,14 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    return new SequentialCommandGroup(
+      new PulseBlingCommand(bling, "red", 0.5),
+      new ParallelDeadlineGroup(
+        new WaitForWheelMotorTemperature(42.0, wheel),
+        new MoveWheelCommand(628.0, wheel, bling)
+      )
+    );
     // Return the command that will run during autonomous ('return null' means no command will be run)
-    return null;
   }
 
   public Command getTeleopCommand() {
