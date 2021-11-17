@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Allow the commands running in the robot to express themselves visually.
@@ -32,6 +33,7 @@ public class Bling extends SubsystemBase {
   public void periodic() {
     //setColorRGBAll(ledR, ledG, ledB);
     m_led.setData(m_ledBuffer);
+    SmartDashboard.putNumberArray("Color", new double[]{ledR,ledG,ledB});
   }
 
   public void setColorDouble(double r, double g, double b) {
@@ -82,6 +84,9 @@ public class Bling extends SubsystemBase {
   }
 
   public void setRGBAll(int r, int g, int b) {
+    ledR = r;
+    ledG = g;
+    ledB = b;
     for (var i = 0; i < (m_ledBuffer.getLength()); i++) {
       m_ledBuffer.setRGB(i, r, g, b);
     }
