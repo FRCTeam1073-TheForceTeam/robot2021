@@ -4,47 +4,45 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.ShuffleboardWidgets;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Bling;
 
-public class PrintTextCommand extends CommandBase {
+public class SetBlingCommand extends CommandBase {
+  Bling bling;
+  double duration;
+  String color;
 
-  ShuffleboardWidgets shuffle;
-  String textToPrint;
-  int numPrints;
-  int counter;
+  double startTime;
 
-  /** Creates a new PrintTextCommand. */
-  public PrintTextCommand(ShuffleboardWidgets shuffle, String textToPrint, int numPrints) {
-    this.shuffle = shuffle;
-    this.textToPrint = textToPrint;
-    this.numPrints = numPrints;
+  /** Creates a new PulseBlingCommand. */
+  public SetBlingCommand(Bling bling, String color) {
+    this.bling = bling;
+    this.color = color;
+    addRequirements(bling);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    counter = 0;
-    shuffle.printText("Starting PrintTextCommand now!");
+    bling.setColor("black");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shuffle.printText(textToPrint);
-    counter++;
+    bling.setColor(color);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shuffle.printText("Ending PrintTextCommand now!");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (counter >= numPrints);
+    return true;
   }
 }

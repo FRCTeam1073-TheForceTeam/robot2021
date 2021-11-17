@@ -15,6 +15,7 @@ public class MoveWheelCommand extends CommandBase {
 
   double targetPosition;
   double diffPosition;
+  double power = 0;
 
   /** Creates a new MoveWheelCommand. */
   public MoveWheelCommand(double targetPosition, WheelSubsystem wheel, Bling bling) {
@@ -29,34 +30,32 @@ public class MoveWheelCommand extends CommandBase {
   @Override
   public void initialize() {
     wheel.setPower(0);
-    bling.setColor("black");
     diffPosition = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    bling.setColor("orange");
-
     double wheelPosition = wheel.getPosition();
-    double diffPosition = targetPosition - wheelPosition;
-    wheel.setPower(curve(diffPosition));
+    diffPosition = targetPosition - wheelPosition;
+    power = curve(diffPosition);
+    wheel.setPower(power);
   }
 
   public double curve(double input) {
-    return MathUtil.clamp(input, -0.1, 0.1);
+    return Math.signum(input) * (Math.pow(Math.min(1.0, 0.4 * Math.abs(input)), 0.6) * 0.125 + 0.05);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("YEAAA");
     wheel.setPower(0);
-    bling.setColor("black");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(diffPosition) <= 0.05; //(0.05 radians)*(1 revolution/2pi radians)*(360 degrees/radian) = approx. 2.86 degrees
+    return (Math.abs(diffPosition) <= 0.2)&&(power<=0.1); //(0.05 radians)*(1 revolution/2pi radians)*(360 degrees/radian) = approx. 2.86 degrees
   }
 }
