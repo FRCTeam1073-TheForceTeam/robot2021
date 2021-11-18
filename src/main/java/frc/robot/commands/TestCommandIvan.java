@@ -9,6 +9,9 @@ import frc.robot.subsystems.*;
 
 public class TestCommandIvan extends CommandBase 
 {
+  private WheelSubsystem wheel;
+  private Bling bling;
+
   /** Creates a new TestCommand. */
   public TestCommandIvan(WheelSubsystem wheel, Bling bling) 
   {

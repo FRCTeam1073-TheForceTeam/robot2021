@@ -30,6 +30,14 @@ public class WheelSubsystem extends SubsystemBase {
     return testMotor.getSelectedSensorPosition() * (2 * Math.PI) / ticksPerRevolution;
   }
 
+  public double getVelocity() {
+    return testMotor.getSelectedSensorVelocity() * (2 * Math.PI) * 10.0 / ticksPerRevolution;
+  }
+
+  public double getMotorTemperature() {
+    return testMotor.getTemperature();
+  }
+
   public void setPower(double power) {
     testMotor.set(ControlMode.PercentOutput, power);
   }

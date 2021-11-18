@@ -16,8 +16,9 @@ public class ShuffleboardWidgets extends SubsystemBase
 {
         private static ShuffleboardTab tab;
 
-        private static ShuffleboardLayout testPanel;
+	private static ShuffleboardLayout testPanel;
 
+	private static NetworkTableEntry textReadout;
 
         public ShuffleboardWidgets() {
         }
@@ -38,9 +39,19 @@ public class ShuffleboardWidgets extends SubsystemBase
                 Shuffleboard.update();
         }
 
-        private void createWidgets() {
+	private void createWidgets() {
+		textReadout = testPanel.add("Text Readout", "").getEntry();                
         }
 
-        private void updateWidgets() {
+	private void updateWidgets() {
+
+        }
+
+	public void hey(String text) {
+		printText("hey, " + text);
+        }
+
+	public void printText(String text) {
+		textReadout.setString(text);
         }
 }

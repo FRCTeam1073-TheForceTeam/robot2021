@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.*;
 
 // Import subsystems: Add subsystems here.
@@ -25,7 +28,8 @@ import frc.robot.subsystems.*;
  * scheduler calls). Instead, the structure of the robot (including subsystems,
  * commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer 
+{
 
   // Subsystems: Add subsystems here
   WheelSubsystem wheel = new WheelSubsystem();
@@ -35,11 +39,13 @@ public class RobotContainer {
   // Controls: Add controls here.
   WheelControls wheelControls = new WheelControls(wheel);
   BlingTestCommand blingTest = new BlingTestCommand(bling);
+  private ShuffleboardWidgets shuffle;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer() {
+  public RobotContainer() 
+  {
     // Initialize static OI class:
     OI.init();
     wheel.setDefaultCommand(wheelControls);
@@ -52,7 +58,8 @@ public class RobotContainer {
    * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  private void configureButtonBindings() 
+  {
 
   }
 
@@ -61,17 +68,36 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // Return the command that will run during autonomous ('return null' means no command will be run)
-    return null;
+  public Command getAutonomousCommand() 
+  {
+    /*
+      1. Set bling lights to blue and wait 5 seconds
+      2. Set bling lights to green and turn wheel at 0.25 power for 3 seconds
+      3. Once done set bling lights to red 
+    */
+    return new SequentialCommandGroup
+    (
+      new SetBlingCommand(bling, "blue"), 
+      new WaitCommand(5.0), 
+      
+      new ParallelDeadlineGroup
+      (
+        new FlashBlingCommand(bling, "green"), 
+        new MoveWheelCommand(100.1, wheel)
+      ),
+
+      new SetBlingCommand(bling, "red")
+    ); 
   }
 
-  public Command getTeleopCommand() {
+  public Command getTeleopCommand() 
+  {
     // Return the command that will run during teleop ('return null' means no command will be run)
     return null;
   }
 
-  public Command getTestCommand() {
+  public Command getTestCommand() 
+  {
     // Return the command that will run during test mode (it's not that important)
     // ('return null' means no command will be run)
     return null;
