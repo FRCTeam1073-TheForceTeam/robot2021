@@ -71,8 +71,9 @@ public class Bling extends SubsystemBase {
   public void periodic() {
     if (!cleared) {
       // Write code here
+    setColorRGBAll(0, 200, 255);
 
-      LEDRainbow(0, 20, 10);
+     // LEDRainbow(0, 20, 10);
       // setLED(3, 255, 0, 0);
 
       // Do not remove! This sets the LEDS
