@@ -74,7 +74,23 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // Return the command that will run during autonomous ('return null' means no command will be run)
     //Put your autonomous code here in place of the null.
-    return null;
+    return new ParallelDeadlineGroup(
+      new SequentialCommandGroup(
+        new MoveWheelCommand(6, wheel),
+        new WaitCommand(5)
+      ),
+      new SequentialCommandGroup(
+        new SetBlingCommand(bling, "blue"),
+        new WaitCommand(0.5),
+        new SetBlingCommand(bling, "purple"),
+        new WaitCommand(0.5),
+        new SetBlingCommand(bling, "green")
+      ),
+      new SequentialCommandGroup(
+        new PrintTextCommand(shuffle, "bling off", 1),
+        new WaitCommand (5)
+      )
+    );
   }
 
   public Command getTeleopCommand() {

@@ -11,16 +11,14 @@ import frc.robot.subsystems.*;
 public class MoveWheelCommand extends CommandBase {
 
   WheelSubsystem wheel;
-  Bling bling;
 
   double targetPosition;
   double diffPosition;
   double power = 0;
 
   /** Creates a new MoveWheelCommand. */
-  public MoveWheelCommand(double targetPosition, WheelSubsystem wheel, Bling bling) {
+  public MoveWheelCommand(double targetPosition, WheelSubsystem wheel) {
     this.wheel = wheel;
-    this.bling = bling;
     this.targetPosition = targetPosition;
     addRequirements(wheel);
     // Use addRequirements() here to declare subsystem dependencies.

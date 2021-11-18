@@ -26,12 +26,12 @@ public class OliCommand extends CommandBase {
     bling.setColor("orange");
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    wheel.setPower(OI.driverController);
-    bling.setColor("blue");
-  }
+  // // Called every time the scheduler runs while the command is scheduled.
+  // @Override
+  // public void execute() {
+  //   wheel.setPower(OI.driverController);
+  //   bling.setColor("blue");
+  // }
 
   // Called once the command ends or is interrupted.
   @Override
