@@ -74,18 +74,32 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // Return the command that will run during autonomous ('return null' means no command will be run)
     return new SequentialCommandGroup(
+
+      // Bling flashes red for one second
       new ParallelDeadlineGroup(
         new WaitCommand(1.0),
         new FlashBlingCommand(bling, "red")
       ),
+
+      // Wheel moves to a specified position and bling flashes blue
       new ParallelDeadlineGroup(
         new MoveWheelCommand(60.0, wheel, bling),
         new FlashBlingCommand(bling,"blue")
       ),
+
+      // Prints text to shuffleboard
       new PrintTextCommand(shuffle,"Yeah!!!!!!!!",1),
+
+      // Sets bling white
       new SetBlingCommand(bling,"white"),
+
+      // Waits 1 second
       new WaitCommand(1.0),
+
+      // Sets bling green
       new SetBlingCommand(bling,"green"),
+
+      // Moves the wheel to another position
       new MoveWheelCommand(-60.0, wheel, bling)
     );
   }
