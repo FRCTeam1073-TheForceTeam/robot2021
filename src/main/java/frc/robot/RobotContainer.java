@@ -58,7 +58,31 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Return the command that will run during autonomous ('return null' means no command will be run)
+<<<<<<< Updated upstream
     return null;
+=======
+    //Put your autonomous code here in place of the null.
+    return new SequentialCommandGroup(
+      
+    new SetBlingCommand(bling, "white"),
+    new WaitCommand(2.0),
+    new ParallelDeadlineGroup(
+    new MoveWheelCommand(50, wheel, bling),
+    new SetBlingCommand(bling, "red")),
+    new WaitCommand(2.0),
+    new SetBlingCommand(bling, "green"),
+    new WaitCommand(2.0)
+    );
+    /*
+     Sequential: flash bling
+    wait 2 seconds
+    Parallel: run motor and set bling to red
+
+    Sequential: set bling to green for 2 seconds
+    */
+    
+  
+>>>>>>> Stashed changes
   }
 
   // Command that we run in teleoperation mode.
