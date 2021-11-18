@@ -74,7 +74,30 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // Return the command that will run during autonomous ('return null' means no command will be run)
     //Put your autonomous code here in place of the null.
-    return null;
+    /*
+    Set bling to red, waits 3 seconds
+
+    if wheel moves, bling set to green while blinking
+
+    wait 2 seconds then set bling to red then prints out; "robot is moving"
+    */
+    return new SequentialCommandGroup(
+
+      new SetBlingCommand(bling, "red"),
+      new WaitCommand(3),
+
+      new ParallelDeadlineGroup(
+        new SequentialCommandGroup(
+          new SetBlingCommand(bling, "green"),
+          new WaitCommand(2)
+        ),
+        new MoveWheelCommand(60, wheel, bling)
+      ),
+      
+      new SetBlingCommand(bling, "red"),
+      new PrintTextCommand(shuffle, "robot was moving", 1)
+
+    );
   }
 
   public Command getTeleopCommand() {
