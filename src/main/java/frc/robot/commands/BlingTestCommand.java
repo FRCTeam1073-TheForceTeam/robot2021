@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import org.opencv.highgui.HighGui;
+
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.RobotState;
