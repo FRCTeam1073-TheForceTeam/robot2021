@@ -33,6 +33,8 @@ public class OliCommand extends CommandBase {
   //   bling.setColor("blue");
   // }
 
+// This is a random comment
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
