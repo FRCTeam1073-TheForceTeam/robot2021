@@ -38,6 +38,7 @@ public class RobotContainer {
   WheelSubsystem wheel = new WheelSubsystem();
   Bling bling = new Bling();
   TextPrinter textPrinter = new TextPrinter();
+  SonarSensor sonar = new SonarSensor();
 
   // Controls: Add controls here.
   WheelControls wheelControls = new WheelControls(wheel);
